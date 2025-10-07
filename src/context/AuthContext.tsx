@@ -25,17 +25,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (profileError) throw profileError;
+      if (!profile) {
+        console.error('Profile not found for user:', userId);
+        return null;
+      }
 
       const { data: userRole, error: roleError } = await supabase
         .from('user_roles')
         .select('role, company_id')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (roleError) throw roleError;
+      
+      if (!userRole) {
+        toast.error('No role assigned. Please contact support.');
+        return null;
+      }
 
       return {
         ...profile,
