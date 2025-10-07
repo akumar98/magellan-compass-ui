@@ -11,6 +11,9 @@ import Rewards from "./pages/Rewards";
 import Community from "./pages/Community";
 import Settings from "./pages/Settings";
 import EmployeeActivity from "./pages/employee/EmployeeActivity";
+import EmployerTeam from "./pages/employer/EmployerTeam";
+import EmployerApprovals from "./pages/employer/EmployerApprovals";
+import EmployerReports from "./pages/employer/EmployerReports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,10 +36,12 @@ const App = () => (
             <Route path="/settings" element={<Settings />} />
             <Route path="/employee/activity" element={<EmployeeActivity />} />
             
-            {/* Placeholder routes - will be built in next phases */}
-            <Route path="/employer/team" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/employer/approvals" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/employer/reports" element={<Navigate to="/dashboard" replace />} />
+            {/* Employer routes */}
+            <Route path="/employer/team" element={<EmployerTeam />} />
+            <Route path="/employer/approvals" element={<EmployerApprovals />} />
+            <Route path="/employer/reports" element={<EmployerReports />} />
+            
+            {/* Admin placeholder routes */}
             <Route path="/admin/companies" element={<Navigate to="/dashboard" replace />} />
             <Route path="/admin/employees" element={<Navigate to="/dashboard" replace />} />
             <Route path="/admin/rewards" element={<Navigate to="/dashboard" replace />} />

@@ -3,8 +3,15 @@ import { Plane, Search, Hotel, MapPin, Gift } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { RewardClaimDialog } from '@/components/rewards/RewardClaimDialog';
+import { useState } from 'react';
 
 export default function Rewards() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedReward, setSelectedReward] = useState<typeof mockRewards[0] | null>(null);
+
   const mockRewards = [
     { id: 1, name: 'Paris Weekend Getaway', points: 2500, category: 'Hotel Stay', destination: 'Paris, France', icon: Hotel, available: true },
     { id: 2, name: 'Round-trip Flight Voucher', points: 3000, category: 'Flight Voucher', destination: 'Anywhere in Europe', icon: Plane, available: true },
@@ -13,6 +20,18 @@ export default function Rewards() {
     { id: 5, name: 'Safari Adventure', points: 5000, category: 'Experience Package', destination: 'Tanzania', icon: MapPin, available: true },
     { id: 6, name: 'Tokyo City Pass', points: 1800, category: 'Experience Package', destination: 'Tokyo, Japan', icon: MapPin, available: true },
   ];
+
+  const filteredRewards = mockRewards.filter(reward => {
+    const matchesSearch = reward.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         reward.destination.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !selectedCategory || reward.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleClaimClick = (reward: typeof mockRewards[0]) => {
+    setSelectedReward(reward);
+    setDialogOpen(true);
+  };
 
   return (
     <DashboardLayout>
@@ -27,20 +46,55 @@ export default function Rewards() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search destinations and experiences..." className="pl-10" />
+            <Input 
+              placeholder="Search destinations and experiences..." 
+              className="pl-10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className="flex gap-2 overflow-x-auto">
-            <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground">All Destinations</Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground">Flight Vouchers</Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground">Hotel Stays</Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground">Experiences</Badge>
-            <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground">Gift Cards</Badge>
+            <Badge 
+              variant={selectedCategory === null ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+              onClick={() => setSelectedCategory(null)}
+            >
+              All Destinations
+            </Badge>
+            <Badge 
+              variant={selectedCategory === 'Flight Voucher' ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+              onClick={() => setSelectedCategory('Flight Voucher')}
+            >
+              Flight Vouchers
+            </Badge>
+            <Badge 
+              variant={selectedCategory === 'Hotel Stay' ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+              onClick={() => setSelectedCategory('Hotel Stay')}
+            >
+              Hotel Stays
+            </Badge>
+            <Badge 
+              variant={selectedCategory === 'Experience Package' ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+              onClick={() => setSelectedCategory('Experience Package')}
+            >
+              Experiences
+            </Badge>
+            <Badge 
+              variant={selectedCategory === 'Travel Gift Card' ? "default" : "outline"}
+              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
+              onClick={() => setSelectedCategory('Travel Gift Card')}
+            >
+              Gift Cards
+            </Badge>
           </div>
         </div>
 
         {/* Travel Rewards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockRewards.map((reward) => {
+          {filteredRewards.map((reward) => {
             const IconComponent = reward.icon;
             return (
               <div key={reward.id} className="card-reward group hover:shadow-lg transition-shadow">
@@ -60,7 +114,11 @@ export default function Rewards() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-bold text-primary">{reward.points} pts</span>
-                    <Button size="sm" className="group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Button 
+                      size="sm" 
+                      className="group-hover:bg-primary group-hover:text-primary-foreground"
+                      onClick={() => handleClaimClick(reward)}
+                    >
                       Book Now
                     </Button>
                   </div>
@@ -69,6 +127,13 @@ export default function Rewards() {
             );
           })}
         </div>
+
+        {/* Claim Dialog */}
+        <RewardClaimDialog
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          reward={selectedReward}
+        />
       </div>
     </DashboardLayout>
   );

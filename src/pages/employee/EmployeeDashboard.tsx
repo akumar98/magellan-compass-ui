@@ -82,21 +82,16 @@ export default function EmployeeDashboard() {
           </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map((item) => (
-            <div key={item} className="card-reward">
-              <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                <Gift className="h-16 w-16 text-primary" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold mb-1">Premium Reward {item}</h3>
-                <p className="text-sm text-muted-foreground mb-3">Amazing reward description</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-primary">500 pts</span>
-                  <Button size="sm">Claim</Button>
-                </div>
-              </div>
+          <div className="card-reward hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/rewards')}>
+            <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+              <Gift className="h-16 w-16 text-primary" />
             </div>
-          ))}
+            <div className="p-4">
+              <h3 className="font-semibold mb-1">Explore Travel Rewards</h3>
+              <p className="text-sm text-muted-foreground mb-3">Browse our full catalog of amazing destinations</p>
+              <Button size="sm" className="w-full">View Catalog</Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
