@@ -171,17 +171,20 @@ export default function Rewards() {
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
         {/* Header */}
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="flex-1">
             <h1 className="text-3xl font-bold mb-2">Travel Rewards Catalog</h1>
             <p className="text-muted-foreground">Explore incredible travel experiences and destinations with your points</p>
           </div>
-          {!prediction && (
-            <Button onClick={handleAnalyzeBurnout} disabled={analyzingBurnout} variant="outline">
-              <Activity className="h-4 w-4 mr-2" />
-              {analyzingBurnout ? 'Analyzing...' : 'Check Wellness'}
-            </Button>
-          )}
+          <Button 
+            onClick={handleAnalyzeBurnout} 
+            disabled={analyzingBurnout} 
+            variant={prediction ? "outline" : "default"}
+            className="shrink-0"
+          >
+            <Activity className="h-4 w-4 mr-2" />
+            {analyzingBurnout ? 'Analyzing...' : prediction ? 'Refresh Analysis' : 'Check Wellness'}
+          </Button>
         </div>
 
         {/* Search & Filters */}
