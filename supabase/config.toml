@@ -1,1 +1,4 @@
 project_id = "gexrxagwscohhtrsvgow"
+
+[functions.analyze-burnout-risk]
+verify_jwt = true

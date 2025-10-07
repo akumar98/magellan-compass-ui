@@ -10,7 +10,8 @@ import {
   TrendingUp,
   Award,
   Menu,
-  X
+  X,
+  AlertTriangle
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -65,6 +66,12 @@ const navItems: NavItem[] = [
     label: 'Reports',
     path: '/employer/reports',
     icon: <TrendingUp className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'Burnout Analytics',
+    path: '/employer/burnout',
+    icon: <AlertTriangle className="h-5 w-5" />,
     roles: ['employer'],
   },
   {

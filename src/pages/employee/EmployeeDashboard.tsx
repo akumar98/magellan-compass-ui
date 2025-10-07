@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Award, Gift, TrendingUp, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { BurnoutInsights } from '@/components/burnout/BurnoutInsights';
 
 export default function EmployeeDashboard() {
   const { user } = useAuth();
@@ -71,6 +72,12 @@ export default function EmployeeDashboard() {
             View Activity
           </Button>
         </div>
+      </div>
+
+      {/* Burnout Insights Section */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Wellness & Burnout Prevention</h2>
+        <BurnoutInsights />
       </div>
 
       {/* Featured Travel Rewards */}

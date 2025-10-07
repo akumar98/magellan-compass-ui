@@ -14,6 +14,7 @@ import EmployeeActivity from "./pages/employee/EmployeeActivity";
 import EmployerTeam from "./pages/employer/EmployerTeam";
 import EmployerApprovals from "./pages/employer/EmployerApprovals";
 import EmployerReports from "./pages/employer/EmployerReports";
+import EmployerBurnout from "./pages/employer/EmployerBurnout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,9 +38,10 @@ const App = () => (
             <Route path="/employee/activity" element={<EmployeeActivity />} />
             
             {/* Employer routes */}
-            <Route path="/employer/team" element={<EmployerTeam />} />
-            <Route path="/employer/approvals" element={<EmployerApprovals />} />
-            <Route path="/employer/reports" element={<EmployerReports />} />
+          <Route path="/employer/team" element={<EmployerTeam />} />
+          <Route path="/employer/approvals" element={<EmployerApprovals />} />
+          <Route path="/employer/reports" element={<EmployerReports />} />
+          <Route path="/employer/burnout" element={<EmployerBurnout />} />
             
             {/* Admin placeholder routes */}
             <Route path="/admin/companies" element={<Navigate to="/dashboard" replace />} />

@@ -78,6 +78,81 @@ export type Database = {
           },
         ]
       }
+      burnout_predictions: {
+        Row: {
+          ai_reasoning: string | null
+          confidence_score: number | null
+          contributing_factors: string[] | null
+          created_at: string | null
+          employee_id: string
+          engagement_score: number | null
+          id: string
+          last_analyzed_at: string | null
+          manager_notified: boolean | null
+          missed_deadlines: number | null
+          notification_sent: boolean | null
+          overtime_hours: number | null
+          predicted_burnout_date: string | null
+          preventive_rewards_suggested: boolean | null
+          recommended_intervention: string | null
+          risk_level: Database["public"]["Enums"]["burnout_risk_level"]
+          risk_score: number
+          sentiment_score: number | null
+          stress_indicators: Json | null
+          time_since_last_break: number | null
+          updated_at: string | null
+          work_intensity_score: number | null
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          confidence_score?: number | null
+          contributing_factors?: string[] | null
+          created_at?: string | null
+          employee_id: string
+          engagement_score?: number | null
+          id?: string
+          last_analyzed_at?: string | null
+          manager_notified?: boolean | null
+          missed_deadlines?: number | null
+          notification_sent?: boolean | null
+          overtime_hours?: number | null
+          predicted_burnout_date?: string | null
+          preventive_rewards_suggested?: boolean | null
+          recommended_intervention?: string | null
+          risk_level?: Database["public"]["Enums"]["burnout_risk_level"]
+          risk_score: number
+          sentiment_score?: number | null
+          stress_indicators?: Json | null
+          time_since_last_break?: number | null
+          updated_at?: string | null
+          work_intensity_score?: number | null
+        }
+        Update: {
+          ai_reasoning?: string | null
+          confidence_score?: number | null
+          contributing_factors?: string[] | null
+          created_at?: string | null
+          employee_id?: string
+          engagement_score?: number | null
+          id?: string
+          last_analyzed_at?: string | null
+          manager_notified?: boolean | null
+          missed_deadlines?: number | null
+          notification_sent?: boolean | null
+          overtime_hours?: number | null
+          predicted_burnout_date?: string | null
+          preventive_rewards_suggested?: boolean | null
+          recommended_intervention?: string | null
+          risk_level?: Database["public"]["Enums"]["burnout_risk_level"]
+          risk_score?: number
+          sentiment_score?: number | null
+          stress_indicators?: Json | null
+          time_since_last_break?: number | null
+          updated_at?: string | null
+          work_intensity_score?: number | null
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           created_at: string | null
@@ -517,6 +592,42 @@ export type Database = {
           },
         ]
       }
+      wellness_scores: {
+        Row: {
+          created_at: string | null
+          data_sources: Json | null
+          employee_id: string
+          energy_level: number | null
+          engagement_level: number | null
+          id: string
+          overall_score: number
+          stress_level: number | null
+          work_life_balance: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          data_sources?: Json | null
+          employee_id: string
+          energy_level?: number | null
+          engagement_level?: number | null
+          id?: string
+          overall_score: number
+          stress_level?: number | null
+          work_life_balance?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          data_sources?: Json | null
+          employee_id?: string
+          energy_level?: number | null
+          engagement_level?: number | null
+          id?: string
+          overall_score?: number
+          stress_level?: number | null
+          work_life_balance?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -537,6 +648,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "employer" | "employee"
       approval_status: "pending" | "approved" | "rejected"
+      burnout_risk_level: "low" | "medium" | "high" | "critical"
       event_source: "workday" | "adp" | "bamboo" | "slack" | "manual"
       event_type:
         | "hire"
@@ -700,6 +812,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "employer", "employee"],
       approval_status: ["pending", "approved", "rejected"],
+      burnout_risk_level: ["low", "medium", "high", "critical"],
       event_source: ["workday", "adp", "bamboo", "slack", "manual"],
       event_type: [
         "hire",
