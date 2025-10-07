@@ -1,5 +1,5 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { Plane, Search, Hotel, MapPin, Gift, Sparkles, Heart } from 'lucide-react';
+import { Plane, Search, Hotel, MapPin, Gift, Sparkles, Heart, Activity } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,14 +8,18 @@ import { RewardsFilters } from '@/components/rewards/RewardsFilters';
 import { useState } from 'react';
 import { useEmployeePreferences } from '@/hooks/useEmployeePreferences';
 import { useBurnoutPrediction } from '@/hooks/useBurnoutPrediction';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Rewards() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedReward, setSelectedReward] = useState<typeof mockRewards[0] | null>(null);
+  const [analyzingBurnout, setAnalyzingBurnout] = useState(false);
   const { preferences, loading: prefsLoading, refreshPreferences } = useEmployeePreferences();
-  const { prediction, loading: burnoutLoading } = useBurnoutPrediction();
+  const { prediction, loading: burnoutLoading, refreshPrediction } = useBurnoutPrediction();
+  const { toast } = useToast();
   
   const [activeFilters, setActiveFilters] = useState({
     travelTypes: [] as string[],
@@ -133,13 +137,51 @@ export default function Rewards() {
     setDialogOpen(true);
   };
 
+  const handleAnalyzeBurnout = async () => {
+    setAnalyzingBurnout(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase.functions.invoke('analyze-burnout-risk', {
+        body: { employeeId: user.id }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: 'Analysis Complete',
+        description: 'Your wellness check is ready. Refreshing recommendations...'
+      });
+
+      await refreshPrediction();
+    } catch (error) {
+      console.error('Burnout analysis error:', error);
+      toast({
+        title: 'Analysis Failed',
+        description: 'Unable to complete wellness check. Please try again.',
+        variant: 'destructive'
+      });
+    } finally {
+      setAnalyzingBurnout(false);
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6 animate-fade-in">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Travel Rewards Catalog</h1>
-          <p className="text-muted-foreground">Explore incredible travel experiences and destinations with your points</p>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Travel Rewards Catalog</h1>
+            <p className="text-muted-foreground">Explore incredible travel experiences and destinations with your points</p>
+          </div>
+          {!prediction && (
+            <Button onClick={handleAnalyzeBurnout} disabled={analyzingBurnout} variant="outline">
+              <Activity className="h-4 w-4 mr-2" />
+              {analyzingBurnout ? 'Analyzing...' : 'Check Wellness'}
+            </Button>
+          )}
         </div>
 
         {/* Search & Filters */}
@@ -203,14 +245,20 @@ export default function Rewards() {
 
         {/* Burnout Alert Banner */}
         {isAtBurnoutRisk && (
-          <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg p-4 flex items-start gap-3">
-            <Heart className="h-5 w-5 text-orange-500 mt-0.5" />
+          <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-lg p-4 flex items-start gap-3 animate-fade-in">
+            <Heart className="h-5 w-5 text-orange-500 mt-0.5 animate-pulse" />
             <div className="flex-1">
-              <h3 className="font-semibold text-orange-900 dark:text-orange-100">Wellness Check-In</h3>
+              <h3 className="font-semibold text-orange-900 dark:text-orange-100">⚠️ Wellness Check-In</h3>
               <p className="text-sm text-orange-800 dark:text-orange-200 mt-1">
-                We've detected signs of increased stress. Consider booking a relaxing getaway to recharge. 
+                We've detected signs of increased stress (Risk Level: <span className="font-semibold uppercase">{prediction?.risk_level}</span>). 
+                Consider booking a relaxing getaway to recharge. 
                 {prediction?.predicted_burnout_date && ` Take action before ${new Date(prediction.predicted_burnout_date).toLocaleDateString()}.`}
               </p>
+              {prediction?.recommended_intervention && (
+                <p className="text-sm text-orange-700 dark:text-orange-300 mt-2 italic">
+                  💡 {prediction.recommended_intervention}
+                </p>
+              )}
             </div>
           </div>
         )}
