@@ -1,9 +1,10 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Plane, Search, Hotel, MapPin, Gift, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { RewardClaimDialog } from '@/components/rewards/RewardClaimDialog';
+import { RewardsFilters } from '@/components/rewards/RewardsFilters';
 import { useState } from 'react';
 import { useEmployeePreferences } from '@/hooks/useEmployeePreferences';
 
@@ -12,34 +13,56 @@ export default function Rewards() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedReward, setSelectedReward] = useState<typeof mockRewards[0] | null>(null);
-  const { preferences, loading: prefsLoading } = useEmployeePreferences();
+  const { preferences, loading: prefsLoading, refreshPreferences } = useEmployeePreferences();
+  
+  const [activeFilters, setActiveFilters] = useState({
+    travelTypes: [] as string[],
+    activities: [] as string[],
+    destinations: [] as string[],
+    duration: '',
+  });
 
   const mockRewards = [
-    { id: 1, name: 'Paris Weekend Getaway', points: 2500, category: 'Hotel Stay', destination: 'Paris, France', icon: Hotel, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary', 'Museums'] },
-    { id: 2, name: 'Round-trip Flight Voucher', points: 3000, category: 'Flight Voucher', destination: 'Anywhere in Europe', icon: Plane, available: true, travelType: 'Flexible', activities: [] },
-    { id: 3, name: 'Bali Yoga Retreat', points: 4000, category: 'Experience Package', destination: 'Bali, Indonesia', icon: MapPin, available: true, travelType: 'Wellness', activities: ['Spa', 'Yoga', 'Relaxation'] },
-    { id: 4, name: 'Airbnb Gift Card - $500', points: 1500, category: 'Travel Gift Card', destination: 'Global', icon: Gift, available: true, travelType: 'Flexible', activities: [] },
-    { id: 5, name: 'Safari Adventure', points: 5000, category: 'Experience Package', destination: 'Tanzania', icon: MapPin, available: true, travelType: 'Adventure', activities: ['Wildlife', 'Photography', 'Hiking'] },
-    { id: 6, name: 'Tokyo City Pass', points: 1800, category: 'Experience Package', destination: 'Tokyo, Japan', icon: MapPin, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary', 'Shopping'] },
-    { id: 7, name: 'Swiss Alps Ski Resort', points: 3500, category: 'Hotel Stay', destination: 'Switzerland', icon: Hotel, available: true, travelType: 'Adventure', activities: ['Skiing', 'Winter Sports'] },
-    { id: 8, name: 'Maldives Luxury Resort', points: 6000, category: 'Hotel Stay', destination: 'Maldives', icon: Hotel, available: true, travelType: 'Luxury', activities: ['Spa', 'Water Sports', 'Relaxation'] },
-    { id: 9, name: 'Rome Historical Tour', points: 2800, category: 'Experience Package', destination: 'Rome, Italy', icon: MapPin, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Museums', 'Culinary'] },
+    { id: 1, name: 'Paris Weekend Getaway', points: 2500, category: 'Hotel Stay', destination: 'Paris, France', icon: Hotel, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary', 'Museums'], duration: 'weekend' },
+    { id: 2, name: 'Round-trip Flight Voucher', points: 3000, category: 'Flight Voucher', destination: 'Anywhere in Europe', icon: Plane, available: true, travelType: 'Flexible', activities: [], duration: '' },
+    { id: 3, name: 'Bali Yoga Retreat', points: 4000, category: 'Experience Package', destination: 'Bali, Indonesia', icon: MapPin, available: true, travelType: 'Wellness', activities: ['Spa', 'Yoga'], duration: 'week' },
+    { id: 4, name: 'Airbnb Gift Card - $500', points: 1500, category: 'Travel Gift Card', destination: 'Global', icon: Gift, available: true, travelType: 'Flexible', activities: [], duration: '' },
+    { id: 5, name: 'Safari Adventure', points: 5000, category: 'Experience Package', destination: 'Tanzania', icon: MapPin, available: true, travelType: 'Adventure', activities: ['Wildlife', 'Photography', 'Hiking'], duration: 'extended' },
+    { id: 6, name: 'Tokyo City Pass', points: 1800, category: 'Experience Package', destination: 'Tokyo, Japan', icon: MapPin, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary', 'Shopping'], duration: 'short' },
+    { id: 7, name: 'Swiss Alps Ski Resort', points: 3500, category: 'Hotel Stay', destination: 'Switzerland', icon: Hotel, available: true, travelType: 'Adventure', activities: ['Skiing'], duration: 'week' },
+    { id: 8, name: 'Maldives Luxury Resort', points: 6000, category: 'Hotel Stay', destination: 'Maldives', icon: Hotel, available: true, travelType: 'Luxury', activities: ['Spa', 'Water Sports'], duration: 'extended' },
+    { id: 9, name: 'Rome Historical Tour', points: 2800, category: 'Experience Package', destination: 'Rome, Italy', icon: MapPin, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Museums', 'Culinary'], duration: 'short' },
+    { id: 10, name: 'Caribbean Cruise', points: 4500, category: 'Experience Package', destination: 'Caribbean', icon: Plane, available: true, travelType: 'Luxury', activities: ['Water Sports', 'Relaxation'], duration: 'week' },
+    { id: 11, name: 'Iceland Northern Lights', points: 3800, category: 'Experience Package', destination: 'Iceland', icon: MapPin, available: true, travelType: 'Adventure', activities: ['Photography', 'Hiking', 'Sightseeing'], duration: 'short' },
+    { id: 12, name: 'Thailand Beach Resort', points: 2200, category: 'Hotel Stay', destination: 'Thailand', icon: Hotel, available: true, travelType: 'Relaxation', activities: ['Spa', 'Water Sports'], duration: 'week' },
   ];
 
-  // Calculate personalization score based on preferences
+  // Calculate personalization score based on both saved preferences and active filters
   const getPersonalizationScore = (reward: typeof mockRewards[0]) => {
-    if (!preferences) return 0;
     let score = 0;
 
+    // Use active filters if set, otherwise fall back to preferences
+    const travelTypesToCheck = activeFilters.travelTypes.length > 0 
+      ? activeFilters.travelTypes 
+      : preferences?.preferred_travel_types || [];
+    
+    const activitiesToCheck = activeFilters.activities.length > 0
+      ? activeFilters.activities
+      : preferences?.preferred_activities || [];
+    
+    const destinationsToCheck = activeFilters.destinations.length > 0
+      ? activeFilters.destinations
+      : preferences?.favorite_destinations || [];
+
     // Match travel type
-    if (preferences.preferred_travel_types.some(type => 
+    if (travelTypesToCheck.some(type => 
       reward.travelType.toLowerCase().includes(type.toLowerCase())
     )) {
       score += 3;
     }
 
     // Match destination
-    if (preferences.favorite_destinations.some(dest =>
+    if (destinationsToCheck.some(dest =>
       reward.destination.toLowerCase().includes(dest.toLowerCase())
     )) {
       score += 3;
@@ -47,11 +70,17 @@ export default function Rewards() {
 
     // Match activities
     const matchingActivities = reward.activities.filter(activity =>
-      preferences.preferred_activities.some(pref =>
+      activitiesToCheck.some(pref =>
         activity.toLowerCase().includes(pref.toLowerCase())
       )
     );
     score += matchingActivities.length;
+
+    // Match duration
+    const durationToCheck = activeFilters.duration || preferences?.trip_duration_preference || '';
+    if (durationToCheck && reward.duration === durationToCheck) {
+      score += 2;
+    }
 
     return score;
   };
@@ -66,7 +95,24 @@ export default function Rewards() {
     const matchesSearch = reward.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          reward.destination.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !selectedCategory || reward.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    
+    // Apply active filters
+    const matchesTravelType = activeFilters.travelTypes.length === 0 || 
+      activeFilters.travelTypes.some(type => reward.travelType.toLowerCase().includes(type.toLowerCase()));
+    
+    const matchesActivities = activeFilters.activities.length === 0 ||
+      activeFilters.activities.some(activity => 
+        reward.activities.some(a => a.toLowerCase().includes(activity.toLowerCase()))
+      );
+    
+    const matchesDestination = activeFilters.destinations.length === 0 ||
+      activeFilters.destinations.some(dest => 
+        reward.destination.toLowerCase().includes(dest.toLowerCase())
+      );
+    
+    const matchesDuration = !activeFilters.duration || reward.duration === activeFilters.duration;
+    
+    return matchesSearch && matchesCategory && matchesTravelType && matchesActivities && matchesDestination && matchesDuration;
   });
 
   const recommendedRewards = filteredRewards.filter(r => r.personalizedScore >= 3);
@@ -87,16 +133,25 @@ export default function Rewards() {
         </div>
 
         {/* Search & Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search destinations and experiences..." 
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search destinations and experiences..." 
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <RewardsFilters
+              preferences={preferences}
+              onPreferencesUpdate={refreshPreferences}
+              activeFilters={activeFilters}
+              onFiltersChange={setActiveFilters}
             />
           </div>
+          
           <div className="flex gap-2 overflow-x-auto">
             <Badge 
               variant={selectedCategory === null ? "default" : "outline"}
