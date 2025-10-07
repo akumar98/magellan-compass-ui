@@ -12,16 +12,16 @@ export default function EmployeeDashboard() {
     <div className="space-y-6 animate-fade-in">
       {/* Welcome Section */}
       <div>
-        <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name?.split(' ')[0]}! 👋</h1>
-        <p className="text-muted-foreground">Track your points and explore available rewards</p>
+        <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.full_name?.split(' ')[0]}! 👋</h1>
+        <p className="text-muted-foreground">Track your milestones and explore available rewards</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
-          title="Available Points"
-          value={user?.points?.toLocaleString() || '0'}
-          subtitle="Ready to redeem"
+          title="Wallet Balance"
+          value="Coming Soon"
+          subtitle="Funds available"
           icon={<Award className="h-6 w-6" />}
           color="primary"
         />

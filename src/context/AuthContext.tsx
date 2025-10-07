@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthContextType, UserRole } from '@/types';
+import { supabase } from '@/integrations/supabase/client';
+import type { Session } from '@supabase/supabase-js';
+import { toast } from 'sonner';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -13,60 +16,103 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate checking for existing session
-    const storedUser = localStorage.getItem('magellan_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (profileError) throw profileError;
+
+      const { data: userRole, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role, company_id')
+        .eq('user_id', userId)
+        .single();
+
+      if (roleError) throw roleError;
+
+      return {
+        ...profile,
+        role: userRole.role,
+        company_id: userRole.company_id,
+      } as User;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return null;
     }
-    setLoading(false);
+  };
+
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        setSession(currentSession);
+        
+        if (currentSession?.user && event !== 'SIGNED_OUT') {
+          // Defer profile fetch to avoid blocking
+          setTimeout(() => {
+            fetchUserProfile(currentSession.user.id).then(setUser);
+          }, 0);
+        } else {
+          setUser(null);
+        }
+        
+        setLoading(false);
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      if (currentSession?.user) {
+        fetchUserProfile(currentSession.user.id).then(setUser);
+      }
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
-    setLoading(true);
-    
-    // Mock authentication - will be replaced with real auth
-    // Demo users for testing
-    let mockUser: User;
-    
-    if (email.includes('admin')) {
-      mockUser = {
-        id: '1',
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        name: 'Admin User',
-        role: 'admin',
-      };
-    } else if (email.includes('employer')) {
-      mockUser = {
-        id: '2',
-        email,
-        name: 'Employer User',
-        role: 'employer',
-        companyId: 'company-1',
-        companyName: 'Acme Corp',
-      };
-    } else {
-      mockUser = {
-        id: '3',
-        email,
-        name: 'Employee User',
-        role: 'employee',
-        companyId: 'company-1',
-        companyName: 'Acme Corp',
-        points: 2450,
-      };
-    }
+        password,
+      });
 
-    localStorage.setItem('magellan_user', JSON.stringify(mockUser));
-    setUser(mockUser);
-    setLoading(false);
+      if (error) throw error;
+
+      if (data.user) {
+        const profile = await fetchUserProfile(data.user.id);
+        setUser(profile);
+        toast.success('Welcome back!');
+      }
+    } catch (error: any) {
+      console.error('Login error:', error);
+      toast.error(error.message || 'Failed to login');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = async () => {
-    localStorage.removeItem('magellan_user');
-    setUser(null);
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+      toast.success('Logged out successfully');
+    } catch (error: any) {
+      console.error('Logout error:', error);
+      toast.error('Failed to logout');
+    }
   };
 
   const isRole = (role: UserRole) => user?.role === role;

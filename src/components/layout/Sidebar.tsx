@@ -117,20 +117,14 @@ export const Sidebar = () => {
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-primary font-semibold text-sm">
-                {user.name.split(' ').map(n => n[0]).join('')}
+                {user.full_name.split(' ').map(n => n[0]).join('')}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">{user.name}</p>
+              <p className="font-medium text-sm truncate">{user.full_name}</p>
               <p className="text-xs text-muted-foreground capitalize">{user.role}</p>
             </div>
           </div>
-          {user.role === 'employee' && user.points !== undefined && (
-            <div className="mt-3 p-2 bg-primary/5 rounded-lg">
-              <p className="text-xs text-muted-foreground">Available Points</p>
-              <p className="text-lg font-bold text-primary">{user.points.toLocaleString()}</p>
-            </div>
-          )}
         </div>
       )}
 

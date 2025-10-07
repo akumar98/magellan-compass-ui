@@ -81,16 +81,16 @@ export const Navbar = () => {
               <Button variant="ghost" className="gap-2">
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                   <span className="text-primary font-semibold text-xs">
-                    {user?.name.split(' ').map(n => n[0]).join('')}
+                    {user?.full_name.split(' ').map(n => n[0]).join('')}
                   </span>
                 </div>
-                <span className="hidden lg:inline-block font-medium text-sm">{user?.name}</span>
+                <span className="hidden lg:inline-block font-medium text-sm">{user?.full_name}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>
                 <div className="flex flex-col">
-                  <span>{user?.name}</span>
+                  <span>{user?.full_name}</span>
                   <span className="text-xs text-muted-foreground font-normal">{user?.email}</span>
                 </div>
               </DropdownMenuLabel>
