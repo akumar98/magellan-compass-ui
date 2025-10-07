@@ -31,7 +31,7 @@ export default function EmployerDashboard() {
           color="warning"
         />
         <StatsCard
-          title="Active Rewards"
+          title="Travel Rewards Booked"
           value="156"
           subtitle="This month"
           icon={<Award className="h-6 w-6" />}
@@ -55,7 +55,7 @@ export default function EmployerDashboard() {
             <div>
               <h3 className="text-lg font-semibold mb-2">Pending Approvals</h3>
               <p className="text-sm text-muted-foreground">
-                7 reward requests need your attention
+                7 travel reward requests need your attention
               </p>
             </div>
             <div className="h-12 w-12 rounded-xl bg-warning/10 flex items-center justify-center">
@@ -90,9 +90,9 @@ export default function EmployerDashboard() {
         <h2 className="text-2xl font-bold mb-4">Recent Team Activity</h2>
         <div className="card-stat space-y-4">
           {[
-            { name: 'Sarah Johnson', action: 'claimed Premium Headphones', points: '500 pts', time: '2 hours ago' },
+            { name: 'Sarah Johnson', action: 'booked Paris Weekend Getaway', points: '2500 pts', time: '2 hours ago' },
             { name: 'Mike Chen', action: 'earned points for project completion', points: '+350 pts', time: '5 hours ago' },
-            { name: 'Emily Davis', action: 'requested Gift Card', points: '300 pts', time: '1 day ago' },
+            { name: 'Emily Davis', action: 'requested Flight Voucher', points: '3000 pts', time: '1 day ago' },
           ].map((activity, index) => (
             <div key={index} className="flex items-center justify-between py-3 border-b border-border last:border-0">
               <div className="flex items-center gap-3">

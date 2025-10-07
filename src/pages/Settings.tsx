@@ -68,8 +68,8 @@ export default function Settings() {
             <Separator />
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-medium">Reward Updates</p>
-                <p className="text-sm text-muted-foreground">Get notified about new rewards</p>
+                <p className="font-medium">Travel Reward Updates</p>
+                <p className="text-sm text-muted-foreground">Get notified about new destinations</p>
               </div>
               <Switch defaultChecked />
             </div>

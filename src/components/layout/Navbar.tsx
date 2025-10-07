@@ -31,7 +31,7 @@ export const Navbar = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search rewards, employees..."
+              placeholder="Search travel rewards, employees..."
               className="pl-10"
             />
           </div>
@@ -56,14 +56,14 @@ export const Navbar = () => {
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex flex-col items-start py-3">
-                <p className="font-medium text-sm">Reward Request Approved</p>
-                <p className="text-xs text-muted-foreground">Your request for Premium Headphones has been approved.</p>
+                <p className="font-medium text-sm">Travel Reward Request Approved</p>
+                <p className="text-xs text-muted-foreground">Your Paris getaway has been approved!</p>
                 <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="flex flex-col items-start py-3">
-                <p className="font-medium text-sm">New Reward Available</p>
-                <p className="text-xs text-muted-foreground">Check out the latest items in the catalog!</p>
+                <p className="font-medium text-sm">New Destinations Available</p>
+                <p className="text-xs text-muted-foreground">Check out new travel experiences in the catalog!</p>
                 <p className="text-xs text-muted-foreground mt-1">1 day ago</p>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

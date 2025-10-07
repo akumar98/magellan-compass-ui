@@ -18,16 +18,16 @@ export default function Community() {
       answer: 'You earn points through various activities like completing projects, reaching milestones, participating in company events, and receiving recognition from peers and managers.',
     },
     {
-      question: 'How long does it take to process reward requests?',
-      answer: 'Most reward requests are processed within 24-48 hours. You will receive a notification once your request is approved or if any additional information is needed.',
+      question: 'How long does it take to process travel reward requests?',
+      answer: 'Most travel reward requests are processed within 24-48 hours. You will receive a notification once your request is approved or if any additional information is needed.',
     },
     {
       question: 'Can I save my points for later?',
-      answer: 'Yes! Your points never expire. You can accumulate them and redeem them whenever you want for any available rewards in the catalog.',
+      answer: 'Yes! Your points never expire. You can accumulate them and redeem them whenever you want for any available travel rewards in the catalog.',
     },
     {
-      question: 'What happens if a reward is out of stock?',
-      answer: 'If a reward is out of stock, you can add it to your wishlist. You will be notified when it becomes available again.',
+      question: 'What happens if a travel experience is unavailable?',
+      answer: 'If a destination or experience is unavailable, you can add it to your wishlist. You will be notified when it becomes available again.',
     },
     {
       question: 'How do I track my point history?',

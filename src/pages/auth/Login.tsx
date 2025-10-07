@@ -93,7 +93,7 @@ export default function Login() {
           <h1 className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
             Magellan One AI
           </h1>
-          <p className="text-muted-foreground">Milestone-driven travel & wellness rewards</p>
+          <p className="text-muted-foreground">Milestone-driven travel rewards platform</p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">

@@ -26,7 +26,7 @@ export default function EmployeeDashboard() {
           color="primary"
         />
         <StatsCard
-          title="Rewards Claimed"
+          title="Travel Rewards Claimed"
           value="8"
           subtitle="This year"
           icon={<Gift className="h-6 w-6" />}
@@ -65,7 +65,7 @@ export default function EmployeeDashboard() {
         <div className="card-stat bg-gradient-to-br from-secondary/10 to-secondary/5">
           <h3 className="text-lg font-semibold mb-2">Recent Activity</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            View your points history and claimed rewards
+            View your points history and claimed travel rewards
           </p>
           <Button variant="outline" onClick={() => navigate('/employee/activity')}>
             View Activity

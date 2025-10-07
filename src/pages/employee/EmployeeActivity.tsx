@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/badge';
 export default function EmployeeActivity() {
   const activities = [
     { type: 'earned', description: 'Project completion bonus', points: '+500', date: '2024-01-15', icon: TrendingUp, color: 'success' },
-    { type: 'claimed', description: 'Premium Headphones', points: '-800', date: '2024-01-12', icon: Gift, color: 'primary' },
+    { type: 'claimed', description: 'Paris Weekend Getaway', points: '-2500', date: '2024-01-12', icon: Gift, color: 'primary' },
     { type: 'earned', description: 'Monthly achievement', points: '+350', date: '2024-01-10', icon: Award, color: 'accent' },
     { type: 'earned', description: 'Team collaboration', points: '+200', date: '2024-01-08', icon: TrendingUp, color: 'success' },
-    { type: 'claimed', description: 'Gift Card - $50', points: '-300', date: '2024-01-05', icon: Gift, color: 'primary' },
+    { type: 'claimed', description: 'Flight Voucher to Europe', points: '-3000', date: '2024-01-05', icon: Gift, color: 'primary' },
     { type: 'earned', description: 'Customer satisfaction', points: '+450', date: '2024-01-03', icon: Award, color: 'accent' },
   ];
 
@@ -18,7 +18,7 @@ export default function EmployeeActivity() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold mb-2">My Activity</h1>
-          <p className="text-muted-foreground">Track your points history and claimed rewards</p>
+          <p className="text-muted-foreground">Track your points history and claimed travel rewards</p>
         </div>
 
         {/* Summary Cards */}

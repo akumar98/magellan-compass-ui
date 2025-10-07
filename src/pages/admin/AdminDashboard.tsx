@@ -33,9 +33,9 @@ export default function AdminDashboard() {
           trend={{ value: 12, isPositive: true }}
         />
         <StatsCard
-          title="Active Rewards"
+          title="Travel Rewards"
           value="89"
-          subtitle="In catalog"
+          subtitle="Destinations available"
           icon={<Gift className="h-6 w-6" />}
           color="accent"
         />
@@ -81,9 +81,9 @@ export default function AdminDashboard() {
           <div className="h-12 w-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
             <Gift className="h-6 w-6 text-accent" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">Manage Rewards</h3>
+          <h3 className="text-lg font-semibold mb-2">Manage Travel Rewards</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Add and edit reward catalog
+            Add and edit travel experiences catalog
           </p>
           <Button variant="outline" onClick={() => navigate('/admin/rewards')}>
             Manage Catalog
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
           {[
             { company: 'Acme Corp', event: 'New company registered', time: '2 hours ago', type: 'company' },
             { company: 'TechStart Inc', event: '15 new employees added', time: '5 hours ago', type: 'users' },
-            { company: 'Global Solutions', event: 'Reward catalog updated', time: '1 day ago', type: 'reward' },
+            { company: 'Global Solutions', event: 'Travel rewards catalog updated', time: '1 day ago', type: 'reward' },
             { company: 'Innovation Labs', event: 'Monthly report generated', time: '2 days ago', type: 'report' },
           ].map((activity, index) => (
             <div key={index} className="flex items-center justify-between py-3 border-b border-border last:border-0">
