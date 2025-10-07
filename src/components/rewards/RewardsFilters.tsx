@@ -249,15 +249,15 @@ export function RewardsFilters({ preferences, onPreferencesUpdate, activeFilters
           <div className="space-y-2">
             <Label className="text-base font-semibold">Trip Duration</Label>
             <Select
-              value={activeFilters.duration}
-              onValueChange={handleDurationChange}
+              value={activeFilters.duration || "any"}
+              onValueChange={(value) => handleDurationChange(value === "any" ? "" : value)}
               disabled={isSaving}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Any duration" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Any duration</SelectItem>
+                <SelectItem value="any">Any duration</SelectItem>
                 <SelectItem value="weekend">Weekend (2-3 days)</SelectItem>
                 <SelectItem value="short">Short (4-6 days)</SelectItem>
                 <SelectItem value="week">Week (7-10 days)</SelectItem>
@@ -293,7 +293,10 @@ export function RewardsFilters({ preferences, onPreferencesUpdate, activeFilters
                   ))}
                   {activeFilters.duration && (
                     <Badge variant="secondary" className="cursor-pointer" onClick={() => handleDurationChange('')}>
-                      {activeFilters.duration}
+                      {activeFilters.duration === 'weekend' ? 'Weekend (2-3 days)' :
+                       activeFilters.duration === 'short' ? 'Short (4-6 days)' :
+                       activeFilters.duration === 'week' ? 'Week (7-10 days)' :
+                       activeFilters.duration === 'extended' ? 'Extended (11+ days)' : activeFilters.duration}
                       <X className="h-3 w-3 ml-1" />
                     </Badge>
                   )}
