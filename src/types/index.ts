@@ -55,6 +55,9 @@ export interface RewardPackage {
   image_url?: string;
   vendor_id?: string;
   availability_status?: string;
+  travel_type?: string;
+  activities?: string[];
+  duration?: string;
 }
 
 export interface WalletTransaction {
