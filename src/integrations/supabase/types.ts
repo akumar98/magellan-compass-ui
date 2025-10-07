@@ -14,16 +14,489 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      approvals: {
+        Row: {
+          approved_at: string | null
+          comments: string | null
+          created_at: string | null
+          employee_contribution: number | null
+          employer_contribution: number | null
+          id: string
+          manager_id: string
+          package_id: string
+          requested_by: string
+          status: Database["public"]["Enums"]["approval_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          comments?: string | null
+          created_at?: string | null
+          employee_contribution?: number | null
+          employer_contribution?: number | null
+          id?: string
+          manager_id: string
+          package_id: string
+          requested_by: string
+          status?: Database["public"]["Enums"]["approval_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          comments?: string | null
+          created_at?: string | null
+          employee_contribution?: number | null
+          employer_contribution?: number | null
+          id?: string
+          manager_id?: string
+          package_id?: string
+          requested_by?: string
+          status?: Database["public"]["Enums"]["approval_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approvals_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvals_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "reward_packages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvals_requested_by_fkey"
+            columns: ["requested_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      companies: {
+        Row: {
+          created_at: string | null
+          employee_count: number | null
+          id: string
+          industry: string | null
+          monthly_budget: number | null
+          name: string
+          settings: Json | null
+          updated_at: string | null
+          wallet_balance: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          employee_count?: number | null
+          id?: string
+          industry?: string | null
+          monthly_budget?: number | null
+          name: string
+          settings?: Json | null
+          updated_at?: string | null
+          wallet_balance?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          employee_count?: number | null
+          id?: string
+          industry?: string | null
+          monthly_budget?: number | null
+          name?: string
+          settings?: Json | null
+          updated_at?: string | null
+          wallet_balance?: number | null
+        }
+        Relationships: []
+      }
+      hris_events: {
+        Row: {
+          created_at: string | null
+          employee_id: string
+          event_data: Json | null
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          processed: boolean | null
+          source: Database["public"]["Enums"]["event_source"]
+        }
+        Insert: {
+          created_at?: string | null
+          employee_id: string
+          event_data?: Json | null
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          processed?: boolean | null
+          source: Database["public"]["Enums"]["event_source"]
+        }
+        Update: {
+          created_at?: string | null
+          employee_id?: string
+          event_data?: Json | null
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          processed?: boolean | null
+          source?: Database["public"]["Enums"]["event_source"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hris_events_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      milestones: {
+        Row: {
+          behavioral_data: Json | null
+          confidence_score: number | null
+          created_at: string | null
+          employee_id: string
+          id: string
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
+          predicted_date: string | null
+          status: Database["public"]["Enums"]["milestone_status"] | null
+          trigger_date: string
+          updated_at: string | null
+        }
+        Insert: {
+          behavioral_data?: Json | null
+          confidence_score?: number | null
+          created_at?: string | null
+          employee_id: string
+          id?: string
+          milestone_type: Database["public"]["Enums"]["milestone_type"]
+          predicted_date?: string | null
+          status?: Database["public"]["Enums"]["milestone_status"] | null
+          trigger_date: string
+          updated_at?: string | null
+        }
+        Update: {
+          behavioral_data?: Json | null
+          confidence_score?: number | null
+          created_at?: string | null
+          employee_id?: string
+          id?: string
+          milestone_type?: Database["public"]["Enums"]["milestone_type"]
+          predicted_date?: string | null
+          status?: Database["public"]["Enums"]["milestone_status"] | null
+          trigger_date?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "milestones_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      package_feedback: {
+        Row: {
+          customization_requests: Json | null
+          employee_id: string
+          id: string
+          package_id: string
+          preference_data: Json | null
+          rating: number | null
+          submitted_at: string | null
+        }
+        Insert: {
+          customization_requests?: Json | null
+          employee_id: string
+          id?: string
+          package_id: string
+          preference_data?: Json | null
+          rating?: number | null
+          submitted_at?: string | null
+        }
+        Update: {
+          customization_requests?: Json | null
+          employee_id?: string
+          id?: string
+          package_id?: string
+          preference_data?: Json | null
+          rating?: number | null
+          submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "package_feedback_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "package_feedback_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "reward_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          company_id: string | null
+          created_at: string | null
+          department: string | null
+          email: string
+          full_name: string
+          hire_date: string | null
+          id: string
+          manager_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          department?: string | null
+          email: string
+          full_name: string
+          hire_date?: string | null
+          id: string
+          manager_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          department?: string | null
+          email?: string
+          full_name?: string
+          hire_date?: string | null
+          id?: string
+          manager_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reward_packages: {
+        Row: {
+          ai_reasoning: string | null
+          category: Database["public"]["Enums"]["reward_category"]
+          created_at: string | null
+          description: string | null
+          estimated_cost: number
+          id: string
+          milestone_id: string
+          options: Json | null
+          preference_score: number | null
+          status: Database["public"]["Enums"]["package_status"] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          category: Database["public"]["Enums"]["reward_category"]
+          created_at?: string | null
+          description?: string | null
+          estimated_cost: number
+          id?: string
+          milestone_id: string
+          options?: Json | null
+          preference_score?: number | null
+          status?: Database["public"]["Enums"]["package_status"] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          ai_reasoning?: string | null
+          category?: Database["public"]["Enums"]["reward_category"]
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number
+          id?: string
+          milestone_id?: string
+          options?: Json | null
+          preference_score?: number | null
+          status?: Database["public"]["Enums"]["package_status"] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_packages_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          company_id: string | null
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          approved_by: string | null
+          balance_after: number
+          created_at: string | null
+          employee_id: string
+          id: string
+          milestone_id: string | null
+          notes: string | null
+          package_id: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+        }
+        Insert: {
+          amount: number
+          approved_by?: string | null
+          balance_after: number
+          created_at?: string | null
+          employee_id: string
+          id?: string
+          milestone_id?: string | null
+          notes?: string | null
+          package_id?: string | null
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+        }
+        Update: {
+          amount?: number
+          approved_by?: string | null
+          balance_after?: number
+          created_at?: string | null
+          employee_id?: string
+          id?: string
+          milestone_id?: string | null
+          notes?: string | null
+          package_id?: string | null
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_transactions_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "wallet_transactions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "reward_packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_company_id: {
+        Args: { _user_id: string }
+        Returns: string
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "employer" | "employee"
+      approval_status: "pending" | "approved" | "rejected"
+      event_source: "workday" | "adp" | "bamboo" | "slack" | "manual"
+      event_type:
+        | "hire"
+        | "promotion"
+        | "team_change"
+        | "pto"
+        | "collaboration"
+        | "performance_review"
+      milestone_status: "pending" | "active" | "completed" | "expired"
+      milestone_type:
+        | "anniversary"
+        | "burnout_risk"
+        | "life_event"
+        | "achievement"
+      package_status:
+        | "draft"
+        | "pending_approval"
+        | "approved"
+        | "rejected"
+        | "redeemed"
+      reward_category: "travel" | "wellness" | "learning" | "equity"
+      transaction_type:
+        | "employer_contribution"
+        | "employee_contribution"
+        | "reward_redemption"
+        | "milestone_bonus"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +623,39 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "employer", "employee"],
+      approval_status: ["pending", "approved", "rejected"],
+      event_source: ["workday", "adp", "bamboo", "slack", "manual"],
+      event_type: [
+        "hire",
+        "promotion",
+        "team_change",
+        "pto",
+        "collaboration",
+        "performance_review",
+      ],
+      milestone_status: ["pending", "active", "completed", "expired"],
+      milestone_type: [
+        "anniversary",
+        "burnout_risk",
+        "life_event",
+        "achievement",
+      ],
+      package_status: [
+        "draft",
+        "pending_approval",
+        "approved",
+        "rejected",
+        "redeemed",
+      ],
+      reward_category: ["travel", "wellness", "learning", "equity"],
+      transaction_type: [
+        "employer_contribution",
+        "employee_contribution",
+        "reward_redemption",
+        "milestone_bonus",
+      ],
+    },
   },
 } as const
