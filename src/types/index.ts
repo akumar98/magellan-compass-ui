@@ -2,7 +2,7 @@ export type UserRole = 'admin' | 'employer' | 'employee';
 
 export type MilestoneType = 'anniversary' | 'burnout_risk' | 'life_event' | 'achievement';
 export type MilestoneStatus = 'pending' | 'active' | 'completed' | 'expired';
-export type RewardCategory = 'travel' | 'wellness' | 'learning' | 'equity';
+export type RewardCategory = 'flight_voucher' | 'hotel_stay' | 'experience_package' | 'travel_gift_card';
 export type PackageStatus = 'draft' | 'pending_approval' | 'approved' | 'rejected' | 'redeemed';
 export type TransactionType = 'employer_contribution' | 'employee_contribution' | 'reward_redemption' | 'milestone_bonus';
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
@@ -51,6 +51,10 @@ export interface RewardPackage {
   preference_score: number;
   options: Record<string, any>;
   status: PackageStatus;
+  destination?: string;
+  image_url?: string;
+  vendor_id?: string;
+  availability_status?: string;
 }
 
 export interface WalletTransaction {

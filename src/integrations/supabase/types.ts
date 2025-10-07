@@ -301,45 +301,57 @@ export type Database = {
       reward_packages: {
         Row: {
           ai_reasoning: string | null
+          availability_status: string | null
           category: Database["public"]["Enums"]["reward_category"]
           created_at: string | null
           description: string | null
+          destination: string | null
           estimated_cost: number
           id: string
+          image_url: string | null
           milestone_id: string
           options: Json | null
           preference_score: number | null
           status: Database["public"]["Enums"]["package_status"] | null
           title: string
           updated_at: string | null
+          vendor_id: string | null
         }
         Insert: {
           ai_reasoning?: string | null
+          availability_status?: string | null
           category: Database["public"]["Enums"]["reward_category"]
           created_at?: string | null
           description?: string | null
+          destination?: string | null
           estimated_cost: number
           id?: string
+          image_url?: string | null
           milestone_id: string
           options?: Json | null
           preference_score?: number | null
           status?: Database["public"]["Enums"]["package_status"] | null
           title: string
           updated_at?: string | null
+          vendor_id?: string | null
         }
         Update: {
           ai_reasoning?: string | null
+          availability_status?: string | null
           category?: Database["public"]["Enums"]["reward_category"]
           created_at?: string | null
           description?: string | null
+          destination?: string | null
           estimated_cost?: number
           id?: string
+          image_url?: string | null
           milestone_id?: string
           options?: Json | null
           preference_score?: number | null
           status?: Database["public"]["Enums"]["package_status"] | null
           title?: string
           updated_at?: string | null
+          vendor_id?: string | null
         }
         Relationships: [
           {
@@ -491,7 +503,15 @@ export type Database = {
         | "approved"
         | "rejected"
         | "redeemed"
-      reward_category: "travel" | "wellness" | "learning" | "equity"
+      reward_category:
+        | "travel"
+        | "wellness"
+        | "learning"
+        | "equity"
+        | "flight_voucher"
+        | "hotel_stay"
+        | "experience_package"
+        | "travel_gift_card"
       transaction_type:
         | "employer_contribution"
         | "employee_contribution"
@@ -649,7 +669,16 @@ export const Constants = {
         "rejected",
         "redeemed",
       ],
-      reward_category: ["travel", "wellness", "learning", "equity"],
+      reward_category: [
+        "travel",
+        "wellness",
+        "learning",
+        "equity",
+        "flight_voucher",
+        "hotel_stay",
+        "experience_package",
+        "travel_gift_card",
+      ],
       transaction_type: [
         "employer_contribution",
         "employee_contribution",

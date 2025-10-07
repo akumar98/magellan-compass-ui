@@ -13,7 +13,7 @@ export default function EmployeeDashboard() {
       {/* Welcome Section */}
       <div>
         <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.full_name?.split(' ')[0]}! 👋</h1>
-        <p className="text-muted-foreground">Track your milestones and explore available rewards</p>
+        <p className="text-muted-foreground">Track your milestones and explore travel rewards</p>
       </div>
 
       {/* Stats Grid */}
@@ -53,9 +53,9 @@ export default function EmployeeDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="card-stat bg-gradient-to-br from-primary/10 to-primary/5">
-          <h3 className="text-lg font-semibold mb-2">Browse Rewards</h3>
+          <h3 className="text-lg font-semibold mb-2">Browse Travel Rewards</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Discover amazing rewards you can claim with your points
+            Discover amazing travel experiences and destinations with your points
           </p>
           <Button onClick={() => navigate('/rewards')}>
             View Catalog
@@ -73,10 +73,10 @@ export default function EmployeeDashboard() {
         </div>
       </div>
 
-      {/* Featured Rewards */}
+      {/* Featured Travel Rewards */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Featured Rewards</h2>
+          <h2 className="text-2xl font-bold">Featured Travel Rewards</h2>
           <Button variant="ghost" onClick={() => navigate('/rewards')}>
             View All
           </Button>

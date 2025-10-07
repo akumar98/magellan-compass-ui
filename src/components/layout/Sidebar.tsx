@@ -68,7 +68,7 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
-    label: 'Rewards Catalog',
+    label: 'Travel Rewards',
     path: '/rewards',
     icon: <Gift className="h-5 w-5" />,
     roles: ['employee'],
@@ -108,7 +108,7 @@ export const Sidebar = () => {
         <h1 className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
           Magellan One
         </h1>
-        <p className="text-xs text-muted-foreground mt-1">Employee Rewards Platform</p>
+        <p className="text-xs text-muted-foreground mt-1">Travel Rewards Platform</p>
       </div>
 
       {/* User Info */}
