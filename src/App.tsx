@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Login from "./pages/auth/Login";
 import Dashboard from "./pages/Dashboard";
 import Rewards from "./pages/Rewards";
+import RewardDetail from "./pages/RewardDetail";
 import Community from "./pages/Community";
 import Settings from "./pages/Settings";
 import EmployeeActivity from "./pages/employee/EmployeeActivity";
@@ -33,6 +34,7 @@ const App = () => (
             
             {/* Feature routes */}
             <Route path="/rewards" element={<Rewards />} />
+            <Route path="/rewards/:id" element={<RewardDetail />} />
             <Route path="/community" element={<Community />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/employee/activity" element={<EmployeeActivity />} />

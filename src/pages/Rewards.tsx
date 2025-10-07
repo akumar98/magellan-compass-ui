@@ -1,5 +1,6 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Plane, Search, Hotel, MapPin, Sparkles, Heart, Activity } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -270,59 +271,64 @@ export default function Rewards() {
               {recommendedRewards.map((reward) => {
                 const IconComponent = reward.icon;
                 return (
-              <div key={reward.id} className="card-reward group hover:shadow-lg transition-shadow">
-                <div className="h-48 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 flex flex-col items-center justify-center relative overflow-hidden">
-                  <div className="absolute top-3 right-3 z-10 flex gap-2">
-                    <Badge className="bg-primary text-primary-foreground">
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      For You
-                    </Badge>
-                    {isAtBurnoutRisk && reward.isWellness && (
-                      <Badge className="bg-orange-500 text-white">
-                        <Heart className="h-3 w-3 mr-1" />
-                        Wellness
+              <Link key={reward.id} to={`/rewards/${reward.id}`} className="block">
+                <div className="card-reward group hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="h-48 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 flex flex-col items-center justify-center relative overflow-hidden">
+                    <div className="absolute top-3 right-3 z-10 flex gap-2">
+                      <Badge className="bg-primary text-primary-foreground">
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        For You
                       </Badge>
+                      {isAtBurnoutRisk && reward.isWellness && (
+                        <Badge className="bg-orange-500 text-white">
+                          <Heart className="h-3 w-3 mr-1" />
+                          Wellness
+                        </Badge>
+                      )}
+                    </div>
+                    {reward.imageUrl ? (
+                      <>
+                        <img 
+                          src={reward.imageUrl} 
+                          alt={reward.name}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
+                      </>
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                        <IconComponent className="h-16 w-16 text-primary relative z-10 group-hover:scale-110 transition-transform" />
+                      </>
                     )}
+                    <MapPin className="h-4 w-4 text-white/80 absolute bottom-2 right-2 z-10 drop-shadow-lg" />
                   </div>
-                  {reward.imageUrl ? (
-                    <>
-                      <img 
-                        src={reward.imageUrl} 
-                        alt={reward.name}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
-                    </>
-                  ) : (
-                    <>
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                      <IconComponent className="h-16 w-16 text-primary relative z-10 group-hover:scale-110 transition-transform" />
-                    </>
-                  )}
-                  <MapPin className="h-4 w-4 text-white/80 absolute bottom-2 right-2 z-10 drop-shadow-lg" />
-                </div>
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-lg">{reward.name}</h3>
-                        <Badge variant="secondary" className="text-xs whitespace-nowrap">{reward.category}</Badge>
-                      </div>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
-                        <MapPin className="h-3 w-3" />
-                        <span>{reward.destination}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-primary">{reward.points} pts</span>
-                        <Button 
-                          size="sm" 
-                          className="group-hover:bg-primary group-hover:text-primary-foreground"
-                          onClick={() => handleClaimClick(reward)}
-                        >
-                          Book Now
-                        </Button>
-                      </div>
+                  <div className="p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-semibold text-lg">{reward.name}</h3>
+                      <Badge variant="secondary" className="text-xs whitespace-nowrap">{reward.category}</Badge>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
+                      <MapPin className="h-3 w-3" />
+                      <span>{reward.destination}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-bold text-primary">{reward.points} pts</span>
+                      <Button 
+                        size="sm" 
+                        className="group-hover:bg-primary group-hover:text-primary-foreground"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleClaimClick(reward);
+                        }}
+                      >
+                        Book Now
+                      </Button>
                     </div>
                   </div>
+                </div>
+              </Link>
                 );
               })}
             </div>
@@ -338,7 +344,8 @@ export default function Rewards() {
             {otherRewards.map((reward) => {
             const IconComponent = reward.icon;
             return (
-              <div key={reward.id} className="card-reward group hover:shadow-lg transition-shadow">
+              <Link key={reward.id} to={`/rewards/${reward.id}`} className="block">
+              <div className="card-reward group hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="h-48 bg-gradient-to-br from-primary/20 via-accent/10 to-secondary/20 flex flex-col items-center justify-center relative overflow-hidden">
                   {isAtBurnoutRisk && reward.isWellness && (
                     <Badge className="absolute top-3 right-3 bg-orange-500 text-white z-10">
@@ -378,13 +385,17 @@ export default function Rewards() {
                     <Button 
                       size="sm" 
                       className="group-hover:bg-primary group-hover:text-primary-foreground"
-                      onClick={() => handleClaimClick(reward)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleClaimClick(reward);
+                      }}
                     >
                       Book Now
                     </Button>
                   </div>
                 </div>
               </div>
+              </Link>
             );
           })}
           </div>
