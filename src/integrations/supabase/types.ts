@@ -114,6 +114,60 @@ export type Database = {
         }
         Relationships: []
       }
+      employee_preferences: {
+        Row: {
+          created_at: string | null
+          employee_id: string
+          favorite_destinations: string[] | null
+          free_text_preferences: string | null
+          id: string
+          interests_ranking: Json | null
+          notification_channels: string[] | null
+          opt_in_personalized_recommendations: boolean | null
+          preferred_activities: string[] | null
+          preferred_travel_types: string[] | null
+          travel_restrictions: string | null
+          trip_duration_preference: string | null
+          updated_at: string | null
+          vacation_timing_preferences: string[] | null
+          work_schedule: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          employee_id: string
+          favorite_destinations?: string[] | null
+          free_text_preferences?: string | null
+          id?: string
+          interests_ranking?: Json | null
+          notification_channels?: string[] | null
+          opt_in_personalized_recommendations?: boolean | null
+          preferred_activities?: string[] | null
+          preferred_travel_types?: string[] | null
+          travel_restrictions?: string | null
+          trip_duration_preference?: string | null
+          updated_at?: string | null
+          vacation_timing_preferences?: string[] | null
+          work_schedule?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          employee_id?: string
+          favorite_destinations?: string[] | null
+          free_text_preferences?: string | null
+          id?: string
+          interests_ranking?: Json | null
+          notification_channels?: string[] | null
+          opt_in_personalized_recommendations?: boolean | null
+          preferred_activities?: string[] | null
+          preferred_travel_types?: string[] | null
+          travel_restrictions?: string | null
+          trip_duration_preference?: string | null
+          updated_at?: string | null
+          vacation_timing_preferences?: string[] | null
+          work_schedule?: string | null
+        }
+        Relationships: []
+      }
       hris_events: {
         Row: {
           created_at: string | null

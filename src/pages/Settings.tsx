@@ -1,10 +1,11 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { User, Bell, Lock, Palette } from 'lucide-react';
+import { User, Bell, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { PreferencesSection } from '@/components/settings/PreferencesSection';
 
 export default function Settings() {
   return (
@@ -83,6 +84,9 @@ export default function Settings() {
             </div>
           </div>
         </div>
+
+        {/* Travel Preferences */}
+        <PreferencesSection />
 
         {/* Security Settings */}
         <div className="card-stat">
