@@ -1,5 +1,5 @@
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { Plane, Search, Hotel, MapPin, Gift, Sparkles, Heart, Activity } from 'lucide-react';
+import { Plane, Search, Hotel, MapPin, Sparkles, Heart, Activity } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,6 @@ export default function Rewards() {
     { id: 1, name: 'Paris Weekend Getaway', points: 2500, category: 'Hotel Stay', destination: 'Paris, France', icon: Hotel, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary', 'Museums'], duration: 'weekend', imageUrl: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', description: 'Experience the magic of Paris with a luxurious 3-night stay in a boutique hotel near the Eiffel Tower.', isWellness: false },
     { id: 2, name: 'Round-trip Flight Voucher', points: 3000, category: 'Flight Voucher', destination: 'Anywhere in Europe', icon: Plane, available: true, travelType: 'Flexible', activities: [], duration: '', imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80', description: 'Flexible round-trip flight voucher to any European destination of your choice.', isWellness: false },
     { id: 3, name: 'Bali Yoga Retreat', points: 4000, category: 'Experience Package', destination: 'Bali, Indonesia', icon: MapPin, available: true, travelType: 'Wellness', activities: ['Spa', 'Yoga'], duration: 'week', imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80', description: '7-day wellness retreat in Ubud with daily yoga, meditation, and spa treatments.', isWellness: true },
-    { id: 4, name: 'Airbnb Gift Card - $500', points: 1500, category: 'Travel Gift Card', destination: 'Global', icon: Gift, available: true, travelType: 'Flexible', activities: [], duration: '', imageUrl: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80', description: '$500 Airbnb gift card valid for any booking worldwide.', isWellness: false },
     { id: 5, name: 'Safari Adventure', points: 5000, category: 'Experience Package', destination: 'Tanzania', icon: MapPin, available: true, travelType: 'Adventure', activities: ['Wildlife', 'Photography', 'Hiking'], duration: 'extended', imageUrl: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800&q=80', description: '10-day safari adventure in Serengeti with luxury tented camps and expert guides.', isWellness: false },
     { id: 6, name: 'Tokyo City Pass', points: 1800, category: 'Experience Package', destination: 'Tokyo, Japan', icon: MapPin, available: true, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary', 'Shopping'], duration: 'short', imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80', description: '5-day Tokyo experience with JR Pass, city tours, and exclusive restaurant reservations.', isWellness: false },
     { id: 7, name: 'Swiss Alps Ski Resort', points: 3500, category: 'Hotel Stay', destination: 'Switzerland', icon: Hotel, available: true, travelType: 'Adventure', activities: ['Skiing'], duration: 'week', imageUrl: 'https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=800&q=80', description: 'Week-long stay at a luxury alpine resort with ski-in/ski-out access.', isWellness: false },
@@ -235,13 +234,6 @@ export default function Rewards() {
               onClick={() => setSelectedCategory('Experience Package')}
             >
               Experiences
-            </Badge>
-            <Badge 
-              variant={selectedCategory === 'Travel Gift Card' ? "default" : "outline"}
-              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-              onClick={() => setSelectedCategory('Travel Gift Card')}
-            >
-              Gift Cards
             </Badge>
           </div>
         </div>
