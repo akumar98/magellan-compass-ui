@@ -16,7 +16,9 @@ import {
   Sliders,
   DollarSign,
   UserPlus,
-  HelpCircle
+  HelpCircle,
+  CreditCard,
+  UserCheck
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -68,9 +70,21 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
-    label: 'Approvals',
+    label: 'Reward Approvals',
     path: '/employer/approvals',
     icon: <ClipboardCheck className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'Employee Approvals',
+    path: '/employer/employee-approval',
+    icon: <UserCheck className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'Billing',
+    path: '/employer/billing',
+    icon: <CreditCard className="h-5 w-5" />,
     roles: ['employer'],
   },
   {

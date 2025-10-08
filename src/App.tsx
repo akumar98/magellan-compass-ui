@@ -22,6 +22,8 @@ import EmployerApprovals from "./pages/employer/EmployerApprovals";
 import EmployerReports from "./pages/employer/EmployerReports";
 import EmployerBurnout from "./pages/employer/EmployerBurnout";
 import EmployerProfile from "./pages/employer/EmployerProfile";
+import EmployerEmployeeApproval from "./pages/employer/EmployerEmployeeApproval";
+import EmployerBilling from "./pages/employer/EmployerBilling";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +56,8 @@ const App = () => (
           <Route path="/employer/profile" element={<EmployerProfile />} />
           <Route path="/employer/team" element={<EmployerTeam />} />
           <Route path="/employer/approvals" element={<EmployerApprovals />} />
+          <Route path="/employer/employee-approval" element={<EmployerEmployeeApproval />} />
+          <Route path="/employer/billing" element={<EmployerBilling />} />
           <Route path="/employer/reports" element={<EmployerReports />} />
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
             
