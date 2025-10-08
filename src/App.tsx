@@ -11,6 +11,11 @@ import Rewards from "./pages/Rewards";
 import RewardDetail from "./pages/RewardDetail";
 import Community from "./pages/Community";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
+import Preferences from "./pages/Preferences";
+import Contributions from "./pages/Contributions";
+import ReferFriend from "./pages/ReferFriend";
+import Support from "./pages/Support";
 import EmployeeActivity from "./pages/employee/EmployeeActivity";
 import EmployerTeam from "./pages/employer/EmployerTeam";
 import EmployerApprovals from "./pages/employer/EmployerApprovals";
@@ -37,6 +42,11 @@ const App = () => (
             <Route path="/rewards/:id" element={<RewardDetail />} />
             <Route path="/community" element={<Community />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/preferences" element={<Preferences />} />
+            <Route path="/contributions" element={<Contributions />} />
+            <Route path="/refer" element={<ReferFriend />} />
+            <Route path="/support" element={<Support />} />
             <Route path="/employee/activity" element={<EmployeeActivity />} />
             
             {/* Employer routes */}

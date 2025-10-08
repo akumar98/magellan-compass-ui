@@ -11,7 +11,12 @@ import {
   Award,
   Menu,
   X,
-  AlertTriangle
+  AlertTriangle,
+  User,
+  Sliders,
+  DollarSign,
+  UserPlus,
+  HelpCircle
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -75,9 +80,27 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
+    label: 'Profile',
+    path: '/profile',
+    icon: <User className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  {
     label: 'Travel Rewards',
     path: '/rewards',
     icon: <Gift className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  {
+    label: 'My Contributions',
+    path: '/contributions',
+    icon: <DollarSign className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  {
+    label: 'Preferences',
+    path: '/preferences',
+    icon: <Sliders className="h-5 w-5" />,
     roles: ['employee'],
   },
   {
@@ -87,9 +110,21 @@ const navItems: NavItem[] = [
     roles: ['employee'],
   },
   {
+    label: 'Refer a Friend',
+    path: '/refer',
+    icon: <UserPlus className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  {
     label: 'Community',
     path: '/community',
     icon: <MessageSquare className="h-5 w-5" />,
+    roles: ['admin', 'employer', 'employee'],
+  },
+  {
+    label: 'Support',
+    path: '/support',
+    icon: <HelpCircle className="h-5 w-5" />,
     roles: ['admin', 'employer', 'employee'],
   },
   {
