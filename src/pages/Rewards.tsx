@@ -166,12 +166,12 @@ export default function Rewards() {
 
         {/* Recommended Section */}
         {filteredRewards.filter(r => r.isRecommended).length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <h2 className="text-2xl font-bold">Recommended for You</h2>
+              <Sparkles className="h-6 w-6 text-primary" />
+              <h2 className="text-2xl font-bold">Suggested For You</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredRewards
                 .filter(r => r.isRecommended)
                 .map((reward) => (
@@ -193,11 +193,11 @@ export default function Rewards() {
         )}
 
         {/* All Rewards */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           <h2 className="text-2xl font-bold">
-            {filteredRewards.filter(r => r.isRecommended).length > 0 ? 'More Rewards' : 'All Rewards'}
+            {filteredRewards.filter(r => r.isRecommended).length > 0 ? 'More Experiences' : 'All Experiences'}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredRewards
               .filter(r => !r.isRecommended)
               .map((reward) => (
