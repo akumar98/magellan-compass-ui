@@ -25,15 +25,15 @@ export default function Rewards() {
   });
 
   const mockRewards = [
-    { id: 3, name: 'Alpine Spa Escape', points: 85000, category: 'Wellness', destination: 'Swiss Alps', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80', description: 'Reset your energy in the Swiss Alps', isWellness: true, travelType: 'Wellness', activities: ['Spa', 'Relaxation'], duration: 'week' },
-    { id: 1, name: 'Paris Weekend Getaway', points: 2500, category: 'City Break', destination: 'Paris, France', imageUrl: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', description: 'Experience the magic of Paris', isWellness: false, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary'], duration: 'weekend' },
-    { id: 7, name: 'Swiss Alps Ski Resort', points: 3500, category: 'Adventure', destination: 'Switzerland', imageUrl: 'https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=800&q=80', description: 'Week-long stay at luxury alpine resort', isWellness: false, travelType: 'Adventure', activities: ['Skiing'], duration: 'week' },
-    { id: 8, name: 'Maldives Luxury Resort', points: 6000, category: 'Beach', destination: 'Maldives', imageUrl: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', description: 'Overwater villa with private pool', isWellness: true, travelType: 'Luxury', activities: ['Spa', 'Water Sports'], duration: 'extended' },
-    { id: 9, name: 'Rome Historical Tour', points: 2800, category: 'Cultural', destination: 'Rome, Italy', imageUrl: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', description: 'Immersive 5-day journey through ancient Rome', isWellness: false, travelType: 'Cultural', activities: ['Sightseeing', 'Museums'], duration: 'short' },
-    { id: 12, name: 'Thailand Beach Resort', points: 2200, category: 'Beach', destination: 'Phuket, Thailand', imageUrl: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80', description: 'Beachfront paradise with daily spa', isWellness: true, travelType: 'Relaxation', activities: ['Spa', 'Water Sports'], duration: 'week' },
-    { id: 6, name: 'Tokyo City Experience', points: 1800, category: 'Cultural', destination: 'Tokyo, Japan', imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80', description: '5-day Tokyo experience with JR Pass', isWellness: false, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary'], duration: 'short' },
-    { id: 10, name: 'Caribbean Cruise', points: 4500, category: 'Cruise', destination: 'Caribbean Islands', imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', description: '7-night Caribbean cruise visiting 5 islands', isWellness: false, travelType: 'Luxury', activities: ['Water Sports', 'Relaxation'], duration: 'week' },
-    { id: 11, name: 'Iceland Northern Lights', points: 3800, category: 'Adventure', destination: 'Reykjavik, Iceland', imageUrl: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=800&q=80', description: '6-day adventure with northern lights tours', isWellness: false, travelType: 'Adventure', activities: ['Photography', 'Hiking'], duration: 'short' },
+    { id: 3, name: '5-Day Yoga & Nature Retreat', points: 3200, category: 'Wellness', destination: 'Bali, Indonesia', imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80', description: 'Reset your energy in Bali', isWellness: true, travelType: 'Wellness', activities: ['Spa', 'Relaxation'], duration: 'week', tags: ['Solo', 'Summer', '5 Days'], rating: 4.9, reviewCount: 26 },
+    { id: 1, name: 'Paris Weekend Getaway', points: 2500, category: 'City Break', destination: 'Paris, France', imageUrl: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80', description: 'Experience the magic of Paris', isWellness: false, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary'], duration: 'weekend', tags: ['Couple', 'Weekend', '3 Days'], rating: 4.7, reviewCount: 45 },
+    { id: 7, name: 'Swiss Alps Ski Resort', points: 3500, category: 'Adventure', destination: 'Switzerland', imageUrl: 'https://images.unsplash.com/photo-1605540436563-5bca919ae766?w=800&q=80', description: 'Week-long stay at luxury alpine resort', isWellness: false, travelType: 'Adventure', activities: ['Skiing'], duration: 'week', tags: ['Family', 'Winter', '7 Days'], rating: 4.8, reviewCount: 32 },
+    { id: 8, name: 'Maldives Luxury Resort', points: 6000, category: 'Beach', destination: 'Maldives', imageUrl: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80', description: 'Overwater villa with private pool', isWellness: true, travelType: 'Luxury', activities: ['Spa', 'Water Sports'], duration: 'extended', tags: ['Couple', 'Summer', '10 Days'], rating: 4.9, reviewCount: 58 },
+    { id: 9, name: 'Rome Historical Tour', points: 2800, category: 'Cultural', destination: 'Rome, Italy', imageUrl: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&q=80', description: 'Immersive 5-day journey through ancient Rome', isWellness: false, travelType: 'Cultural', activities: ['Sightseeing', 'Museums'], duration: 'short', tags: ['Solo', 'Spring', '5 Days'], rating: 4.6, reviewCount: 41 },
+    { id: 12, name: 'Thailand Beach Resort', points: 2200, category: 'Beach', destination: 'Phuket, Thailand', imageUrl: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&q=80', description: 'Beachfront paradise with daily spa', isWellness: true, travelType: 'Relaxation', activities: ['Spa', 'Water Sports'], duration: 'week', tags: ['Family', 'Summer', '7 Days'], rating: 4.7, reviewCount: 37 },
+    { id: 6, name: 'Tokyo City Experience', points: 1800, category: 'Cultural', destination: 'Tokyo, Japan', imageUrl: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80', description: '5-day Tokyo experience with JR Pass', isWellness: false, travelType: 'Cultural', activities: ['Sightseeing', 'Culinary'], duration: 'short', tags: ['Solo', 'Spring', '5 Days'], rating: 4.8, reviewCount: 52 },
+    { id: 10, name: 'Caribbean Cruise', points: 4500, category: 'Cruise', destination: 'Caribbean Islands', imageUrl: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80', description: '7-night Caribbean cruise visiting 5 islands', isWellness: false, travelType: 'Luxury', activities: ['Water Sports', 'Relaxation'], duration: 'week', tags: ['Family', 'Summer', '7 Days'], rating: 4.5, reviewCount: 63 },
+    { id: 11, name: 'Iceland Northern Lights', points: 3800, category: 'Adventure', destination: 'Reykjavik, Iceland', imageUrl: 'https://images.unsplash.com/photo-1483347756197-71ef80e95f73?w=800&q=80', description: '6-day adventure with northern lights tours', isWellness: false, travelType: 'Adventure', activities: ['Photography', 'Hiking'], duration: 'short', tags: ['Couple', 'Winter', '6 Days'], rating: 4.9, reviewCount: 28 },
   ];
 
   // Calculate personalization scores
@@ -171,7 +171,7 @@ export default function Rewards() {
               <Sparkles className="h-6 w-6 text-primary" />
               <h2 className="text-2xl font-bold">Suggested For You</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {filteredRewards
                 .filter(r => r.isRecommended)
                 .map((reward) => (
@@ -186,6 +186,9 @@ export default function Rewards() {
                     isRecommended={reward.isRecommended}
                     isWellness={reward.isWellness}
                     matchScore={reward.matchScore}
+                    rating={reward.rating}
+                    reviewCount={reward.reviewCount}
+                    tags={reward.tags}
                   />
                 ))}
             </div>
@@ -197,7 +200,7 @@ export default function Rewards() {
           <h2 className="text-2xl font-bold">
             {filteredRewards.filter(r => r.isRecommended).length > 0 ? 'More Experiences' : 'All Experiences'}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredRewards
               .filter(r => !r.isRecommended)
               .map((reward) => (
@@ -212,6 +215,9 @@ export default function Rewards() {
                   isRecommended={false}
                   isWellness={reward.isWellness}
                   matchScore={reward.matchScore}
+                  rating={reward.rating}
+                  reviewCount={reward.reviewCount}
+                  tags={reward.tags}
                 />
               ))}
           </div>
