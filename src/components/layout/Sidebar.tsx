@@ -56,6 +56,12 @@ const navItems: NavItem[] = [
     roles: ['admin'],
   },
   {
+    label: 'Profile',
+    path: '/employer/profile',
+    icon: <User className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
     label: 'My Team',
     path: '/employer/team',
     icon: <Users className="h-5 w-5" />,
