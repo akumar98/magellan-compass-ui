@@ -171,7 +171,7 @@ export default function Rewards() {
               <Sparkles className="h-6 w-6 text-primary" />
               <h2 className="text-2xl font-bold">Suggested For You</h2>
             </div>
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-3 gap-5">
               {filteredRewards
                 .filter(r => r.isRecommended)
                 .map((reward) => (
@@ -200,7 +200,7 @@ export default function Rewards() {
           <h2 className="text-2xl font-bold">
             {filteredRewards.filter(r => r.isRecommended).length > 0 ? 'More Experiences' : 'All Experiences'}
           </h2>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 gap-5">
             {filteredRewards
               .filter(r => !r.isRecommended)
               .map((reward) => (
