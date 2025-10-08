@@ -44,7 +44,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
 
   return (
     <Link to={`/rewards/${id}`}>
-      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer border-border/50">
+      <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer border-border/50 h-full flex flex-col">
         {/* Hero Image */}
         <div className="relative h-56 overflow-hidden">
           <img
@@ -62,7 +62,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
         </div>
 
         {/* Content Section */}
-        <div className="p-5 space-y-4">
+        <div className="p-5 space-y-4 flex-1 flex flex-col">
           {/* AI Personalization Message */}
           {isRecommended && (
             <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground">
@@ -123,7 +123,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-2 mt-auto">
             <Button className="flex-1 gap-2" size="lg">
               Redeem
             </Button>
