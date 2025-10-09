@@ -8,10 +8,13 @@ import { MilestoneOverview } from '@/components/employer/MilestoneOverview';
 import { UpcomingMilestonesCards } from '@/components/employer/UpcomingMilestonesCards';
 import { QuickActionsEmployer } from '@/components/employer/QuickActionsEmployer';
 import { AIRecommendations } from '@/components/employer/AIRecommendations';
+import { InviteEmployeesDialog } from '@/components/employer/InviteEmployeesDialog';
+import { useState } from 'react';
 import { Users, Gift, DollarSign, TrendingUp } from 'lucide-react';
 
 export default function EmployerDashboard() {
   const navigate = useNavigate();
+  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
 
   const participationData = [65, 68, 70, 72, 75, 76, 78];
   const redemptionData = [58, 60, 61, 63, 64, 65, 65];
@@ -19,7 +22,9 @@ export default function EmployerDashboard() {
   const roiData = [1.0, 1.05, 1.1, 1.15, 1.18, 1.2, 1.2];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <>
+      <InviteEmployeesDialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen} />
+      <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold mb-2">Employer Dashboard</h1>
@@ -93,14 +98,15 @@ export default function EmployerDashboard() {
           <UpcomingMilestonesCards />
         </div>
         <QuickActionsEmployer
-          onAddEmployees={() => navigate('/employer/team')}
-          onAdjustPolicy={() => navigate('/settings')}
+          onAddEmployees={() => setInviteDialogOpen(true)}
+          onAdjustPolicy={() => navigate('/employer/matching-policy')}
           onExportReport={() => navigate('/employer/reports')}
         />
       </div>
 
       {/* AI Recommendations */}
       <AIRecommendations />
-    </div>
+      </div>
+    </>
   );
 }

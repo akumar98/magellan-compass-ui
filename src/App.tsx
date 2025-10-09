@@ -24,6 +24,7 @@ import EmployerBurnout from "./pages/employer/EmployerBurnout";
 import EmployerProfile from "./pages/employer/EmployerProfile";
 import EmployerEmployeeApproval from "./pages/employer/EmployerEmployeeApproval";
 import EmployerBilling from "./pages/employer/EmployerBilling";
+import EmployerMatchingPolicy from "./pages/employer/EmployerMatchingPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ const App = () => (
           <Route path="/employer/billing" element={<EmployerBilling />} />
           <Route path="/employer/reports" element={<EmployerReports />} />
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
+          <Route path="/employer/matching-policy" element={<EmployerMatchingPolicy />} />
             
             {/* Admin placeholder routes */}
             <Route path="/admin/companies" element={<Navigate to="/dashboard" replace />} />
