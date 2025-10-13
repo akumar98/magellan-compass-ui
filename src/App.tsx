@@ -35,6 +35,8 @@ import EmployeesManagement from "./pages/admin/EmployeesManagement";
 import RewardsCatalog from "./pages/admin/RewardsCatalog";
 import SystemSettings from "./pages/admin/SystemSettings";
 import AuditLogs from "./pages/admin/AuditLogs";
+import Help from "./pages/Help";
+import CompanyOnboarding from "./pages/CompanyOnboarding";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -84,6 +86,10 @@ const App = () => (
             <Route path="/admin/rewards" element={<RewardsCatalog />} />
             <Route path="/admin/settings" element={<SystemSettings />} />
             <Route path="/admin/logs" element={<AuditLogs />} />
+
+            {/* Shared routes */}
+            <Route path="/help" element={<Help />} />
+            <Route path="/onboarding/company" element={<CompanyOnboarding />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

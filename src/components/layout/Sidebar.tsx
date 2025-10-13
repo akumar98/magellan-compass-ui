@@ -18,7 +18,11 @@ import {
   UserPlus,
   HelpCircle,
   CreditCard,
-  UserCheck
+  UserCheck,
+  Bell,
+  History,
+  BarChart3,
+  FileText
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -100,6 +104,30 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
+    label: 'Analytics & Insights',
+    path: '/employer/analytics',
+    icon: <BarChart3 className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'Matching Policy',
+    path: '/employer/matching-policy',
+    icon: <Sliders className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'System Settings',
+    path: '/admin/settings',
+    icon: <Settings className="h-5 w-5" />,
+    roles: ['admin'],
+  },
+  {
+    label: 'Audit Logs',
+    path: '/admin/logs',
+    icon: <FileText className="h-5 w-5" />,
+    roles: ['admin'],
+  },
+  {
     label: 'Profile',
     path: '/profile',
     icon: <User className="h-5 w-5" />,
@@ -109,6 +137,18 @@ const navItems: NavItem[] = [
     label: 'Travel Rewards',
     path: '/rewards',
     icon: <Gift className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  {
+    label: 'Redemption History',
+    path: '/employee/redemption-history',
+    icon: <History className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  {
+    label: 'Notifications',
+    path: '/employee/notifications',
+    icon: <Bell className="h-5 w-5" />,
     roles: ['employee'],
   },
   {
@@ -142,8 +182,8 @@ const navItems: NavItem[] = [
     roles: ['admin', 'employer', 'employee'],
   },
   {
-    label: 'Support',
-    path: '/support',
+    label: 'Help & Support',
+    path: '/help',
     icon: <HelpCircle className="h-5 w-5" />,
     roles: ['admin', 'employer', 'employee'],
   },
