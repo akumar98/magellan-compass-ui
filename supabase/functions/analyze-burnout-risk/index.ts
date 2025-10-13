@@ -58,14 +58,18 @@ serve(async (req) => {
     );
 
     if (accessError || !canAccess) {
-      console.log('Access denied for user', user.id, 'to employee', employeeId);
+      // Log access denial without sensitive IDs
+      console.log('Access denied: User attempted to access unauthorized employee data');
       return new Response(
         JSON.stringify({ error: 'Forbidden: You do not have permission to access this employee data' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Analyzing burnout risk for employee (authorized)');
+    // Environment-aware logging - only log in development
+    if (Deno.env.get('ENVIRONMENT') === 'development') {
+      console.log('Analyzing burnout risk for authorized employee');
+    }
 
     // Fetch employee data
     const { data: profile } = await supabaseClient
@@ -185,7 +189,12 @@ Provide your response in the following JSON format:
     const aiData = await aiResponse.json();
     const analysis = JSON.parse(aiData.choices[0].message.content);
 
-    console.log('AI Analysis completed successfully');
+    // Log only non-sensitive metadata
+    console.log('AI Analysis completed', {
+      risk_level: analysis.risk_level,
+      confidence: analysis.confidence,
+      // Omit personal factors and reasoning
+    });
 
     // Calculate predicted burnout date
     const predictedDate = new Date();
@@ -213,7 +222,8 @@ Provide your response in the following JSON format:
       .single();
 
     if (predictionError) {
-      console.error('Error saving prediction:', predictionError);
+      // Log error without sensitive data details
+      console.error('Error saving prediction:', predictionError.message || 'Unknown error');
       throw predictionError;
     }
 
