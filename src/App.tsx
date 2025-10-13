@@ -17,6 +17,9 @@ import Contributions from "./pages/Contributions";
 import ReferFriend from "./pages/ReferFriend";
 import Support from "./pages/Support";
 import EmployeeActivity from "./pages/employee/EmployeeActivity";
+import EmployeeOnboarding from "./pages/employee/EmployeeOnboarding";
+import RedemptionHistory from "./pages/employee/RedemptionHistory";
+import Notifications from "./pages/employee/Notifications";
 import EmployerTeam from "./pages/employer/EmployerTeam";
 import EmployerApprovals from "./pages/employer/EmployerApprovals";
 import EmployerReports from "./pages/employer/EmployerReports";
@@ -25,6 +28,13 @@ import EmployerProfile from "./pages/employer/EmployerProfile";
 import EmployerEmployeeApproval from "./pages/employer/EmployerEmployeeApproval";
 import EmployerBilling from "./pages/employer/EmployerBilling";
 import EmployerMatchingPolicy from "./pages/employer/EmployerMatchingPolicy";
+import EmployeeDetail from "./pages/employer/EmployeeDetail";
+import Analytics from "./pages/employer/Analytics";
+import CompaniesManagement from "./pages/admin/CompaniesManagement";
+import EmployeesManagement from "./pages/admin/EmployeesManagement";
+import RewardsCatalog from "./pages/admin/RewardsCatalog";
+import SystemSettings from "./pages/admin/SystemSettings";
+import AuditLogs from "./pages/admin/AuditLogs";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,21 +62,28 @@ const App = () => (
             <Route path="/refer" element={<ReferFriend />} />
             <Route path="/support" element={<Support />} />
             <Route path="/employee/activity" element={<EmployeeActivity />} />
+            <Route path="/employee/onboarding" element={<EmployeeOnboarding />} />
+            <Route path="/employee/redemption-history" element={<RedemptionHistory />} />
+            <Route path="/employee/notifications" element={<Notifications />} />
             
             {/* Employer routes */}
           <Route path="/employer/profile" element={<EmployerProfile />} />
           <Route path="/employer/team" element={<EmployerTeam />} />
+          <Route path="/employer/team/:id" element={<EmployeeDetail />} />
           <Route path="/employer/approvals" element={<EmployerApprovals />} />
           <Route path="/employer/employee-approval" element={<EmployerEmployeeApproval />} />
           <Route path="/employer/billing" element={<EmployerBilling />} />
           <Route path="/employer/reports" element={<EmployerReports />} />
+          <Route path="/employer/analytics" element={<Analytics />} />
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
           <Route path="/employer/matching-policy" element={<EmployerMatchingPolicy />} />
             
-            {/* Admin placeholder routes */}
-            <Route path="/admin/companies" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/admin/employees" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/admin/rewards" element={<Navigate to="/dashboard" replace />} />
+            {/* Admin routes */}
+            <Route path="/admin/companies" element={<CompaniesManagement />} />
+            <Route path="/admin/employees" element={<EmployeesManagement />} />
+            <Route path="/admin/rewards" element={<RewardsCatalog />} />
+            <Route path="/admin/settings" element={<SystemSettings />} />
+            <Route path="/admin/logs" element={<AuditLogs />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
