@@ -18,16 +18,54 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
+    // Get authenticated user
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { employeeId } = await req.json();
 
-    if (!employeeId) {
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!employeeId || typeof employeeId !== 'string' || !uuidRegex.test(employeeId)) {
       return new Response(
-        JSON.stringify({ error: 'Employee ID is required' }),
+        JSON.stringify({ error: 'Invalid employee ID format' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Analyzing burnout risk for employee:', employeeId);
+    // Check if user has permission to access this employee's data
+    const { data: canAccess, error: accessError } = await supabaseClient.rpc(
+      'can_access_employee_data',
+      {
+        requesting_user_id: user.id,
+        target_employee_id: employeeId
+      }
+    );
+
+    if (accessError || !canAccess) {
+      console.log('Access denied for user', user.id, 'to employee', employeeId);
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: You do not have permission to access this employee data' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Analyzing burnout risk for employee (authorized)');
 
     // Fetch employee data
     const { data: profile } = await supabaseClient
@@ -147,7 +185,7 @@ Provide your response in the following JSON format:
     const aiData = await aiResponse.json();
     const analysis = JSON.parse(aiData.choices[0].message.content);
 
-    console.log('AI Analysis:', analysis);
+    console.log('AI Analysis completed successfully');
 
     // Calculate predicted burnout date
     const predictedDate = new Date();
