@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -25,11 +25,21 @@ const signupSchema = loginSchema.extend({
 });
 
 export default function Login() {
+  const [searchParams] = useSearchParams();
+  const role = searchParams.get('role') as 'employee' | 'employer' | null;
+  const mode = searchParams.get('mode') || 'login';
   const [isLoading, setIsLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [signupData, setSignupData] = useState({ email: '', password: '', confirm_password: '', full_name: '' });
   const { login } = useAuth();
   const navigate = useNavigate();
+  
+  // Redirect if no role is specified
+  useEffect(() => {
+    if (!role) {
+      navigate('/role-selection');
+    }
+  }, [role, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +49,7 @@ export default function Login() {
       const validated = loginSchema.parse(loginData);
       await login(validated.email, validated.password);
       
-      // Check if user has a role
+      // Verify the user has the correct role
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: userRole } = await supabase
@@ -49,10 +59,19 @@ export default function Login() {
           .maybeSingle();
         
         if (!userRole) {
-          navigate('/role-selection');
-        } else {
-          navigate('/dashboard');
+          toast.error('No role assigned. Please contact support.');
+          await supabase.auth.signOut();
+          return;
         }
+        
+        // Verify role matches what they selected
+        if (userRole.role !== role) {
+          toast.error(`This account is registered as ${userRole.role}. Please select the correct role.`);
+          await supabase.auth.signOut();
+          return;
+        }
+        
+        navigate('/dashboard');
       }
     } catch (error: any) {
       if (error instanceof z.ZodError) {
@@ -86,10 +105,23 @@ export default function Login() {
       if (error) throw error;
 
       if (data.user) {
-        toast.success('Account created successfully! Please select your role.');
+        // Assign the selected role to the new user
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({ 
+            user_id: data.user.id, 
+            role: role 
+          });
+
+        if (roleError) {
+          console.error('Role assignment error:', roleError);
+          toast.error('Failed to assign role. Please contact support.');
+          return;
+        }
+
+        toast.success(`Account created successfully as ${role}!`);
         await login(validated.email, validated.password);
-        // Redirect to role selection page after signup
-        navigate('/role-selection');
+        navigate('/dashboard');
       }
     } catch (error: any) {
       if (error instanceof z.ZodError) {
@@ -102,17 +134,32 @@ export default function Login() {
     }
   };
 
+  if (!role) {
+    return null; // Will redirect via useEffect
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 p-4">
       <Card className="w-full max-w-md p-8 space-y-6">
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/role-selection')}
+          className="mb-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Role Selection
+        </Button>
+        
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
             Magellan One AI
           </h1>
-          <p className="text-muted-foreground">Milestone-driven travel rewards platform</p>
+          <p className="text-muted-foreground">
+            {role === 'employee' ? 'Employee' : 'Employer'} {mode === 'login' ? 'Login' : 'Sign Up'}
+          </p>
         </div>
 
-        <Tabs defaultValue="login" className="w-full">
+        <Tabs defaultValue={mode} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Login</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>

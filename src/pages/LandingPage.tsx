@@ -10,11 +10,11 @@ const LandingPage = () => {
   const { user } = useAuth();
 
   const handleLogin = () => {
-    navigate('/login');
+    navigate('/role-selection?mode=login');
   };
 
   const handleRegister = () => {
-    navigate('/login');
+    navigate('/role-selection?mode=signup');
   };
 
   const handleTryDemo = () => {

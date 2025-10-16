@@ -1,87 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { UserCheck, Building2, Info, AlertCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const RoleSelection = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get('mode') || 'signup'; // 'signup' or 'login'
 
-  // Check if user already has a role
-  useEffect(() => {
-    const checkExistingRole = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: userRole } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .maybeSingle();
-        
-        if (userRole) {
-          // User already has a role, redirect to dashboard
-          navigate('/dashboard');
-        }
-      }
-    };
-    checkExistingRole();
-  }, [navigate]);
-
-  const handleRoleSelection = async (role: 'employee' | 'employer') => {
-    setIsLoading(true);
-    
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast({
-          title: "Authentication Required",
-          description: "Please log in to continue.",
-          variant: "destructive",
-        });
-        navigate('/login');
-        return;
-      }
-
-      // Insert the user's role
-      const { error } = await supabase
-        .from('user_roles')
-        .insert({ 
-          user_id: user.id, 
-          role: role 
-        });
-
-      if (error) {
-        console.error('Role assignment error:', error);
-        toast({
-          title: "Error",
-          description: "Failed to set your role. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      toast({
-        title: "Success",
-        description: `You're now registered as ${role === 'employee' ? 'an Employee' : 'an Employer'}`,
-      });
-
-      // Redirect to appropriate dashboard
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Unexpected error:', error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleRoleSelection = (role: 'employee' | 'employer') => {
+    // Navigate to login page with role and mode parameters
+    navigate(`/login?role=${role}&mode=${mode}`);
   };
 
   return (
@@ -98,7 +28,7 @@ const RoleSelection = () => {
       <nav className="relative z-10 bg-white border-b border-gray-100">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
               <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
@@ -121,13 +51,13 @@ const RoleSelection = () => {
 
             <div className="flex items-center gap-3">
               <Button 
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/role-selection?mode=login')}
                 className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
               >
                 Login
               </Button>
               <Button 
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/role-selection?mode=signup')}
                 className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
               >
                 Register
@@ -171,10 +101,9 @@ const RoleSelection = () => {
 
               <Button
                 onClick={() => handleRoleSelection('employee')}
-                disabled={isLoading}
                 className="w-full bg-[#0EA5E9] hover:bg-[#0284C7] text-white h-12 text-base font-medium rounded-lg"
               >
-                {isLoading ? 'Processing...' : 'Continue as Employee'}
+                Continue as Employee
               </Button>
             </div>
           </Card>
@@ -201,17 +130,16 @@ const RoleSelection = () => {
 
               <Button
                 onClick={() => handleRoleSelection('employer')}
-                disabled={isLoading}
                 className="w-full bg-[#0EA5E9] hover:bg-[#0284C7] text-white h-12 text-base font-medium rounded-lg"
               >
-                {isLoading ? 'Processing...' : 'Continue as Employer'}
+                Continue as Employer
               </Button>
             </div>
           </Card>
         </div>
 
         <p className="text-center text-white text-sm mt-8">
-          You'll need your account credentials to log in.
+          You'll need your account credentials to {mode === 'login' ? 'log in' : 'sign up'}.
         </p>
       </div>
 
