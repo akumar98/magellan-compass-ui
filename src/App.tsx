@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
 import RoleSelection from "./pages/RoleSelection";
@@ -37,6 +38,9 @@ import EmployeesManagement from "./pages/admin/EmployeesManagement";
 import RewardsCatalog from "./pages/admin/RewardsCatalog";
 import SystemSettings from "./pages/admin/SystemSettings";
 import AuditLogs from "./pages/admin/AuditLogs";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminBudgets from "./pages/admin/AdminBudgets";
+import AdminIntegrations from "./pages/admin/AdminIntegrations";
 import Help from "./pages/Help";
 import CompanyOnboarding from "./pages/CompanyOnboarding";
 import NotFound from "./pages/NotFound";
@@ -83,12 +87,15 @@ const App = () => (
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
           <Route path="/employer/matching-policy" element={<EmployerMatchingPolicy />} />
             
-            {/* Admin routes */}
-            <Route path="/admin/companies" element={<CompaniesManagement />} />
-            <Route path="/admin/employees" element={<EmployeesManagement />} />
-            <Route path="/admin/rewards" element={<RewardsCatalog />} />
-            <Route path="/admin/settings" element={<SystemSettings />} />
-            <Route path="/admin/logs" element={<AuditLogs />} />
+            {/* Admin routes - Protected */}
+            <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/companies" element={<ProtectedRoute requiredRole="admin"><CompaniesManagement /></ProtectedRoute>} />
+            <Route path="/admin/employees" element={<ProtectedRoute requiredRole="admin"><EmployeesManagement /></ProtectedRoute>} />
+            <Route path="/admin/rewards" element={<ProtectedRoute requiredRole="admin"><RewardsCatalog /></ProtectedRoute>} />
+            <Route path="/admin/budgets" element={<ProtectedRoute requiredRole="admin"><AdminBudgets /></ProtectedRoute>} />
+            <Route path="/admin/integrations" element={<ProtectedRoute requiredRole="admin"><AdminIntegrations /></ProtectedRoute>} />
+            <Route path="/admin/settings" element={<ProtectedRoute requiredRole="admin"><SystemSettings /></ProtectedRoute>} />
+            <Route path="/admin/logs" element={<ProtectedRoute requiredRole="admin"><AuditLogs /></ProtectedRoute>} />
 
             {/* Shared routes */}
             <Route path="/help" element={<Help />} />
