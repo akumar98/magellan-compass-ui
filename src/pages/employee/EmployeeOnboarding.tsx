@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Sparkles, MapPin, Calendar, Compass } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function EmployeeOnboarding() {
   const navigate = useNavigate();
@@ -26,12 +27,54 @@ export default function EmployeeOnboarding() {
   const durations = ['Weekend (2-3 days)', 'Short Trip (4-6 days)', 'Week Long (7-10 days)', 'Extended (10+ days)'];
   const activities = ['Hiking', 'Spa & Wellness', 'Fine Dining', 'Museums', 'Beach Activities', 'Shopping', 'Adventure Sports', 'Photography'];
 
-  const handleComplete = () => {
-    toast({
-      title: "Preferences saved!",
-      description: "Your personalized recommendations are ready.",
-    });
-    navigate('/dashboard');
+  const handleComplete = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "Please log in to continue.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Save preferences to database
+      const { error } = await supabase
+        .from('employee_preferences')
+        .upsert({
+          employee_id: user.id,
+          preferred_travel_types: preferences.travelTypes,
+          favorite_destinations: preferences.destinations,
+          trip_duration_preference: preferences.duration,
+          preferred_activities: preferences.activities,
+          free_text_preferences: preferences.freeText,
+          updated_at: new Date().toISOString(),
+        });
+
+      if (error) {
+        console.error('Error saving preferences:', error);
+        toast({
+          title: "Error",
+          description: "Failed to save preferences. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Preferences saved!",
+        description: "Your personalized recommendations are ready.",
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -213,7 +256,14 @@ export default function EmployeeOnboarding() {
             Back
           </Button>
           {step < 4 ? (
-            <Button onClick={() => setStep(step + 1)}>
+            <Button 
+              onClick={() => setStep(step + 1)}
+              disabled={
+                (step === 1 && preferences.travelTypes.length === 0) ||
+                (step === 2 && preferences.destinations.length === 0) ||
+                (step === 3 && (!preferences.duration || preferences.activities.length === 0))
+              }
+            >
               Next
             </Button>
           ) : (

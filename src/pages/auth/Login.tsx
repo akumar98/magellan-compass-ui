@@ -121,7 +121,13 @@ export default function Login() {
 
         toast.success(`Account created successfully as ${role}!`);
         await login(validated.email, validated.password);
-        navigate('/dashboard');
+        
+        // Redirect to appropriate onboarding based on role
+        if (role === 'employee') {
+          navigate('/employee/onboarding');
+        } else if (role === 'employer') {
+          navigate('/onboarding/company');
+        }
       }
     } catch (error: any) {
       if (error instanceof z.ZodError) {

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Building2, Users, DollarSign, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function CompanyOnboarding() {
   const navigate = useNavigate();
@@ -24,12 +25,64 @@ export default function CompanyOnboarding() {
     additionalInfo: ''
   });
 
-  const handleComplete = () => {
-    toast({
-      title: "Company setup complete!",
-      description: "Your account is ready. Redirecting to dashboard...",
-    });
-    setTimeout(() => navigate('/dashboard'), 1500);
+  const handleComplete = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "Please log in to continue.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Create company record
+      const { data: company, error: companyError } = await supabase
+        .from('companies')
+        .insert({
+          name: formData.companyName,
+          industry: formData.industry,
+          employee_count: parseInt(formData.employeeCount.split('-')[0]) || 0,
+          monthly_budget: parseFloat(formData.monthlyBudget),
+        })
+        .select()
+        .single();
+
+      if (companyError) {
+        console.error('Error creating company:', companyError);
+        toast({
+          title: "Error",
+          description: "Failed to create company. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Update user role with company_id
+      const { error: roleError } = await supabase
+        .from('user_roles')
+        .update({ company_id: company.id })
+        .eq('user_id', user.id);
+
+      if (roleError) {
+        console.error('Error updating role:', roleError);
+      }
+
+      toast({
+        title: "Company setup complete!",
+        description: "Your account is ready. Redirecting to dashboard...",
+      });
+      
+      setTimeout(() => navigate('/dashboard'), 1500);
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    }
   };
 
   const updateFormData = (field: string, value: string) => {
@@ -231,11 +284,21 @@ export default function CompanyOnboarding() {
             Back
           </Button>
           {step < 3 ? (
-            <Button onClick={() => setStep(step + 1)}>
+            <Button 
+              onClick={() => setStep(step + 1)}
+              disabled={
+                (step === 1 && (!formData.companyName || !formData.industry || !formData.employeeCount)) ||
+                (step === 2 && !formData.monthlyBudget)
+              }
+            >
               Next
             </Button>
           ) : (
-            <Button onClick={handleComplete} className="gap-2">
+            <Button 
+              onClick={handleComplete} 
+              className="gap-2"
+              disabled={!formData.adminName || !formData.adminEmail}
+            >
               <CheckCircle className="h-4 w-4" />
               Complete Setup
             </Button>
