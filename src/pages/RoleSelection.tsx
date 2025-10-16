@@ -71,10 +71,12 @@ const RoleSelection = () => {
       <div className="relative z-10 container mx-auto px-6 py-16">
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            Welcome to MagellanOneAI
+            {mode === 'signup' ? 'Welcome to MagellanOneAI' : 'Welcome Back to MagellanOneAI'}
           </h1>
           <p className="text-xl text-white">
-            Choose your role to get started.
+            {mode === 'signup' 
+              ? 'Choose your role to get started.' 
+              : 'Select your account type to continue.'}
           </p>
         </div>
 
@@ -89,21 +91,29 @@ const RoleSelection = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Employee</h2>
               
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Access your dashboard, rewards, and wellness milestones.
+                {mode === 'signup' 
+                  ? 'Access your dashboard, rewards, and wellness milestones.'
+                  : 'Log in to access your rewards and milestones.'}
               </p>
 
-              <div className="flex items-start gap-2 bg-blue-50 rounded-lg p-3 mb-8 w-full">
-                <Info className="w-4 h-4 text-[#0EA5E9] mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-gray-700 text-left">
-                  Requires company account approval
-                </p>
-              </div>
+              {mode === 'signup' && (
+                <div className="flex items-start gap-2 bg-blue-50 rounded-lg p-3 mb-8 w-full">
+                  <Info className="w-4 h-4 text-[#0EA5E9] mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-gray-700 text-left">
+                    Requires company account approval
+                  </p>
+                </div>
+              )}
+
+              {mode === 'login' && (
+                <div className="mb-8 w-full h-[52px]" /> // Spacer to match signup height
+              )}
 
               <Button
                 onClick={() => handleRoleSelection('employee')}
                 className="w-full bg-[#0EA5E9] hover:bg-[#0284C7] text-white h-12 text-base font-medium rounded-lg"
               >
-                Continue as Employee
+                {mode === 'signup' ? 'Continue as Employee' : 'Login as Employee'}
               </Button>
             </div>
           </Card>
@@ -118,28 +128,46 @@ const RoleSelection = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Employer</h2>
               
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Manage teams, track engagement, and approve rewards.
+                {mode === 'signup'
+                  ? 'Manage teams, track engagement, and approve rewards.'
+                  : 'Log in to manage your team and track engagement.'}
               </p>
 
-              <div className="flex items-start gap-2 bg-orange-50 rounded-lg p-3 mb-8 w-full">
-                <AlertCircle className="w-4 h-4 text-[#F59E0B] mt-0.5 flex-shrink-0" />
-                <p className="text-sm text-gray-700 text-left">
-                  Admin privileges required
-                </p>
-              </div>
+              {mode === 'signup' && (
+                <div className="flex items-start gap-2 bg-orange-50 rounded-lg p-3 mb-8 w-full">
+                  <AlertCircle className="w-4 h-4 text-[#F59E0B] mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-gray-700 text-left">
+                    Admin privileges required
+                  </p>
+                </div>
+              )}
+
+              {mode === 'login' && (
+                <div className="mb-8 w-full h-[52px]" /> // Spacer to match signup height
+              )}
 
               <Button
                 onClick={() => handleRoleSelection('employer')}
                 className="w-full bg-[#0EA5E9] hover:bg-[#0284C7] text-white h-12 text-base font-medium rounded-lg"
               >
-                Continue as Employer
+                {mode === 'signup' ? 'Continue as Employer' : 'Login as Employer'}
               </Button>
             </div>
           </Card>
         </div>
 
         <p className="text-center text-white text-sm mt-8">
-          You'll need your account credentials to {mode === 'login' ? 'log in' : 'sign up'}.
+          {mode === 'signup' 
+            ? "You'll need your account credentials to log in."
+            : "Don't have an account? "}
+          {mode === 'login' && (
+            <button 
+              onClick={() => navigate('/role-selection?mode=signup')}
+              className="underline hover:text-white/80 transition-colors"
+            >
+              Sign up here
+            </button>
+          )}
         </p>
       </div>
 
