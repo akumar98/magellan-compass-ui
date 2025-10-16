@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -19,6 +20,7 @@ const loginSchema = z.object({
 const signupSchema = loginSchema.extend({
   full_name: z.string().trim().min(2, 'Name must be at least 2 characters').max(100, 'Name too long'),
   confirm_password: z.string(),
+  company_id: z.string().optional(), // Only required for employees
 }).refine((data) => data.password === data.confirm_password, {
   message: "Passwords don't match",
   path: ['confirm_password'],
@@ -29,8 +31,15 @@ export default function Login() {
   const role = searchParams.get('role') as 'employee' | 'employer' | null;
   const mode = searchParams.get('mode') || 'login';
   const [isLoading, setIsLoading] = useState(false);
+  const [companies, setCompanies] = useState<Array<{ id: string; name: string }>>([]);
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [signupData, setSignupData] = useState({ email: '', password: '', confirm_password: '', full_name: '' });
+  const [signupData, setSignupData] = useState({ 
+    email: '', 
+    password: '', 
+    confirm_password: '', 
+    full_name: '',
+    company_id: '' 
+  });
   const { login } = useAuth();
   const navigate = useNavigate();
   
@@ -41,6 +50,23 @@ export default function Login() {
     }
   }, [role, navigate]);
 
+  // Fetch companies list for employee signup
+  useEffect(() => {
+    if (role === 'employee' && mode === 'signup') {
+      const fetchCompanies = async () => {
+        const { data, error } = await supabase
+          .from('companies')
+          .select('id, name')
+          .order('name');
+        
+        if (!error && data) {
+          setCompanies(data);
+        }
+      };
+      fetchCompanies();
+    }
+  }, [role, mode]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -49,17 +75,30 @@ export default function Login() {
       const validated = loginSchema.parse(loginData);
       await login(validated.email, validated.password);
       
-      // Verify the user has the correct role
+      // Check user's approval status
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: userRole } = await supabase
           .from('user_roles')
-          .select('role')
+          .select('role, approval_status')
           .eq('user_id', user.id)
           .maybeSingle();
         
         if (!userRole) {
           toast.error('No role assigned. Please contact support.');
+          await supabase.auth.signOut();
+          return;
+        }
+
+        // Check if employee is approved
+        if (userRole.role === 'employee' && userRole.approval_status === 'pending') {
+          toast.error('Your account is pending approval from your company admin.');
+          await supabase.auth.signOut();
+          return;
+        }
+
+        if (userRole.approval_status === 'rejected') {
+          toast.error('Your account request was rejected. Please contact your company admin.');
           await supabase.auth.signOut();
           return;
         }
@@ -87,6 +126,13 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      // Validate company selection for employees
+      if (role === 'employee' && !signupData.company_id) {
+        toast.error('Please select your company');
+        setIsLoading(false);
+        return;
+      }
+
       const validated = signupSchema.parse(signupData);
       
       const redirectUrl = `${window.location.origin}/`;
@@ -106,27 +152,39 @@ export default function Login() {
 
       if (data.user) {
         // Assign the selected role to the new user
+        const roleInsertData: any = { 
+          user_id: data.user.id, 
+          role: role,
+          approval_status: role === 'employee' ? 'pending' : 'approved'
+        };
+
+        // Add company_id for employees
+        if (role === 'employee' && validated.company_id) {
+          roleInsertData.company_id = validated.company_id;
+        }
+
         const { error: roleError } = await supabase
           .from('user_roles')
-          .insert({ 
-            user_id: data.user.id, 
-            role: role 
-          });
+          .insert(roleInsertData);
 
         if (roleError) {
           console.error('Role assignment error:', roleError);
-          toast.error('Failed to assign role. Please contact support.');
+          toast.error('Failed to assign role. Please try again.');
           return;
         }
 
-        toast.success(`Account created successfully as ${role}!`);
-        await login(validated.email, validated.password);
-        
-        // Redirect to appropriate onboarding based on role
         if (role === 'employee') {
-          navigate('/employee/onboarding');
-        } else if (role === 'employer') {
-          navigate('/onboarding/company');
+          toast.success('Account created! Waiting for company approval.');
+          // Don't log in yet - wait for approval
+          navigate('/login?role=employee&mode=login');
+        } else {
+          toast.success(`Account created successfully as ${role}!`);
+          await login(validated.email, validated.password);
+          
+          // Redirect to appropriate onboarding
+          if (role === 'employer') {
+            navigate('/onboarding/company');
+          }
         }
       }
     } catch (error: any) {
@@ -233,6 +291,35 @@ export default function Login() {
                   disabled={isLoading}
                 />
               </div>
+
+              {role === 'employee' && (
+                <div className="space-y-2">
+                  <Label htmlFor="signup-company">Company *</Label>
+                  <Select
+                    value={signupData.company_id}
+                    onValueChange={(value) => setSignupData({ ...signupData, company_id: value })}
+                    disabled={isLoading}
+                  >
+                    <SelectTrigger id="signup-company">
+                      <SelectValue placeholder="Select your company" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {companies.length === 0 ? (
+                        <SelectItem value="none" disabled>No companies available</SelectItem>
+                      ) : (
+                        companies.map((company) => (
+                          <SelectItem key={company.id} value={company.id}>
+                            {company.name}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground">
+                    Your request will be sent to company admins for approval
+                  </p>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="signup-password">Password</Label>

@@ -494,6 +494,9 @@ export type Database = {
       }
       user_roles: {
         Row: {
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
           company_id: string | null
           created_at: string | null
           id: string
@@ -501,6 +504,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           company_id?: string | null
           created_at?: string | null
           id?: string
@@ -508,6 +514,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           company_id?: string | null
           created_at?: string | null
           id?: string
