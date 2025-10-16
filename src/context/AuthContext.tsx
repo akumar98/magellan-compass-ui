@@ -39,10 +39,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('user_id', userId)
         .maybeSingle();
 
-      if (roleError) throw roleError;
+      if (roleError) {
+        console.error('Error fetching role:', roleError);
+        // User exists but has no role - this is expected for new signups
+        return null;
+      }
       
       if (!userRole) {
-        toast.error('No role assigned. Please contact support.');
+        // No role assigned yet - this is normal for new users
         return null;
       }
 

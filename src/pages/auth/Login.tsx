@@ -38,7 +38,22 @@ export default function Login() {
     try {
       const validated = loginSchema.parse(loginData);
       await login(validated.email, validated.password);
-      navigate('/dashboard');
+      
+      // Check if user has a role
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: userRole } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        
+        if (!userRole) {
+          navigate('/role-selection');
+        } else {
+          navigate('/dashboard');
+        }
+      }
     } catch (error: any) {
       if (error instanceof z.ZodError) {
         error.errors.forEach((err) => toast.error(err.message));
@@ -71,9 +86,10 @@ export default function Login() {
       if (error) throw error;
 
       if (data.user) {
-        toast.success('Account created successfully!');
+        toast.success('Account created successfully! Please select your role.');
         await login(validated.email, validated.password);
-        navigate('/dashboard');
+        // Redirect to role selection page after signup
+        navigate('/role-selection');
       }
     } catch (error: any) {
       if (error instanceof z.ZodError) {

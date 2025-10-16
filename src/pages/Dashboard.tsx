@@ -20,6 +20,11 @@ export default function Dashboard() {
     return <Navigate to="/login" replace />;
   }
 
+  // If user doesn't have a role yet, redirect to role selection
+  if (!user.role) {
+    return <Navigate to="/role-selection" replace />;
+  }
+
   return (
     <DashboardLayout>
       {user.role === 'employee' && <EmployeeDashboard />}

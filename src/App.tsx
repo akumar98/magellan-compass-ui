@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
+import RoleSelection from "./pages/RoleSelection";
 import Login from "./pages/auth/Login";
 import Dashboard from "./pages/Dashboard";
 import Rewards from "./pages/Rewards";
@@ -52,6 +53,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/role-selection" element={<RoleSelection />} />
             <Route path="/dashboard" element={<Dashboard />} />
             
             {/* Feature routes */}
