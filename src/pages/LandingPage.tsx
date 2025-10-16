@@ -1,42 +1,23 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Brain, Milestone, Wallet, ArrowRight, CheckCircle2, Mail, Building2, User, Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Brain, TrendingUp, Heart, Twitter, Linkedin, Instagram } from 'lucide-react';
+import heroBackground from '@/assets/hero-background.png';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { toast } = useToast();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: ''
-  });
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
-    setMobileMenuOpen(false);
+  const handleLogin = () => {
+    navigate('/login');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Request Received",
-      description: "Our team will contact you within 24 hours.",
-    });
-    setFormData({ name: '', email: '', company: '', message: '' });
+  const handleRegister = () => {
+    navigate('/login');
   };
 
-  const handleDashboard = () => {
+  const handleTryDemo = () => {
     if (user) {
       navigate('/dashboard');
     } else {
@@ -44,346 +25,313 @@ const LandingPage = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="text-2xl font-bold text-primary cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            Magellan One AI
-          </div>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex gap-4 items-center">
-            <Button variant="ghost" onClick={() => scrollToSection('features')}>Features</Button>
-            <Button variant="ghost" onClick={() => scrollToSection('how-it-works')}>How It Works</Button>
-            <Button variant="ghost" onClick={() => scrollToSection('contact')}>Contact</Button>
-            <Button onClick={handleDashboard}>
-              {user ? 'Go to Dashboard' : 'Login'}
-            </Button>
-          </div>
+  const scrollToHowItWorks = () => {
+    // Placeholder - would scroll to how it works section if it existed
+    console.log('Scroll to How It Works');
+  };
 
-          {/* Mobile Navigation */}
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px]">
-              <div className="flex flex-col gap-4 mt-8">
-                <Button variant="ghost" onClick={() => scrollToSection('features')} className="justify-start text-lg">
-                  Features
-                </Button>
-                <Button variant="ghost" onClick={() => scrollToSection('how-it-works')} className="justify-start text-lg">
-                  How It Works
-                </Button>
-                <Button variant="ghost" onClick={() => scrollToSection('contact')} className="justify-start text-lg">
-                  Contact
-                </Button>
-                <Button onClick={handleDashboard} className="justify-start text-lg">
-                  {user ? 'Go to Dashboard' : 'Login'}
-                </Button>
+  const handleBookCall = () => {
+    // Placeholder for booking a discovery call
+    console.log('Book a Discovery Call');
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navigation */}
+      <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
               </div>
-            </SheetContent>
-          </Sheet>
+              <span className="text-xl font-bold text-gray-900">MagellanOneAI</span>
+            </div>
+            
+            <div className="hidden md:flex items-center gap-8">
+              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">
+                How It Works
+              </button>
+              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">
+                About US
+              </button>
+              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">
+                Contact Us
+              </button>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button 
+                onClick={handleLogin}
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
+              >
+                Login
+              </Button>
+              <Button 
+                onClick={handleRegister}
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
+              >
+                Register
+              </Button>
+            </div>
+          </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-16 md:py-24 lg:py-32 overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4"
-            alt="Luxury travel destination"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/70" />
+      <section className="relative bg-gradient-to-r from-[#0369A1] via-[#06B6D4] to-[#F59E0B] py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-40">
+          <div className="w-full h-full bg-cover bg-center" style={{ 
+            backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)',
+            mixBlendMode: 'multiply'
+          }} />
         </div>
         
-        <div className="container mx-auto px-4 relative">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="space-y-6 lg:space-y-8">
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground leading-tight">
-                Reward the Journey — Not Just the Job.
-              </h1>
-              <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground">
-                Magellan One AI transforms employee milestones into personalized travel rewards.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" onClick={() => scrollToSection('contact')} className="text-base md:text-lg h-12 md:h-14 px-6 md:px-8">
-                  Request a Demo <ArrowRight className="ml-2" />
-                </Button>
-                <Button size="lg" variant="outline" onClick={handleDashboard} className="text-base md:text-lg h-12 md:h-14 px-6 md:px-8">
-                  Explore Platform
-                </Button>
-              </div>
-            </div>
-            <div className="relative h-[300px] md:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl hidden lg:block">
-              <img
-                src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1"
-                alt="AI-personalized travel experiences"
-                className="w-full h-full object-cover"
-              />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+              Transform Work Milestones<br />into Life-Changing Journeys
+            </h1>
+            <p className="text-xl text-white mb-8">
+              Turn employee wellbeing into unforgettable journeys
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button 
+                onClick={handleTryDemo}
+                className="bg-white text-[#0EA5E9] hover:bg-gray-100 px-8 h-12 text-base font-medium rounded-md"
+              >
+                Try Demo
+              </Button>
+              <Button 
+                onClick={scrollToHowItWorks}
+                variant="outline"
+                className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 h-12 text-base font-medium rounded-md"
+              >
+                How It Works
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-16 md:py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Powerful Features</h2>
-            <p className="text-lg md:text-xl text-muted-foreground">Everything you need to transform employee recognition</p>
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Personalized Rewards That Actually Matter
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Our AI-powered platform creates personalized travel experiences that boost engagement and retention
+            </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <Card className="p-6 md:p-8 hover-lift">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 md:mb-6">
-                <Brain className="w-7 h-7 md:w-8 md:h-8 text-primary" />
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* AI Personalization */}
+            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                <Brain className="w-7 h-7 text-[#0EA5E9]" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">AI-Powered Personalization</h3>
-              <p className="text-muted-foreground">
-                Rewards matched to each employee's preferences.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">AI Personalization</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Tailored travel recommendations based on employee preferences and milestones.
               </p>
             </Card>
-            <Card className="p-6 md:p-8 hover-lift">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 md:mb-6">
-                <Milestone className="w-7 h-7 md:w-8 md:h-8 text-primary" />
+
+            {/* Wellness Goals */}
+            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6">
+                <Heart className="w-7 h-7 text-[#F59E0B]" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Milestone Recognition</h3>
-              <p className="text-muted-foreground">
-                Celebrate key achievements automatically.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Wellness Goals</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Link performance with wellness-focused travel that energizes and inspires.
               </p>
             </Card>
-            <Card className="p-6 md:p-8 hover-lift sm:col-span-2 lg:col-span-1">
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 md:mb-6">
-                <Wallet className="w-7 h-7 md:w-8 md:h-8 text-primary" />
+
+            {/* Real ROI */}
+            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                <TrendingUp className="w-7 h-7 text-[#10B981]" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Co-Funding Wallet</h3>
-              <p className="text-muted-foreground">
-                Shared contributions between employers and employees for meaningful experiences.
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Real ROI</h3>
+              <p className="text-gray-600 leading-relaxed">
+                See measurable impact through improved engagement, retention, and wellbeing.
               </p>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section id="how-it-works" className="py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">How It Works</h2>
-            <p className="text-lg md:text-xl text-muted-foreground">Simple, seamless, and automated</p>
+      {/* Testimonials Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Real Teams. Real Results.
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              See how MagellanOneAI is transforming employee engagement and creating unforgettable experiences
+            </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-            {[
-              { step: 1, title: 'Employee hits a milestone', description: 'System detects work anniversary, achievement, or wellness goal' },
-              { step: 2, title: 'AI curates personalized travel offers', description: 'Recommendations matched to preferences and interests' },
-              { step: 3, title: 'Manager reviews and approves', description: 'Quick approval through dashboard' },
-              { step: 4, title: 'Wallet funds unlock and employee redeems', description: 'Funds released for immediate use' }
-            ].map((item) => (
-              <div key={item.step} className="text-center space-y-4">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-2xl md:text-3xl font-bold mx-auto shadow-lg">
-                  {item.step}
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* John Smith Testimonial */}
+            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="flex items-start gap-4 mb-6">
+                <img 
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop" 
+                  alt="John Smith"
+                  className="w-14 h-14 rounded-full object-cover"
+                />
+                <div>
+                  <h4 className="font-bold text-gray-900">John Smith</h4>
+                  <p className="text-sm text-gray-600">Senior Developer at TechCorp</p>
                 </div>
-                <h3 className="text-lg md:text-xl font-bold px-2">{item.title}</h3>
-                <p className="text-sm md:text-base text-muted-foreground px-2">{item.description}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              <p className="text-gray-700 leading-relaxed mb-6 italic">
+                "After hitting my quarterly goals, MagellanOneAI suggested a hiking retreat in Colorado that matched my exact interests. It was the first time I felt truly seen and valued by my company."
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-[#0EA5E9] flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  Colorado Hiking Retreat
+                </span>
+                <span className="text-yellow-500 flex">★★★★★</span>
+              </div>
+            </Card>
 
-      {/* Integrations */}
-      <section className="py-16 md:py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Seamless Integrations</h2>
-            <p className="text-lg md:text-xl text-muted-foreground">Seamlessly connects with your existing HR tools</p>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-center">
-            {[
-              { name: 'Workday', logo: '🔷' },
-              { name: 'ADP', logo: '🔶' },
-              { name: 'BambooHR', logo: '🎋' },
-              { name: 'Slack', logo: '💬' }
-            ].map((integration) => (
-              <Card key={integration.name} className="p-6 md:p-8 text-center hover-lift">
-                <div className="text-4xl md:text-5xl mb-3 md:mb-4">{integration.logo}</div>
-                <div className="text-lg md:text-xl font-bold text-foreground">{integration.name}</div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">What Our Users Say</h2>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {[
-              {
-                quote: "Magellan One AI turned my work anniversary into an unforgettable wellness retreat.",
-                author: "Sarah",
-                role: "LPL Financial",
-                image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330"
-              },
-              {
-                quote: "We saw 15% higher engagement in the first 90 days.",
-                author: "HR Director",
-                role: "Honeywell",
-                image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
-              },
-              {
-                quote: "The AI recommendations are spot-on. It truly understands what motivates our employees.",
-                author: "Emily Rodriguez",
-                role: "People Operations",
-                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80"
-              }
-            ].map((testimonial, idx) => (
-              <Card key={idx} className="p-6 md:p-8 hover-lift">
-                <div className="flex items-center gap-3 md:gap-4 mb-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.author}
-                    className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <div className="font-bold text-sm md:text-base">{testimonial.author}</div>
-                    <div className="text-xs md:text-sm text-muted-foreground">{testimonial.role}</div>
-                  </div>
+            {/* Sarah Johnson Testimonial */}
+            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div className="flex items-start gap-4 mb-6">
+                <img 
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop" 
+                  alt="Sarah Johnson"
+                  className="w-14 h-14 rounded-full object-cover"
+                />
+                <div>
+                  <h4 className="font-bold text-gray-900">Sarah Johnson</h4>
+                  <p className="text-sm text-gray-600">Marketing Manager at GrowthLabs</p>
                 </div>
-                <p className="text-sm md:text-base text-muted-foreground italic">"{testimonial.quote}"</p>
-              </Card>
-            ))}
+              </div>
+              <p className="text-gray-700 leading-relaxed mb-6 italic">
+                "The coastal wellness retreat in Portugal that MagellanOneAI recommended was exactly what I needed after a successful product launch. It's amazing how well the AI understood my preferences and needs."
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-[#F59E0B] flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  Portugal Coastal Retreat
+                </span>
+                <span className="text-yellow-500 flex">★★★★★</span>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6">
-            Start your pilot with Magellan One AI today
+      <section className="py-20 bg-[#0EA5E9]">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">
+            Loyalty Starts With Listening
           </h2>
-          <p className="text-lg md:text-xl mb-6 md:mb-8 opacity-90">
-            Transform how you recognize and reward your team
+          <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
+            Give your team more than just perks — give them time, space, and energy to thrive.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" onClick={() => scrollToSection('contact')} className="text-base md:text-lg h-12 md:h-14">
-              Request Demo
-            </Button>
-            <Button size="lg" variant="outline" onClick={() => scrollToSection('contact')} className="text-base md:text-lg h-12 md:h-14 bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              Talk to Sales
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
-      <section id="contact" className="py-16 md:py-20">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Get in Touch</h2>
-            <p className="text-base md:text-xl text-muted-foreground">Let's discuss how Magellan One AI can transform your workplace</p>
-          </div>
-          <Card className="p-6 md:p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <User className="w-4 h-4" /> Name
-                </label>
-                <Input
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Your name"
-                  className="h-11"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> Email
-                </label>
-                <Input
-                  required
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="your.email@company.com"
-                  className="h-11"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Building2 className="w-4 h-4" /> Company
-                </label>
-                <Input
-                  required
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  placeholder="Your company name"
-                  className="h-11"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Message</label>
-                <Textarea
-                  required
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Tell us about your needs..."
-                  rows={5}
-                  className="resize-none"
-                />
-              </div>
-              <Button type="submit" size="lg" className="w-full h-12">
-                Send Request <CheckCircle2 className="ml-2" />
-              </Button>
-            </form>
-          </Card>
+          <Button 
+            onClick={handleBookCall}
+            className="bg-white text-[#0EA5E9] hover:bg-gray-100 px-8 h-12 text-base font-medium rounded-md"
+          >
+            Book a Discovery Call
+          </Button>
+          <p className="text-white/90 text-sm mt-4">
+            No commitment required. See how it works for your team.
+          </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-10 md:py-12 border-t bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+      <footer className="bg-[#0F172A] text-white py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-12 mb-8">
+            {/* Brand */}
             <div>
-              <div className="text-xl md:text-2xl font-bold text-primary mb-4">Magellan One AI</div>
-              <p className="text-sm md:text-base text-muted-foreground">Transforming employee recognition through personalized travel rewards.</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4 text-sm md:text-base">Product</h4>
-              <div className="space-y-2 text-sm md:text-base text-muted-foreground">
-                <div className="cursor-pointer hover:text-foreground transition-colors" onClick={() => scrollToSection('features')}>Features</div>
-                <div className="cursor-pointer hover:text-foreground transition-colors" onClick={() => scrollToSection('how-it-works')}>How It Works</div>
-                <div className="cursor-pointer hover:text-foreground transition-colors" onClick={handleDashboard}>Platform</div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  </svg>
+                </div>
+                <span className="text-xl font-bold">MagellanOneAI</span>
+              </div>
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                Transforming employee rewards through AI-powered travel experiences.
+              </p>
+              <div className="flex gap-4">
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <Instagram className="w-5 h-5" />
+                </a>
               </div>
             </div>
+
+            {/* Product */}
             <div>
-              <h4 className="font-bold mb-4 text-sm md:text-base">Company</h4>
-              <div className="space-y-2 text-sm md:text-base text-muted-foreground">
-                <div className="cursor-pointer hover:text-foreground transition-colors">About</div>
-                <div className="cursor-pointer hover:text-foreground transition-colors">Careers</div>
-                <div className="cursor-pointer hover:text-foreground transition-colors" onClick={() => scrollToSection('contact')}>Contact</div>
+              <h4 className="font-bold mb-4 text-white">Product</h4>
+              <div className="space-y-3">
+                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                  Features
+                </a>
+                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                  How It Works
+                </a>
               </div>
             </div>
+
+            {/* Company */}
             <div>
-              <h4 className="font-bold mb-4 text-sm md:text-base">Legal</h4>
-              <div className="space-y-2 text-sm md:text-base text-muted-foreground">
-                <div className="cursor-pointer hover:text-foreground transition-colors">Privacy Policy</div>
-                <div className="cursor-pointer hover:text-foreground transition-colors">Terms of Service</div>
+              <h4 className="font-bold mb-4 text-white">Company</h4>
+              <div className="space-y-3">
+                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                  About Us
+                </a>
+                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                  Contact
+                </a>
               </div>
             </div>
           </div>
-          <div className="border-t pt-6 md:pt-8 text-center text-sm md:text-base text-muted-foreground">
-            <p>© 2025 Magellan One AI. All rights reserved.</p>
+
+          {/* Bottom Footer */}
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-sm">
+              © 2025 MagellanOneAI. All rights reserved.
+            </p>
+            <div className="flex gap-6 text-sm">
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                Terms of Service
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                Data Policy
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                Cookie Settings
+              </a>
+            </div>
           </div>
         </div>
       </footer>
