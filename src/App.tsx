@@ -11,6 +11,9 @@ import RoleSelection from "./pages/RoleSelection";
 import Login from "./pages/auth/Login";
 import AdminLogin from "./pages/admin/AdminLogin";
 import SuperAdminLogin from "./pages/admin/SuperAdminLogin";
+import SuperAdminDashboard from "./pages/super-admin/SuperAdminDashboard";
+import SuperAdminCompanies from "./pages/super-admin/SuperAdminCompanies";
+import SuperAdminUsers from "./pages/super-admin/SuperAdminUsers";
 import Dashboard from "./pages/Dashboard";
 import Rewards from "./pages/Rewards";
 import RewardDetail from "./pages/RewardDetail";
@@ -90,6 +93,11 @@ const App = () => (
           <Route path="/employer/analytics" element={<Analytics />} />
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
           <Route path="/employer/matching-policy" element={<EmployerMatchingPolicy />} />
+            
+            {/* Super Admin routes - Protected */}
+            <Route path="/super-admin" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminDashboard /></ProtectedRoute>} />
+            <Route path="/super-admin/companies" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminCompanies /></ProtectedRoute>} />
+            <Route path="/super-admin/users" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminUsers /></ProtectedRoute>} />
             
             {/* Admin routes - Protected */}
             <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />
