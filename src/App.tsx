@@ -10,6 +10,7 @@ import LandingPage from "./pages/LandingPage";
 import RoleSelection from "./pages/RoleSelection";
 import Login from "./pages/auth/Login";
 import AdminLogin from "./pages/admin/AdminLogin";
+import SuperAdminLogin from "./pages/admin/SuperAdminLogin";
 import Dashboard from "./pages/Dashboard";
 import Rewards from "./pages/Rewards";
 import RewardDetail from "./pages/RewardDetail";
@@ -59,6 +60,7 @@ const App = () => (
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/super-admin/login" element={<SuperAdminLogin />} />
           <Route path="/role-selection" element={<RoleSelection />} />
             <Route path="/dashboard" element={<Dashboard />} />
             

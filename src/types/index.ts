@@ -1,4 +1,4 @@
-export type UserRole = 'admin' | 'employer' | 'employee';
+export type UserRole = 'super_admin' | 'admin' | 'employer' | 'employee';
 
 export type MilestoneType = 'anniversary' | 'burnout_risk' | 'life_event' | 'achievement';
 export type MilestoneStatus = 'pending' | 'active' | 'completed' | 'expired';
