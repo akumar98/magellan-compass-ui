@@ -37,6 +37,26 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  // Super Admin Items
+  {
+    label: 'Super Admin Dashboard',
+    path: '/super-admin',
+    icon: <LayoutDashboard className="h-5 w-5" />,
+    roles: ['super_admin'],
+  },
+  {
+    label: 'Manage Companies',
+    path: '/super-admin/companies',
+    icon: <Building2 className="h-5 w-5" />,
+    roles: ['super_admin'],
+  },
+  {
+    label: 'Manage Users',
+    path: '/super-admin/users',
+    icon: <Users className="h-5 w-5" />,
+    roles: ['super_admin'],
+  },
+  // Admin & Other Role Items
   {
     label: 'Dashboard',
     path: '/dashboard',

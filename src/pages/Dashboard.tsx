@@ -25,6 +25,11 @@ export default function Dashboard() {
     return <Navigate to="/role-selection" replace />;
   }
 
+  // Redirect super admins to their dashboard
+  if (user.role === 'super_admin') {
+    return <Navigate to="/super-admin" replace />;
+  }
+
   return (
     <DashboardLayout>
       {user.role === 'employee' && <EmployeeDashboard />}

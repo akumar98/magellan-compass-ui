@@ -71,7 +71,7 @@ const SuperAdminLogin = () => {
       await login(email, password);
       
       toast.success('Super admin login successful!');
-      navigate('/admin');
+      navigate('/super-admin');
     } catch (error: any) {
       console.error('Super admin login error:', error);
       toast.error(error.message || 'Super admin login failed');
