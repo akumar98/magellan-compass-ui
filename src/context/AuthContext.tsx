@@ -33,11 +33,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return null;
       }
 
-      const { data: userRole, error: roleError } = await supabase
+      const { data: userRoles, error: roleError } = await supabase
         .from('user_roles')
         .select('role, company_id')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq('user_id', userId);
 
       if (roleError) {
         console.error('Error fetching role:', roleError);
@@ -45,10 +44,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return null;
       }
       
-      if (!userRole) {
+      if (!userRoles || userRoles.length === 0) {
         // No role assigned yet - this is normal for new users
         return null;
       }
+
+      // Prioritize roles: super_admin > admin > employer > employee
+      const rolePriority = ['super_admin', 'admin', 'employer', 'employee'];
+      const prioritizedRole = userRoles.sort((a, b) => 
+        rolePriority.indexOf(a.role) - rolePriority.indexOf(b.role)
+      )[0];
+      
+      const userRole = prioritizedRole;
 
       return {
         ...profile,
