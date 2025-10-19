@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Label } from '@/components/ui/label';
@@ -246,9 +247,8 @@ export default function Login() {
 
               <div className="space-y-2">
                 <Label htmlFor="login-password">Password</Label>
-                <Input
+                <PasswordInput
                   id="login-password"
-                  type="password"
                   placeholder="••••••••"
                   value={loginData.password}
                   onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
@@ -323,9 +323,8 @@ export default function Login() {
 
               <div className="space-y-2">
                 <Label htmlFor="signup-password">Password</Label>
-                <Input
+                <PasswordInput
                   id="signup-password"
-                  type="password"
                   placeholder="••••••••"
                   value={signupData.password}
                   onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
@@ -336,9 +335,8 @@ export default function Login() {
 
               <div className="space-y-2">
                 <Label htmlFor="signup-confirm">Confirm Password</Label>
-                <Input
+                <PasswordInput
                   id="signup-confirm"
-                  type="password"
                   placeholder="••••••••"
                   value={signupData.confirm_password}
                   onChange={(e) => setSignupData({ ...signupData, confirm_password: e.target.value })}
