@@ -72,37 +72,30 @@ const SuperAdminUsers = () => {
   };
 
   const handleAdd = async () => {
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: formData.email,
-      password: formData.password,
-      email_confirm: true,
-      user_metadata: {
-        full_name: formData.full_name,
-      },
-    });
-
-    if (authError) {
-      toast.error('Failed to create user');
-      console.error(authError);
-      return;
-    }
-
-    if (authData.user) {
-      const { error: roleError } = await supabase.from('user_roles').insert({
-        user_id: authData.user.id,
-        role: formData.role,
-        approval_status: 'approved',
+    try {
+      setLoading(true);
+      
+      // Call edge function to create user with service role
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: {
+          email: formData.email,
+          password: formData.password,
+          fullName: formData.full_name,
+          role: formData.role,
+        },
       });
 
-      if (roleError) {
-        toast.error('User created but role assignment failed');
-        console.error(roleError);
-      } else {
-        toast.success('User created successfully');
-        setIsAddDialogOpen(false);
-        setFormData({ email: '', password: '', full_name: '', role: 'employee' });
-        fetchUsers();
-      }
+      if (error) throw error;
+
+      toast.success('User created successfully');
+      setIsAddDialogOpen(false);
+      setFormData({ email: '', password: '', full_name: '', role: 'employee' });
+      fetchUsers();
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      toast.error(error.message || 'Failed to create user');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,16 +124,25 @@ const SuperAdminUsers = () => {
   const handleDelete = async () => {
     if (!selectedUser) return;
 
-    const { error } = await supabase.auth.admin.deleteUser(selectedUser.id);
+    try {
+      setLoading(true);
 
-    if (error) {
-      toast.error('Failed to delete user');
-      console.error(error);
-    } else {
+      // Call edge function to delete user with service role
+      const { error } = await supabase.functions.invoke('delete-user', {
+        body: { userId: selectedUser.id },
+      });
+      
+      if (error) throw error;
+
       toast.success('User deleted successfully');
       setIsDeleteDialogOpen(false);
       setSelectedUser(null);
       fetchUsers();
+    } catch (error: any) {
+      console.error('Error deleting user:', error);
+      toast.error(error.message || 'Failed to delete user');
+    } finally {
+      setLoading(false);
     }
   };
 
