@@ -153,7 +153,7 @@ const LandingPage = () => {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Real ROI</h3>
               <p className="text-gray-600 leading-relaxed">
-                See measurable impact through improved engagement, retention, and wellbeing.
+                See measurable impact through improved engagement, retention, and well-being.
               </p>
             </Card>
           </div>
