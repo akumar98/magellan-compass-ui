@@ -1,38 +1,38 @@
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { Brain, TrendingUp, Heart, Twitter, Linkedin, Instagram } from 'lucide-react';
-import heroBackground from '@/assets/hero-background.png';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { Brain, TrendingUp, Heart, Twitter, Linkedin, Instagram } from "lucide-react";
+import heroBackground from "@/assets/hero-background.png";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleLogin = () => {
-    navigate('/role-selection?mode=login');
+    navigate("/role-selection?mode=login");
   };
 
   const handleRegister = () => {
-    navigate('/role-selection?mode=signup');
+    navigate("/role-selection?mode=signup");
   };
 
   const handleTryDemo = () => {
     if (user) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   };
 
   const scrollToHowItWorks = () => {
     // Placeholder - would scroll to how it works section if it existed
-    console.log('Scroll to How It Works');
+    console.log("Scroll to How It Works");
   };
 
   const handleBookCall = () => {
     // Placeholder for booking a discovery call
-    console.log('Book a Discovery Call');
+    console.log("Book a Discovery Call");
   };
 
   return (
@@ -44,32 +44,26 @@ const LandingPage = () => {
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
               <span className="text-xl font-bold text-gray-900">MagellanOneAI</span>
             </div>
-            
+
             <div className="hidden md:flex items-center gap-8">
-              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">
-                How It Works
-              </button>
-              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">
-                About US
-              </button>
-              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">
-                Contact Us
-              </button>
+              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">How It Works</button>
+              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">About US</button>
+              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">Contact Us</button>
             </div>
 
             <div className="flex items-center gap-3">
-              <Button 
+              <Button
                 onClick={handleLogin}
                 className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
               >
                 Login
               </Button>
-              <Button 
+              <Button
                 onClick={handleRegister}
                 className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
               >
@@ -83,28 +77,31 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-[#0369A1] via-[#06B6D4] to-[#F59E0B] py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-40">
-          <div className="w-full h-full bg-cover bg-center" style={{ 
-            backgroundImage: 'url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)',
-            mixBlendMode: 'multiply'
-          }} />
+          <div
+            className="w-full h-full bg-cover bg-center"
+            style={{
+              backgroundImage: "url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)",
+              mixBlendMode: "multiply",
+            }}
+          />
         </div>
-        
+
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Transform Work Milestones<br />into Life-Changing Journeys
+              Transform Work Milestones
+              <br />
+              into Life-Changing Journeys
             </h1>
-            <p className="text-xl text-white mb-8">
-              Turn employee wellbeing into unforgettable journeys
-            </p>
+            <p className="text-xl text-white mb-8">Turn employee well-being into unforgettable journeys</p>
             <div className="flex justify-center gap-4">
-              <Button 
+              <Button
                 onClick={handleTryDemo}
                 className="bg-white text-[#0EA5E9] hover:bg-gray-100 px-8 h-12 text-base font-medium rounded-md"
               >
                 Try Demo
               </Button>
-              <Button 
+              <Button
                 onClick={scrollToHowItWorks}
                 variant="outline"
                 className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 h-12 text-base font-medium rounded-md"
@@ -120,9 +117,7 @@ const LandingPage = () => {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Personalized Rewards That Actually Matter
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Personalized Rewards That Actually Matter</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Our AI-powered platform creates personalized travel experiences that boost engagement and retention
             </p>
@@ -169,9 +164,7 @@ const LandingPage = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Real Teams. Real Results.
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Real Teams. Real Results.</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               See how MagellanOneAI is transforming employee engagement and creating unforgettable experiences
             </p>
@@ -181,8 +174,8 @@ const LandingPage = () => {
             {/* John Smith Testimonial */}
             <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4 mb-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop" 
+                <img
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop"
                   alt="John Smith"
                   className="w-14 h-14 rounded-full object-cover"
                 />
@@ -192,7 +185,8 @@ const LandingPage = () => {
                 </div>
               </div>
               <p className="text-gray-700 leading-relaxed mb-6 italic">
-                "After hitting my quarterly goals, MagellanOneAI suggested a hiking retreat in Colorado that matched my exact interests. It was the first time I felt truly seen and valued by my company."
+                "After hitting my quarterly goals, MagellanOneAI suggested a hiking retreat in Colorado that matched my
+                exact interests. It was the first time I felt truly seen and valued by my company."
               </p>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-[#0EA5E9] flex items-center gap-1">
@@ -208,8 +202,8 @@ const LandingPage = () => {
             {/* Sarah Johnson Testimonial */}
             <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4 mb-6">
-                <img 
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop" 
+                <img
+                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop"
                   alt="Sarah Johnson"
                   className="w-14 h-14 rounded-full object-cover"
                 />
@@ -219,7 +213,8 @@ const LandingPage = () => {
                 </div>
               </div>
               <p className="text-gray-700 leading-relaxed mb-6 italic">
-                "The coastal wellness retreat in Portugal that MagellanOneAI recommended was exactly what I needed after a successful product launch. It's amazing how well the AI understood my preferences and needs."
+                "The coastal wellness retreat in Portugal that MagellanOneAI recommended was exactly what I needed after
+                a successful product launch. It's amazing how well the AI understood my preferences and needs."
               </p>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-[#F59E0B] flex items-center gap-1">
@@ -238,21 +233,17 @@ const LandingPage = () => {
       {/* CTA Section */}
       <section className="py-20 bg-[#0EA5E9]">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">
-            Loyalty Starts With Listening
-          </h2>
+          <h2 className="text-4xl font-bold text-white mb-4">Loyalty Starts With Listening</h2>
           <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
             Give your team more than just perks — give them time, space, and energy to thrive.
           </p>
-          <Button 
+          <Button
             onClick={handleBookCall}
             className="bg-white text-[#0EA5E9] hover:bg-gray-100 px-8 h-12 text-base font-medium rounded-md"
           >
             Book a Discovery Call
           </Button>
-          <p className="text-white/90 text-sm mt-4">
-            No commitment required. See how it works for your team.
-          </p>
+          <p className="text-white/90 text-sm mt-4">No commitment required. See how it works for your team.</p>
         </div>
       </section>
 
@@ -265,7 +256,7 @@ const LandingPage = () => {
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                   </svg>
                 </div>
                 <span className="text-xl font-bold">MagellanOneAI</span>
@@ -315,9 +306,7 @@ const LandingPage = () => {
 
           {/* Bottom Footer */}
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm">
-              © 2025 MagellanOneAI. All rights reserved.
-            </p>
+            <p className="text-gray-400 text-sm">© 2025 MagellanOneAI. All rights reserved.</p>
             <div className="flex gap-6 text-sm">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 Privacy Policy
