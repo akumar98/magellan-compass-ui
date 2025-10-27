@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,9 +28,10 @@ export default function EmployerMatchingPolicy() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Adjust Matching Policy</h1>
+    <DashboardLayout>
+      <div className="space-y-6 animate-fade-in">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Adjust Matching Policy</h1>
         <p className="text-muted-foreground mt-1">
           Define how contributions are matched to maximize employee engagement and reward alignment.
         </p>
@@ -273,10 +275,11 @@ export default function EmployerMatchingPolicy() {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end gap-3">
-        <Button variant="outline">Cancel</Button>
-        <Button>Save Policy Changes</Button>
+        <div className="flex justify-end gap-3">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save Policy Changes</Button>
+        </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

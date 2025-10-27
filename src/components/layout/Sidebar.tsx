@@ -112,6 +112,12 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
+    label: 'Notifications',
+    path: '/employer/notifications',
+    icon: <Bell className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
     label: 'Reports',
     path: '/employer/reports',
     icon: <TrendingUp className="h-5 w-5" />,
@@ -157,7 +163,7 @@ const navItems: NavItem[] = [
     label: 'Travel Rewards',
     path: '/rewards',
     icon: <Gift className="h-5 w-5" />,
-    roles: ['employee'],
+    roles: ['employee'], // Only visible to employees
   },
   {
     label: 'Redemption History',

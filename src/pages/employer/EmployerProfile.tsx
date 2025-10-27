@@ -20,15 +20,37 @@ import {
   FileDown,
   Settings as SettingsIcon,
   Trash2,
-  Users
+  Users,
+  Loader2
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useAvatarUpload } from '@/hooks/useAvatarUpload';
 
 export default function EmployerProfile() {
+  const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadAvatar, uploading } = useAvatarUpload(user?.id || '');
+  
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsAlerts, setSmsAlerts] = useState(false);
   const [appNotifications, setAppNotifications] = useState(true);
   const [teamAlerts, setTeamAlerts] = useState(true);
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = await uploadAvatar(file);
+      if (url) {
+        setAvatarUrl(url);
+      }
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -38,12 +60,28 @@ export default function EmployerProfile() {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               <div className="relative">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
                 <Avatar className="h-24 w-24">
-                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" />
+                  <AvatarImage src={avatarUrl || "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah"} />
                   <AvatarFallback>SM</AvatarFallback>
                 </Avatar>
-                <Button size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full">
-                  <Edit3 className="h-3.5 w-3.5" />
+                <Button 
+                  size="icon" 
+                  className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full"
+                  onClick={handleAvatarClick}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Edit3 className="h-3.5 w-3.5" />
+                  )}
                 </Button>
               </div>
               <div>

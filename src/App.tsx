@@ -38,6 +38,7 @@ import EmployerBilling from "./pages/employer/EmployerBilling";
 import EmployerMatchingPolicy from "./pages/employer/EmployerMatchingPolicy";
 import EmployeeDetail from "./pages/employer/EmployeeDetail";
 import Analytics from "./pages/employer/Analytics";
+import EmployerNotifications from "./pages/employer/EmployerNotifications";
 import CompaniesManagement from "./pages/admin/CompaniesManagement";
 import EmployeesManagement from "./pages/admin/EmployeesManagement";
 import RewardsCatalog from "./pages/admin/RewardsCatalog";
@@ -89,6 +90,7 @@ const App = () => (
           <Route path="/employer/approvals" element={<EmployerApprovals />} />
           <Route path="/employer/employee-approval" element={<EmployerEmployeeApproval />} />
           <Route path="/employer/billing" element={<EmployerBilling />} />
+          <Route path="/employer/notifications" element={<ProtectedRoute requiredRole="employer"><EmployerNotifications /></ProtectedRoute>} />
           <Route path="/employer/reports" element={<EmployerReports />} />
           <Route path="/employer/analytics" element={<Analytics />} />
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
