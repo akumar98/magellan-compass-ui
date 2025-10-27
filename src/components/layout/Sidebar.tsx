@@ -28,6 +28,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { PendingRequestsBadge } from '@/components/employer/PendingRequestsBadge';
 
 interface NavItem {
   label: string;
@@ -273,7 +274,10 @@ export const Sidebar = () => {
             }
           >
             {item.icon}
-            <span>{item.label}</span>
+            <span className="flex-1">{item.label}</span>
+            {item.path === '/employer/employee-approval' && user?.role === 'employer' && (
+              <PendingRequestsBadge />
+            )}
           </NavLink>
         ))}
       </nav>
