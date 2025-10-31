@@ -34,7 +34,7 @@ export const RewardConfirmationDialog: React.FC<RewardConfirmationDialogProps> =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <div className="space-y-6">
           {/* Success Icon */}
           <div className="flex justify-center">
