@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Brain, TrendingUp, Heart, Twitter, Linkedin, Instagram } from "lucide-react";
+import { Shield, TrendingUp, Heart, Twitter, Linkedin, Instagram, CheckCircle2, ArrowRight } from "lucide-react";
 import heroBackground from "@/assets/hero-background.png";
 
 const LandingPage = () => {
@@ -26,8 +26,11 @@ const LandingPage = () => {
   };
 
   const scrollToHowItWorks = () => {
-    // Placeholder - would scroll to how it works section if it existed
-    console.log("Scroll to How It Works");
+    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToProof = () => {
+    document.getElementById('proof-strip')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleBookCall = () => {
@@ -75,87 +78,217 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-[#0369A1] via-[#06B6D4] to-[#F59E0B] py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-40">
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: "url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80)",
-              mixBlendMode: "multiply",
-            }}
-          />
+      <section className="relative gradient-primary py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
         </div>
 
         <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              Transform Work Milestones
-              <br />
-              into Life-Changing Journeys
-            </h1>
-            <p className="text-xl text-white mb-8">Turn employee well-being into unforgettable journeys</p>
-            <div className="flex justify-center gap-4">
-              <Button
-                onClick={handleTryDemo}
-                className="bg-white text-[#0EA5E9] hover:bg-gray-100 px-8 h-12 text-base font-medium rounded-md"
-              >
-                Try Demo
-              </Button>
-              <Button
-                onClick={scrollToHowItWorks}
-                variant="outline"
-                className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 h-12 text-base font-medium rounded-md"
-              >
-                How It Works
-              </Button>
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+            {/* Left: Text Content */}
+            <div className="text-center lg:text-left">
+              <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in">
+                Predict the moment. Personalize the lift. Prove the impact.
+              </h1>
+              <p className="text-xl lg:text-2xl text-white/90 mb-8 leading-relaxed">
+                Consent-timed care that raises retention, engagement, and productivity.
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                <Button
+                  onClick={scrollToHowItWorks}
+                  size="lg"
+                  className="bg-white text-primary hover:bg-white/90 px-8 h-12 text-base font-semibold rounded-lg shadow-lg"
+                >
+                  See how it works
+                </Button>
+                <Button
+                  onClick={scrollToProof}
+                  variant="outline"
+                  size="lg"
+                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 h-12 text-base font-semibold rounded-lg"
+                >
+                  Why employees trust it
+                </Button>
+              </div>
+              
+              {/* Trust Microcopy */}
+              <p className="text-white/80 text-sm mt-6 max-w-md mx-auto lg:mx-0">
+                We read patterns, not messages. You control your signals at any time.
+              </p>
+            </div>
+
+            {/* Right: Abstract Illustration */}
+            <div className="hidden lg:flex justify-center items-center">
+              <div className="relative w-full max-w-md">
+                <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl" />
+                <div className="relative p-8 space-y-6">
+                  {/* Signal */}
+                  <div className="flex items-center gap-4 animate-fade-in">
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                      <div className="w-6 h-6 rounded-full bg-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="h-3 bg-white/30 rounded-full w-3/4" />
+                      <div className="h-2 bg-white/20 rounded-full w-1/2 mt-2" />
+                    </div>
+                  </div>
+                  
+                  {/* Arrow */}
+                  <div className="flex justify-center">
+                    <ArrowRight className="w-8 h-8 text-white/60" />
+                  </div>
+                  
+                  {/* Support */}
+                  <div className="flex items-center gap-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                      <Heart className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="h-3 bg-white/30 rounded-full w-2/3" />
+                      <div className="h-2 bg-white/20 rounded-full w-1/2 mt-2" />
+                    </div>
+                  </div>
+                  
+                  {/* Arrow */}
+                  <div className="flex justify-center">
+                    <ArrowRight className="w-8 h-8 text-white/60" />
+                  </div>
+                  
+                  {/* Smile */}
+                  <div className="flex items-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                      <span className="text-2xl">😊</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="h-3 bg-white/30 rounded-full w-4/5" />
+                      <div className="h-2 bg-white/20 rounded-full w-3/5 mt-2" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      {/* REP Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Retention */}
+            <Card className="card-stat group cursor-pointer">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                <Shield className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-3">Retention</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Fewer regretted exits. Catch risk early.
+              </p>
+            </Card>
+
+            {/* Engagement */}
+            <Card className="card-stat group cursor-pointer">
+              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
+                <Heart className="w-8 h-8 text-accent" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-3">Engagement</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                eNPS lifts when care arrives on time.
+              </p>
+            </Card>
+
+            {/* Productivity */}
+            <Card className="card-stat group cursor-pointer">
+              <div className="w-16 h-16 rounded-2xl bg-success/10 flex items-center justify-center mb-6 group-hover:bg-success/20 transition-colors">
+                <TrendingUp className="w-8 h-8 text-success" />
+              </div>
+              <h3 className="text-2xl font-bold text-foreground mb-3">Productivity</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Momentum returns when teams get support.
+              </p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-20 bg-background">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Personalized Rewards That Actually Matter</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Our AI-powered platform creates personalized travel experiences that boost engagement and retention
+            <h2 className="text-4xl font-bold text-foreground mb-4">How It Works</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Three simple steps to transform workforce care
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* AI Personalization */}
-            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
-                <Brain className="w-7 h-7 text-[#0EA5E9]" />
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+            {/* Step 1: Sense */}
+            <div className="relative">
+              <Card className="card-stat text-center">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary text-primary-foreground text-2xl font-bold mb-6">
+                  1
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3">Sense</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Read permissioned signals like milestones and PTO patterns.
+                </p>
+              </Card>
+              {/* Arrow */}
+              <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                <ArrowRight className="w-8 h-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">AI Personalization</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Tailored travel recommendations based on employee preferences and milestones.
-              </p>
-            </Card>
+            </div>
 
-            {/* Wellness Goals */}
-            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mb-6">
-                <Heart className="w-7 h-7 text-[#F59E0B]" />
+            {/* Step 2: Support */}
+            <div className="relative">
+              <Card className="card-stat text-center">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent text-accent-foreground text-2xl font-bold mb-6">
+                  2
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3">Support</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Curate a wellness or travel reset, co-funded and manager-approved.
+                </p>
+              </Card>
+              {/* Arrow */}
+              <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                <ArrowRight className="w-8 h-8 text-accent" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Wellness Goals</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Link performance with wellness-focused travel that energizes and inspires.
-              </p>
-            </Card>
+            </div>
 
-            {/* Real ROI */}
-            <Card className="bg-white p-8 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
-                <TrendingUp className="w-7 h-7 text-[#10B981]" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Real ROI</h3>
-              <p className="text-gray-600 leading-relaxed">
-                See measurable impact through improved engagement, retention, and well-being.
-              </p>
-            </Card>
+            {/* Step 3: Prove */}
+            <div className="relative">
+              <Card className="card-stat text-center">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-success text-success-foreground text-2xl font-bold mb-6">
+                  3
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-3">Prove</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Show impact with decision logs and ROI snapshots.
+                </p>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Proof Strip Section */}
+      <section id="proof-strip" className="py-12 bg-primary/5">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16 max-w-5xl mx-auto">
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0" />
+              <span className="text-lg font-semibold text-foreground">+10 eNPS</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0" />
+              <span className="text-lg font-semibold text-foreground">≥ 40% opt-in</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0" />
+              <span className="text-lg font-semibold text-foreground">120%+ NRR path</span>
+            </div>
           </div>
         </div>
       </section>
