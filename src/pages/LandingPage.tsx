@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Shield, TrendingUp, Heart, Twitter, Linkedin, Instagram, CheckCircle2, ArrowRight } from "lucide-react";
 import heroBackground from "@/assets/hero-background.png";
@@ -8,6 +8,29 @@ import heroBackground from "@/assets/hero-background.png";
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  
+  // Hero variant logic - supports ?variant=A or ?variant=B
+  const variant = searchParams.get('variant')?.toUpperCase();
+  
+  const heroVariants = {
+    DEFAULT: {
+      headline: "Predict the moment. Personalize the lift. Prove the impact.",
+      subheadline: "Consent-timed care that raises retention, engagement, and productivity."
+    },
+    A: {
+      headline: "Care that arrives on time.",
+      subheadline: "Predict who needs support, when, and how — with consent and precision."
+    },
+    B: {
+      headline: "The Workforce Care Intelligence platform.",
+      subheadline: "Turn well-timed support into measurable retention, engagement, and productivity."
+    }
+  };
+  
+  const currentHero = variant === 'A' ? heroVariants.A : 
+                      variant === 'B' ? heroVariants.B : 
+                      heroVariants.DEFAULT;
 
   const handleLogin = () => {
     navigate("/role-selection?mode=login");
@@ -89,10 +112,10 @@ const LandingPage = () => {
             {/* Left: Text Content */}
             <div className="text-center lg:text-left">
               <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in">
-                Predict the moment. Personalize the lift. Prove the impact.
+                {currentHero.headline}
               </h1>
               <p className="text-xl lg:text-2xl text-white/90 mb-8 leading-relaxed">
-                Consent-timed care that raises retention, engagement, and productivity.
+                {currentHero.subheadline}
               </p>
               <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
                 <Button
