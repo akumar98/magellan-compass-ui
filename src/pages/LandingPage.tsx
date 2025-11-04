@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Shield, TrendingUp, Heart, Twitter, Linkedin, Instagram, CheckCircle2, ArrowRight } from "lucide-react";
+import { Shield, TrendingUp, Heart, Twitter, Linkedin, Instagram, ArrowRight } from "lucide-react";
+import { ProofStrip } from "@/components/landing/ProofStrip";
 import heroBackground from "@/assets/hero-background.png";
 
 const LandingPage = () => {
@@ -297,24 +298,7 @@ const LandingPage = () => {
       </section>
 
       {/* Proof Strip Section */}
-      <section id="proof-strip" className="py-12 bg-primary/5">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-16 max-w-5xl mx-auto">
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0" />
-              <span className="text-lg font-semibold text-foreground">+10 eNPS</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0" />
-              <span className="text-lg font-semibold text-foreground">≥ 40% opt-in</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 text-success flex-shrink-0" />
-              <span className="text-lg font-semibold text-foreground">120%+ NRR path</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ProofStrip />
 
       {/* Testimonials Section */}
       <section className="py-20 bg-white">
