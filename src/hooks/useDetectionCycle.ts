@@ -249,8 +249,13 @@ export const useDetectionCycle = (cycleId?: string) => {
 
       if (stepsError) throw stepsError;
 
-      // Start the state machine in the background (don't await)
-      runStateMachine(newCycle.id);
+      // Start the state machine in the background (don't await but keep reference)
+      // Use setTimeout to ensure it runs even after navigation
+      setTimeout(() => {
+        runStateMachine(newCycle.id).catch(err => {
+          console.error('[startCycle] State machine failed:', err);
+        });
+      }, 100);
 
       // Return cycle ID immediately for navigation
       return newCycle.id;
