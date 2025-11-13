@@ -189,6 +189,86 @@ export type Database = {
         }
         Relationships: []
       }
+      detection_cycles: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          duration_sec: number | null
+          employer_id: string
+          id: string
+          result_summary_json: Json | null
+          started_at: string | null
+          started_by: string
+          state: string
+          updated_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          duration_sec?: number | null
+          employer_id: string
+          id?: string
+          result_summary_json?: Json | null
+          started_at?: string | null
+          started_by: string
+          state?: string
+          updated_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          duration_sec?: number | null
+          employer_id?: string
+          id?: string
+          result_summary_json?: Json | null
+          started_at?: string | null
+          started_by?: string
+          state?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      detection_steps: {
+        Row: {
+          created_at: string | null
+          cycle_id: string
+          details_json: Json | null
+          ended_at: string | null
+          id: string
+          started_at: string | null
+          status: string
+          step: string
+        }
+        Insert: {
+          created_at?: string | null
+          cycle_id: string
+          details_json?: Json | null
+          ended_at?: string | null
+          id?: string
+          started_at?: string | null
+          status?: string
+          step: string
+        }
+        Update: {
+          created_at?: string | null
+          cycle_id?: string
+          details_json?: Json | null
+          ended_at?: string | null
+          id?: string
+          started_at?: string | null
+          status?: string
+          step?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detection_steps_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "detection_cycles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       employee_preferences: {
         Row: {
           created_at: string | null
@@ -646,10 +726,7 @@ export type Database = {
         Args: { requesting_user_id: string; target_employee_id: string }
         Returns: boolean
       }
-      get_user_company_id: {
-        Args: { _user_id: string }
-        Returns: string
-      }
+      get_user_company_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

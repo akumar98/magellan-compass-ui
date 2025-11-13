@@ -3,6 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Sparkles,
   CheckCircle2,
@@ -17,50 +20,93 @@ import {
   Lightbulb,
   Settings,
   Gift,
-  AlertTriangle
+  AlertTriangle,
+  XCircle
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { useDetectionCycle } from '@/hooks/useDetectionCycle';
+import { useEffect, useState } from 'react';
 
 const AIConciergeDetection = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const cycleId = searchParams.get('cycleId');
+  const [showLogs, setShowLogs] = useState(false);
+
+  const {
+    cycle,
+    steps,
+    loading,
+    fastMode,
+    setFastMode,
+    cancelCycle,
+    retryCycle,
+    getStepProgress,
+    isRunning,
+    isCompleted,
+    isFailed,
+    isCancelled,
+  } = useDetectionCycle(cycleId || undefined);
+
+  useEffect(() => {
+    if (!cycleId) {
+      navigate('/employer/ai-concierge');
+    }
+  }, [cycleId, navigate]);
+
+  useEffect(() => {
+    if (isCompleted && cycle?.result_summary_json) {
+      setTimeout(() => {
+        navigate(`/employer/ai-concierge/review?cycleId=${cycle.id}`);
+      }, 2000);
+    }
+  }, [isCompleted, cycle, navigate]);
+
+  const getStepStatus = (stepName: string) => {
+    const step = steps.find(s => s.step === stepName);
+    if (!step) return 'pending';
+    return step.status;
+  };
 
   const processingSteps = [
     {
       title: 'Context Analysis',
       subtitle: 'Analyzing behavioral patterns...',
-      status: 'completed',
+      status: getStepStatus('context_analysis'),
       icon: <Brain className="w-5 h-5" />
     },
     {
       title: 'Preference Match',
       subtitle: 'Cross-referencing employee preferences and past activity...',
-      status: 'completed',
+      status: getStepStatus('preference_match'),
       icon: <Lightbulb className="w-5 h-5" />
     },
     {
       title: 'Policy Alignment',
       subtitle: 'Cross-checking company policy and compliance requirements...',
-      status: 'progress',
+      status: getStepStatus('policy_alignment'),
       icon: <Shield className="w-5 h-5" />
     },
     {
       title: 'Budget Fit Check',
-      subtitle: 'Computing funding split (80/20...',
-      status: 'pending',
+      subtitle: 'Computing funding split...',
+      status: getStepStatus('budget_fit_check'),
       icon: <DollarSign className="w-5 h-5" />
     },
     {
       title: 'Generating Rewards',
       subtitle: 'Creating personalized reset recommendations...',
-      status: 'pending',
+      status: getStepStatus('generating_rewards'),
       icon: <Gift className="w-5 h-5" />
     },
   ];
 
+  const results = cycle?.result_summary_json || {};
+
   const fundingData = [
-    { name: 'Company Funded', value: 75, color: 'hsl(var(--primary))' },
-    { name: 'Employee Co-fund', value: 25, color: 'hsl(var(--success))' }
+    { name: 'Company Funded', value: results?.charts?.funding_distribution?.company * 100 || 75, color: 'hsl(var(--primary))' },
+    { name: 'Employee Co-fund', value: results?.charts?.funding_distribution?.employee * 100 || 25, color: 'hsl(var(--success))' }
   ];
 
   const insightCards = [
@@ -90,10 +136,29 @@ const AIConciergeDetection = () => {
             <h1 className="text-3xl font-bold text-foreground">Detection Cycle in Progress</h1>
             <p className="text-muted-foreground mt-1">AI is analyzing wellbeing and milestone signals to generate suitable resets.</p>
           </div>
-          <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-            <Sparkles className="w-3 h-3 mr-1" />
-            Processing
-          </Badge>
+          <div className="flex items-center gap-3">
+            {!isCompleted && !isFailed && !isCancelled && (
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="fast-mode"
+                  checked={fastMode}
+                  onCheckedChange={setFastMode}
+                />
+                <Label htmlFor="fast-mode" className="text-sm text-muted-foreground">Fast Mode (Dev)</Label>
+              </div>
+            )}
+            <Badge 
+              variant="secondary" 
+              className={`${
+                isCompleted ? 'bg-success/10 text-success border-success/20' :
+                isFailed || isCancelled ? 'bg-destructive/10 text-destructive border-destructive/20' :
+                'bg-primary/10 text-primary border-primary/20'
+              }`}
+            >
+              <Sparkles className="w-3 h-3 mr-1" />
+              {isCompleted ? 'Completed' : isFailed ? 'Failed' : isCancelled ? 'Cancelled' : 'Processing'}
+            </Badge>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -115,12 +180,12 @@ const AIConciergeDetection = () => {
                         {/* Icon */}
                         <div className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full ${
                           step.status === 'completed' ? 'bg-success/10' :
-                          step.status === 'progress' ? 'bg-primary/10' :
+                          step.status === 'in_progress' ? 'bg-primary/10' :
                           'bg-muted'
                         }`}>
                           {step.status === 'completed' ? (
                             <CheckCircle2 className="w-5 h-5 text-success" />
-                          ) : step.status === 'progress' ? (
+                          ) : step.status === 'in_progress' ? (
                             <div className="flex items-center justify-center">
                               {step.icon}
                               <div className="absolute w-12 h-12 rounded-full border-2 border-primary border-t-transparent animate-spin" />
@@ -140,7 +205,7 @@ const AIConciergeDetection = () => {
                               <span className="text-xs text-success">Completed</span>
                             </div>
                           )}
-                          {step.status === 'progress' && (
+                          {step.status === 'in_progress' && (
                             <div className="flex items-center gap-1 mt-1">
                               <Clock className="w-3 h-3 text-primary" />
                               <span className="text-xs text-primary">In Progress</span>

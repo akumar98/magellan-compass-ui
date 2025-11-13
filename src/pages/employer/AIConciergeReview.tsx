@@ -28,52 +28,34 @@ import {
   Eye,
   BookOpen
 } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useDetectionCycle } from '@/hooks/useDetectionCycle';
+import { useEffect } from 'react';
 
 const AIConciergeReview = () => {
-  const recommendations = [
-    {
-      title: 'Dilijan Forest Retreat',
-      location: 'Armenia',
-      duration: '3 days',
-      description: '3-day quiet retreat with spa treatments and nature immersion',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop',
-      tags: ['Top Match', 'All Meals', 'Wellness Program', 'Nature Walks', 'Yoga Sessions', 'Transport'],
-      companyFund: 480,
-      employeeContribution: 160,
-      totalCost: 640,
-      badge: 'Within Budget',
-      badgeColor: 'success',
-      whyThisFits: 'Short travel distance (2 hours). Aligns with preference for low-activity weekends, and provides structure for stress recovery. Perfect for quiet physical activity.'
-    },
-    {
-      title: 'Batumi Coastal Wellness',
-      location: 'Georgia',
-      duration: '4 days',
-      description: '4-day beachside retreat with spa and meditation programs',
-      image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&auto=format&fit=crop',
-      tags: ['Resort Suite', 'Half Board', 'Meditation', 'Pool & Beach', 'Spa Access', 'Fitness Center'],
-      companyFund: 520,
-      employeeContribution: 260,
-      totalCost: 780,
-      badge: 'Co-Fund Required',
-      badgeColor: 'warning',
-      whyThisFits: 'Relaxed schedule with low-effort gentle activity, matches interest in coastal environments, and provides structured recovery in a high-rated spa. Perfect for stress management skills without big budget overage.'
-    },
-    {
-      title: 'Tsaghkadzor Mountain Lodge',
-      location: 'Armenia',
-      duration: '3 days',
-      description: '3-day mountain escape with wellness activities and hiking',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop',
-      tags: ['Standard Room', 'Breakfast', 'Mountain Views', 'Guided Hikes', 'Sauna Access', 'WiFi'],
-      companyFund: 380,
-      employeeContribution: 120,
-      totalCost: 500,
-      badge: 'Budget Option',
-      badgeColor: 'default',
-      whyThisFits: 'Most budget-friendly active close-proximity (1.5 hours), and offers guided activities that align with occasional interest in gentle physical activity.'
-    },
-  ];
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const cycleId = searchParams.get('cycleId');
+  const { cycle, loading } = useDetectionCycle(cycleId || undefined);
+
+  useEffect(() => {
+    if (!cycleId) {
+      navigate('/employer/ai-concierge');
+    }
+  }, [cycleId, navigate]);
+
+  if (loading || !cycle) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const results = cycle.result_summary_json || {};
+  const recommendations = results.recommendations || [];
 
   return (
     <DashboardLayout>
@@ -114,45 +96,37 @@ const AIConciergeReview = () => {
               <p className="text-sm text-muted-foreground mb-6">Compare tailored reset options tailored to Sarah's needs and preferences</p>
 
               <div className="space-y-6">
-                {recommendations.map((rec, idx) => (
-                  <Card key={idx} className="overflow-hidden">
-                    <div className="relative">
-                      <img src={rec.image} alt={rec.title} className="w-full h-48 object-cover" />
-                      <Badge 
-                        variant={rec.badgeColor === 'success' ? 'default' : rec.badgeColor === 'warning' ? 'secondary' : 'outline'}
-                        className={`absolute top-4 right-4 ${
-                          rec.badgeColor === 'success' ? 'bg-success text-success-foreground' :
-                          rec.badgeColor === 'warning' ? 'bg-warning text-warning-foreground' :
-                          'bg-muted'
-                        }`}
-                      >
-                        {rec.badge}
-                      </Badge>
-                    </div>
-                    <CardContent className="pt-6 space-y-4">
-                      <div>
-                        <div className="flex items-start justify-between mb-2">
+                {recommendations.map((emp: any, empIdx: number) => (
+                  <div key={empIdx} className="space-y-4">
+                    <h3 className="font-semibold text-lg">Recommendations for {emp.employee_name || `Employee ${empIdx + 1}`}</h3>
+                    {emp.options?.map((rec: any, idx: number) => (
+                      <Card key={idx} className="overflow-hidden">
+                        <div className="relative">
+                          <img src={rec.image_url || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop'} alt={rec.title} className="w-full h-48 object-cover" />
+                          <Badge 
+                            variant={rec.policy === 'within_budget' ? 'default' : 'secondary'}
+                            className={`absolute top-4 right-4 ${
+                              rec.policy === 'within_budget' ? 'bg-success text-success-foreground' : 'bg-warning text-warning-foreground'
+                            }`}
+                          >
+                            {rec.policy === 'within_budget' ? 'Within Budget' : 'Co-Fund Required'}
+                          </Badge>
+                        </div>
+                        <CardContent className="pt-6 space-y-4">
                           <div>
-                            <h3 className="text-xl font-bold">{rec.title}</h3>
-                            <p className="text-sm text-muted-foreground">{rec.description}</p>
-                          </div>
+                            <div className="flex items-start justify-between mb-2">
+                              <div>
+                                <h3 className="text-xl font-bold">{rec.title}</h3>
+                                <p className="text-sm text-muted-foreground">{rec.desc}</p>
+                              </div>
                         </div>
                         
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2 mt-3">
+                        {/* Cost */}
+                        <div className="mt-3">
                           <Badge variant="outline" className="text-xs">
-                            <MapPin className="w-3 h-3 mr-1" />
-                            {rec.location}
+                            <DollarSign className="w-3 h-3 mr-1" />
+                            ${rec.cost} total
                           </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            <Calendar className="w-3 h-3 mr-1" />
-                            {rec.duration}
-                          </Badge>
-                          {rec.tags.map((tag, i) => (
-                            <Badge key={i} variant="secondary" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
                         </div>
                       </div>
 
@@ -167,14 +141,14 @@ const AIConciergeReview = () => {
                               <div className="w-2 h-2 rounded-full bg-primary" />
                               <span className="text-muted-foreground">Company Contribution</span>
                             </div>
-                            <span className="font-semibold">${rec.companyFund}</span>
+                            <span className="font-semibold">${rec.company}</span>
                           </div>
                           <div className="flex justify-between text-sm">
                             <div className="flex items-center gap-2">
                               <div className="w-2 h-2 rounded-full bg-success" />
                               <span className="text-muted-foreground">Employee Contribution</span>
                             </div>
-                            <span className="font-semibold">${rec.employeeContribution}</span>
+                            <span className="font-semibold">${rec.employee}</span>
                           </div>
                           <Separator className="my-2" />
                           <div className="flex justify-between font-semibold">
@@ -211,6 +185,8 @@ const AIConciergeReview = () => {
                       </div>
                     </CardContent>
                   </Card>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>

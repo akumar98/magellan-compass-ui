@@ -24,9 +24,22 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip } from 'recharts';
+import { useDetectionCycle } from '@/hooks/useDetectionCycle';
+import { useState } from 'react';
 
 const AIConciergeOverview = () => {
   const navigate = useNavigate();
+  const { startCycle, loading } = useDetectionCycle();
+  const [isStarting, setIsStarting] = useState(false);
+
+  const handleStartCycle = async () => {
+    setIsStarting(true);
+    const cycleId = await startCycle();
+    if (cycleId) {
+      navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}`);
+    }
+    setIsStarting(false);
+  };
 
   const historicalTrendData = [
     { week: 'Week 1', burnout: 42, disengagement: 38, events: 35 },
@@ -300,8 +313,8 @@ const AIConciergeOverview = () => {
                       </div>
                       <p className="text-sm text-muted-foreground">No message content read</p>
                     </div>
-                    <Button onClick={() => navigate('/employer/ai-concierge/detection')}>
-                      ▶ Start Detection Cycle
+                    <Button onClick={handleStartCycle} disabled={isStarting || loading}>
+                      {isStarting || loading ? 'Starting...' : '▶ Start Detection Cycle'}
                     </Button>
                   </div>
                 </div>
