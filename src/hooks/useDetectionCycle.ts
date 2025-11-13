@@ -241,16 +241,26 @@ export const useDetectionCycle = (cycleId?: string) => {
         .order('risk_score', { ascending: false })
         .limit(5);
 
+      console.log('[startCycle] Fetched burnout predictions:', employeesWithRisk);
+
       if (employeesError) {
         console.error('Error fetching burnout predictions:', employeesError);
       }
 
       // Fetch profile details for these employees
       const employeeIds = employeesWithRisk?.map(e => e.employee_id) || [];
+      
+      if (employeeIds.length === 0) {
+        console.warn('[startCycle] No employees with burnout risk found');
+        throw new Error('No employees with burnout risk found');
+      }
+
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('id, full_name, email, department')
         .in('id', employeeIds);
+
+      console.log('[startCycle] Fetched profiles:', profiles);
 
       if (profilesError) {
         console.error('Error fetching profiles:', profilesError);
@@ -269,7 +279,7 @@ export const useDetectionCycle = (cycleId?: string) => {
         };
       }) || [];
 
-      console.log('[startCycle] Employee data:', employeeData);
+      console.log('[startCycle] Employee data prepared:', employeeData);
 
       const { data: newCycle, error: cycleError } = await supabase
         .from('detection_cycles')
