@@ -93,6 +93,7 @@ const App = () => (
             <Route path="/employee/notifications" element={<Notifications />} />
             
             {/* Employer routes - Protected */}
+            <Route path="/employer" element={<Navigate to="/employer/ai-concierge" replace />} />
           <Route path="/employer/profile" element={<ProtectedRoute requiredRole="employer"><EmployerProfile /></ProtectedRoute>} />
           <Route path="/employer/team" element={<ProtectedRoute requiredRole="employer"><EmployerTeam /></ProtectedRoute>} />
           <Route path="/employer/team/:id" element={<ProtectedRoute requiredRole="employer"><EmployeeDetail /></ProtectedRoute>} />
