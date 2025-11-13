@@ -221,7 +221,7 @@ const AIConciergeOverview = () => {
               <CardContent>
                 <div className="space-y-1">
                   {/* Table Header */}
-                  <div className="grid grid-cols-6 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
+                  <div className="grid grid-cols-7 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
                     <div className="col-span-2">Employee</div>
                     <div>Role</div>
                     <div>Team</div>
@@ -233,7 +233,7 @@ const AIConciergeOverview = () => {
                   
                   {/* Table Rows */}
                   {employees.map((emp, idx) => (
-                    <div key={idx} className="grid grid-cols-6 gap-4 py-3 border-b hover:bg-muted/50 items-center">
+                    <div key={idx} className="grid grid-cols-7 gap-4 py-3 border-b hover:bg-muted/50 items-center">
                       <div className="col-span-2 flex items-center gap-3">
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.name}`} />
@@ -261,7 +261,20 @@ const AIConciergeOverview = () => {
                         </Badge>
                       </div>
                       <div>
-                        <Button variant="ghost" size="sm">Review</Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={async () => {
+                            const cycleId = await startCycle();
+                            if (cycleId) {
+                              navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}&employeeId=${emp.name}`);
+                            }
+                          }}
+                          disabled={isStarting || loading}
+                        >
+                          <Brain className="w-3 h-3 mr-1" />
+                          Start Detection
+                        </Button>
                       </div>
                     </div>
                   ))}

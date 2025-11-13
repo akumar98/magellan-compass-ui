@@ -107,26 +107,56 @@ const AIConciergeReview = () => {
         </div>
 
         {/* Employee Header */}
-        <Card className="border-destructive/20 bg-destructive/5">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-16 w-16">
-                <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" />
-                <AvatarFallback>SM</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center gap-3">
-                  <h2 className="text-xl font-bold">Employee: Sarah Mitchell</h2>
-                  <Badge variant="destructive" className="text-xs">
-                    <AlertTriangle className="w-3 h-3 mr-1" />
-                    Burnout Risk Signal
-                  </Badge>
+        {recommendations.length > 0 && (
+          <Card className="border-destructive/20 bg-destructive/5">
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                <h2 className="text-lg font-semibold">Analyzing {recommendations.length} Employee{recommendations.length > 1 ? 's' : ''}</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {recommendations.map((rec: any, idx: number) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${rec.employee_name}`} />
+                        <AvatarFallback>{rec.employee_name?.split(' ').map((n: string) => n[0]).join('') || 'U'}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold truncate">{rec.employee_name || 'Unknown Employee'}</p>
+                        <p className="text-sm text-muted-foreground truncate">{rec.department || 'Unknown Department'}</p>
+                        <Badge variant="destructive" className="text-xs mt-1">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          {rec.burnout_risk || 'Risk'} Risk
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-sm text-muted-foreground">Senior Engineer · Design Team · 3 years</p>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
+
+        {!recommendations.length && (
+          <Card className="border-destructive/20 bg-destructive/5">
+            <CardContent className="pt-6">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" />
+                  <AvatarFallback>SM</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-xl font-bold">Employee: Sarah Mitchell</h2>
+                    <Badge variant="destructive" className="text-xs">
+                      <AlertTriangle className="w-3 h-3 mr-1" />
+                      Burnout Risk Signal
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground">Senior Engineer · Design Team · 3 years</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recommendations Column */}

@@ -228,13 +228,45 @@ export const useDetectionCycle = (cycleId?: string) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      // Create cycle
+      // Fetch employees with burnout risk
+      const { data: burnoutPredictions, error: burnoutError } = await supabase
+        .from('burnout_predictions')
+        .select(`
+          *,
+          profiles:employee_id (
+            id,
+            full_name,
+            email,
+            department
+          )
+        `)
+        .in('risk_level', ['medium', 'high'])
+        .order('risk_score', { ascending: false })
+        .limit(5);
+
+      if (burnoutError) {
+        console.error('Error fetching employees:', burnoutError);
+      }
+
+      // Create cycle with employee data
+      const employeeData = burnoutPredictions?.map(bp => ({
+        id: bp.employee_id,
+        name: (bp.profiles as any)?.full_name || 'Unknown',
+        email: (bp.profiles as any)?.email || 'unknown@email.com',
+        department: (bp.profiles as any)?.department || 'Unknown',
+        risk_level: bp.risk_level,
+        risk_score: bp.risk_score,
+      })) || [];
+
       const { data: newCycle, error: cycleError } = await supabase
         .from('detection_cycles')
         .insert({
           employer_id: user.id,
           started_by: user.id,
           state: 'context_analysis',
+          result_summary_json: {
+            employees: employeeData,
+          },
         })
         .select()
         .single();
@@ -325,7 +357,35 @@ export const useDetectionCycle = (cycleId?: string) => {
       console.log('[State Machine] Generating results...');
       // Generate results with images
       const results = await generateMockResults();
-      console.log('[State Machine] Results generated:', results);
+      
+      // Get employee data from cycle
+      const { data: cycleData } = await supabase
+        .from('detection_cycles')
+        .select('result_summary_json')
+        .eq('id', cycleId)
+        .single();
+
+      const summaryJson = cycleData?.result_summary_json as any;
+      const employees = summaryJson?.employees || [];
+      
+      // Generate recommendations for each employee
+      const recommendations = employees.map((emp: any, i: number) => ({
+        employee_id: emp.id,
+        employee_name: emp.name,
+        employee_email: emp.email,
+        department: emp.department,
+        burnout_risk: emp.risk_level,
+        risk_score: emp.risk_score,
+        options: results.recommendations[0]?.options || [],
+      }));
+
+      const finalResults = {
+        ...results,
+        recommendations,
+        employees,
+      };
+
+      console.log('[State Machine] Results generated:', finalResults);
 
       // Update cycle to completed
       await supabase
@@ -333,7 +393,7 @@ export const useDetectionCycle = (cycleId?: string) => {
         .update({
           state: 'completed',
           completed_at: new Date().toISOString(),
-          result_summary_json: results,
+          result_summary_json: finalResults,
           duration_sec: 10,
         })
         .eq('id', cycleId);
@@ -343,7 +403,7 @@ export const useDetectionCycle = (cycleId?: string) => {
       // Create notification
       toast({
         title: 'Detection Cycle Complete',
-        description: `Found ${results.detections} employees needing wellness support`,
+        description: `Found ${finalResults.detections} employees needing wellness support`,
       });
     } catch (error) {
       console.error('[State Machine] Error:', error);
