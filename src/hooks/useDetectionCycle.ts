@@ -222,11 +222,16 @@ export const useDetectionCycle = (cycleId?: string) => {
   };
 
   // Start a new cycle
-  const startCycle = async () => {
+  const startCycle = async (employerId?: string) => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      // Use provided employerId or fetch from auth
+      let userId = employerId;
+      if (!userId) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('Not authenticated');
+        userId = user.id;
+      }
 
       // Fetch employees with burnout risk using direct join
       const { data: employeesWithRisk, error: employeesError } = await supabase
@@ -269,8 +274,8 @@ export const useDetectionCycle = (cycleId?: string) => {
       const { data: newCycle, error: cycleError } = await supabase
         .from('detection_cycles')
         .insert({
-          employer_id: user.id,
-          started_by: user.id,
+          employer_id: userId,
+          started_by: userId,
           state: 'context_analysis',
           result_summary_json: {
             employees: employeeData,

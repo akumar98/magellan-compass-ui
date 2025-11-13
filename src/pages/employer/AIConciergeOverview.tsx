@@ -26,15 +26,18 @@ import { useNavigate } from 'react-router-dom';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip } from 'recharts';
 import { useDetectionCycle } from '@/hooks/useDetectionCycle';
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 
 const AIConciergeOverview = () => {
   const navigate = useNavigate();
   const { startCycle, loading } = useDetectionCycle();
   const [isStarting, setIsStarting] = useState(false);
+  const { user } = useAuth();
 
   const handleStartCycle = async () => {
+    if (!user?.id) return;
     setIsStarting(true);
-    const cycleId = await startCycle();
+    const cycleId = await startCycle(user.id);
     if (cycleId) {
       navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}`);
     }
@@ -265,7 +268,8 @@ const AIConciergeOverview = () => {
                           variant="outline" 
                           size="sm"
                           onClick={async () => {
-                            const cycleId = await startCycle();
+                            if (!user?.id) return;
+                            const cycleId = await startCycle(user.id);
                             if (cycleId) {
                               navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}&employeeId=${emp.name}`);
                             }
