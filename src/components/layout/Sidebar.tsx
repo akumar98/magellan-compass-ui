@@ -22,7 +22,8 @@ import {
   Bell,
   History,
   BarChart3,
-  FileText
+  FileText,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -104,6 +105,12 @@ const navItems: NavItem[] = [
     label: 'Employee Approvals',
     path: '/employer/employee-approval',
     icon: <UserCheck className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'AI Concierge',
+    path: '/employer/ai-concierge',
+    icon: <Sparkles className="h-5 w-5" />,
     roles: ['employer'],
   },
   {

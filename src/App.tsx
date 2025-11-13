@@ -39,6 +39,9 @@ import EmployerMatchingPolicy from "./pages/employer/EmployerMatchingPolicy";
 import EmployeeDetail from "./pages/employer/EmployeeDetail";
 import Analytics from "./pages/employer/Analytics";
 import EmployerNotifications from "./pages/employer/EmployerNotifications";
+import AIConciergeOverview from "./pages/employer/AIConciergeOverview";
+import AIConciergeDetection from "./pages/employer/AIConciergeDetection";
+import AIConciergeReview from "./pages/employer/AIConciergeReview";
 import CompaniesManagement from "./pages/admin/CompaniesManagement";
 import EmployeesManagement from "./pages/admin/EmployeesManagement";
 import RewardsCatalog from "./pages/admin/RewardsCatalog";
@@ -95,6 +98,9 @@ const App = () => (
           <Route path="/employer/analytics" element={<Analytics />} />
           <Route path="/employer/burnout" element={<EmployerBurnout />} />
           <Route path="/employer/matching-policy" element={<EmployerMatchingPolicy />} />
+          <Route path="/employer/ai-concierge" element={<AIConciergeOverview />} />
+          <Route path="/employer/ai-concierge/detection" element={<AIConciergeDetection />} />
+          <Route path="/employer/ai-concierge/review" element={<AIConciergeReview />} />
             
             {/* Super Admin routes - Protected */}
             <Route path="/super-admin" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminDashboard /></ProtectedRoute>} />
