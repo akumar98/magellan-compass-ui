@@ -106,9 +106,19 @@ const AIConciergeOverview = () => {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">AI Concierge Overview</h1>
-          <p className="text-muted-foreground mt-1">Real-time insights into employee wellbeing and moment detection.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">AI Concierge Overview</h1>
+            <p className="text-muted-foreground mt-1">Real-time insights into employee wellbeing and moment detection.</p>
+          </div>
+          <Button 
+            onClick={handleStartCycle} 
+            disabled={isStarting || loading}
+            className="flex items-center gap-2"
+          >
+            <Brain className="w-4 h-4" />
+            {isStarting ? 'Starting...' : 'Start Detection Cycle'}
+          </Button>
         </div>
 
         {/* Summary Metrics */}

@@ -139,9 +139,16 @@ export const useDetectionCycle = (cycleId?: string) => {
         'A luxury spa resort with infinity pools, tropical gardens, and elegant massage treatment rooms',
       ];
 
-      const { data, error } = await supabase.functions.invoke('generate-recommendation-images', {
+      // Add timeout to image generation to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Image generation timeout')), 5000)
+      );
+
+      const imagePromise = supabase.functions.invoke('generate-recommendation-images', {
         body: { prompts: imagePrompts },
       });
+
+      const { data, error } = await Promise.race([imagePromise, timeoutPromise]) as any;
 
       if (error) {
         console.error('[generateMockResults] Edge function error:', error);
