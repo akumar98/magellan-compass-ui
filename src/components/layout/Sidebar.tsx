@@ -122,6 +122,12 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
+    label: 'Burnout Analytics',
+    path: '/employer/burnout',
+    icon: <AlertTriangle className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
     label: 'Analytics',
     path: '/employer/analytics',
     icon: <BarChart3 className="h-5 w-5" />,
