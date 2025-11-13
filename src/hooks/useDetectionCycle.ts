@@ -229,11 +229,10 @@ export const useDetectionCycle = (cycleId?: string) => {
 
       if (stepsError) throw stepsError;
 
-      await fetchCycle();
+      // Start the state machine in the background (don't await)
+      runStateMachine(newCycle.id);
 
-      // Start the state machine
-      await runStateMachine(newCycle.id);
-
+      // Return cycle ID immediately for navigation
       return newCycle.id;
     } catch (error: any) {
       console.error('Error starting cycle:', error);
