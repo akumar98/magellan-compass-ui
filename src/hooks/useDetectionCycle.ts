@@ -132,6 +132,7 @@ export const useDetectionCycle = (cycleId?: string) => {
     ];
 
     try {
+      console.log('[generateMockResults] Calling image generation edge function...');
       const imagePrompts = [
         'A serene wellness retreat in Sedona with desert landscapes, modern spa facilities, and yoga pavilions at sunset',
         'A cozy mountain cabin weekend escape surrounded by pine forests with wooden interiors and mountain views',
@@ -142,13 +143,16 @@ export const useDetectionCycle = (cycleId?: string) => {
         body: { prompts: imagePrompts },
       });
 
-      if (!error && data?.images) {
+      if (error) {
+        console.error('[generateMockResults] Edge function error:', error);
+      } else if (data?.images) {
+        console.log('[generateMockResults] Images generated successfully');
         // Use generated images if available, fallback to defaults
         images = data.images.map((img: string | null, idx: number) => img || images[idx]);
       }
     } catch (error) {
-      console.error('Error generating images:', error);
-      // Use default images on error
+      console.error('[generateMockResults] Error generating images:', error);
+      // Use default images on error - don't fail the whole process
     }
 
     const recommendations = Array.from({ length: detections }, (_, i) => ({
@@ -188,6 +192,8 @@ export const useDetectionCycle = (cycleId?: string) => {
         },
       ],
     }));
+
+    console.log('[generateMockResults] Final results:', { detections, recommendations: recommendations.length });
 
     return {
       detections,
@@ -263,65 +269,87 @@ export const useDetectionCycle = (cycleId?: string) => {
 
   // Run the state machine
   const runStateMachine = async (cycleId: string) => {
-    for (let i = 0; i < STEPS_ORDER.length; i++) {
-      const step = STEPS_ORDER[i];
-      const duration = durations[step as keyof typeof durations];
+    try {
+      console.log('[State Machine] Starting for cycle:', cycleId);
+      
+      for (let i = 0; i < STEPS_ORDER.length; i++) {
+        const step = STEPS_ORDER[i];
+        const duration = durations[step as keyof typeof durations];
 
-      // Update step to in_progress
-      await supabase
-        .from('detection_steps')
-        .update({
-          status: 'in_progress',
-          started_at: new Date().toISOString(),
-        })
-        .eq('cycle_id', cycleId)
-        .eq('step', step);
+        console.log('[State Machine] Processing step:', step);
 
-      // Update cycle state
+        // Update step to in_progress
+        await supabase
+          .from('detection_steps')
+          .update({
+            status: 'in_progress',
+            started_at: new Date().toISOString(),
+          })
+          .eq('cycle_id', cycleId)
+          .eq('step', step);
+
+        // Update cycle state
+        await supabase
+          .from('detection_cycles')
+          .update({ state: step })
+          .eq('id', cycleId);
+
+        // Wait for step duration
+        await new Promise(resolve => setTimeout(resolve, duration));
+
+        // Update step to completed
+        await supabase
+          .from('detection_steps')
+          .update({
+            status: 'completed',
+            ended_at: new Date().toISOString(),
+          })
+          .eq('cycle_id', cycleId)
+          .eq('step', step);
+
+        console.log('[State Machine] Completed step:', step);
+      }
+
+      console.log('[State Machine] Generating results...');
+      // Generate results with images
+      const results = await generateMockResults();
+      console.log('[State Machine] Results generated:', results);
+
+      // Update cycle to completed
       await supabase
         .from('detection_cycles')
-        .update({ state: step })
+        .update({
+          state: 'completed',
+          completed_at: new Date().toISOString(),
+          result_summary_json: results,
+          duration_sec: 10,
+        })
         .eq('id', cycleId);
 
-      await fetchCycle();
+      console.log('[State Machine] Cycle completed successfully');
 
-      // Wait for step duration
-      await new Promise(resolve => setTimeout(resolve, duration));
-
-      // Update step to completed
+      // Create notification
+      toast({
+        title: 'Detection Cycle Complete',
+        description: `Found ${results.detections} employees needing wellness support`,
+      });
+    } catch (error) {
+      console.error('[State Machine] Error:', error);
+      
+      // Update cycle to failed
       await supabase
-        .from('detection_steps')
+        .from('detection_cycles')
         .update({
-          status: 'completed',
-          ended_at: new Date().toISOString(),
+          state: 'failed',
         })
-        .eq('cycle_id', cycleId)
-        .eq('step', step);
-
-      await fetchCycle();
+        .eq('id', cycleId);
+      
+      toast({
+        title: 'Detection Failed',
+        description: 'An error occurred during the detection cycle',
+        variant: 'destructive',
+      });
     }
-
-    // Generate results with images
-    const results = await generateMockResults();
-
-    // Update cycle to completed
-    await supabase
-      .from('detection_cycles')
-      .update({
-        state: 'completed',
-        completed_at: new Date().toISOString(),
-        result_summary_json: results,
-        duration_sec: 10,
-      })
-      .eq('id', cycleId);
-
-    await fetchCycle();
-
-    // Create notification
-    toast({
-      title: 'Detection Cycle Complete',
-      description: `Found ${results.detections} employees needing wellness support`,
-    });
   };
 
   // Cancel cycle
