@@ -228,35 +228,43 @@ export const useDetectionCycle = (cycleId?: string) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      // Fetch employees with burnout risk
-      const { data: burnoutPredictions, error: burnoutError } = await supabase
+      // Fetch employees with burnout risk using direct join
+      const { data: employeesWithRisk, error: employeesError } = await supabase
         .from('burnout_predictions')
-        .select(`
-          *,
-          profiles:employee_id (
-            id,
-            full_name,
-            email,
-            department
-          )
-        `)
+        .select('employee_id, risk_level, risk_score')
         .in('risk_level', ['medium', 'high'])
         .order('risk_score', { ascending: false })
         .limit(5);
 
-      if (burnoutError) {
-        console.error('Error fetching employees:', burnoutError);
+      if (employeesError) {
+        console.error('Error fetching burnout predictions:', employeesError);
       }
 
-      // Create cycle with employee data
-      const employeeData = burnoutPredictions?.map(bp => ({
-        id: bp.employee_id,
-        name: (bp.profiles as any)?.full_name || 'Unknown',
-        email: (bp.profiles as any)?.email || 'unknown@email.com',
-        department: (bp.profiles as any)?.department || 'Unknown',
-        risk_level: bp.risk_level,
-        risk_score: bp.risk_score,
-      })) || [];
+      // Fetch profile details for these employees
+      const employeeIds = employeesWithRisk?.map(e => e.employee_id) || [];
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, full_name, email, department')
+        .in('id', employeeIds);
+
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+      }
+
+      // Combine the data
+      const employeeData = employeesWithRisk?.map(bp => {
+        const profile = profiles?.find(p => p.id === bp.employee_id);
+        return {
+          id: bp.employee_id,
+          name: profile?.full_name || 'Unknown Employee',
+          email: profile?.email || 'unknown@email.com',
+          department: profile?.department || 'Unknown',
+          risk_level: bp.risk_level,
+          risk_score: bp.risk_score,
+        };
+      }) || [];
+
+      console.log('[startCycle] Employee data:', employeeData);
 
       const { data: newCycle, error: cycleError } = await supabase
         .from('detection_cycles')
