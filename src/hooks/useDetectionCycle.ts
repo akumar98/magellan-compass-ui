@@ -103,6 +103,20 @@ export const useDetectionCycle = (cycleId?: string) => {
     fetchCycle();
   }, [fetchCycle]);
 
+  // Poll for updates while cycle is running
+  useEffect(() => {
+    if (!cycle) return;
+    
+    const isRunning = STEPS_ORDER.includes(cycle.state as DetectionState);
+    if (!isRunning) return;
+
+    const interval = setInterval(() => {
+      fetchCycle();
+    }, 500); // Poll every 500ms for smooth updates
+
+    return () => clearInterval(interval);
+  }, [cycle, fetchCycle]);
+
   // Generate mock results with AI images
   const generateMockResults = async () => {
     const detections = Math.floor(Math.random() * 4) + 2; // 2-5
