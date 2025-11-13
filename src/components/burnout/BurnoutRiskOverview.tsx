@@ -169,8 +169,56 @@ export function BurnoutRiskOverview() {
     );
   }
 
+  const handleStartBulkDetection = async () => {
+    setStartingDetection('bulk');
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to start detection",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Start detection without specific employee ID to analyze all at-risk employees
+      const cycleId = await startCycle(user.id);
+      if (cycleId) {
+        navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}`);
+      }
+    } catch (error) {
+      console.error('Error starting bulk detection:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start detection cycle",
+        variant: "destructive"
+      });
+    } finally {
+      setStartingDetection(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Header with Bulk Action */}
+      {atRiskEmployees.length > 0 && (
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold">Burnout Risk Management</h2>
+            <p className="text-sm text-muted-foreground">Monitor and address employee burnout risks</p>
+          </div>
+          <Button 
+            onClick={handleStartBulkDetection}
+            disabled={startingDetection === 'bulk'}
+            size="lg"
+          >
+            <Play className="h-4 w-4 mr-2" />
+            {startingDetection === 'bulk' ? 'Starting...' : `Start Detection for All (${atRiskEmployees.length})`}
+          </Button>
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-4">
