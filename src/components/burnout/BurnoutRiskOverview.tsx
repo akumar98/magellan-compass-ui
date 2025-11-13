@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { AlertTriangle, Users, TrendingUp, Activity } from 'lucide-react';
+import { AlertTriangle, Users, TrendingUp, Activity, Play } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Progress } from '@/components/ui/progress';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { useDetectionCycle } from '@/hooks/useDetectionCycle';
 
 interface RiskDistribution {
   low: number;
@@ -14,6 +18,7 @@ interface RiskDistribution {
 
 interface EmployeeRisk {
   id: string;
+  employee_id: string;
   employee_name: string;
   department: string;
   risk_level: string;
@@ -31,6 +36,10 @@ export function BurnoutRiskOverview() {
   });
   const [atRiskEmployees, setAtRiskEmployees] = useState<EmployeeRisk[]>([]);
   const [loading, setLoading] = useState(true);
+  const [startingDetection, setStartingDetection] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { startCycle } = useDetectionCycle();
 
   useEffect(() => {
     loadBurnoutData();
@@ -87,6 +96,7 @@ export function BurnoutRiskOverview() {
         if (pred.risk_level !== 'low' && profile) {
           risks.push({
             id: pred.id,
+            employee_id: employeeId,
             employee_name: profile.full_name,
             department: profile.department || 'N/A',
             risk_level: pred.risk_level,
@@ -116,6 +126,35 @@ export function BurnoutRiskOverview() {
       case 'high': return 'bg-destructive';
       case 'critical': return 'bg-destructive';
       default: return 'bg-muted';
+    }
+  };
+
+  const handleStartDetection = async (employeeId: string) => {
+    setStartingDetection(employeeId);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Error",
+          description: "You must be logged in to start detection",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const cycleId = await startCycle(user.id, employeeId);
+      if (cycleId) {
+        navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}`);
+      }
+    } catch (error) {
+      console.error('Error starting detection:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start detection cycle",
+        variant: "destructive"
+      });
+    } finally {
+      setStartingDetection(null);
     }
   };
 
@@ -227,7 +266,7 @@ export function BurnoutRiskOverview() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="text-right">
+                  <div className="text-right mr-2">
                     <div className="text-sm font-bold">{employee.risk_score}%</div>
                     <div className="text-xs text-muted-foreground">Risk Score</div>
                   </div>
@@ -237,6 +276,14 @@ export function BurnoutRiskOverview() {
                   >
                     {employee.risk_level}
                   </Badge>
+                  <Button
+                    size="sm"
+                    onClick={() => handleStartDetection(employee.employee_id)}
+                    disabled={startingDetection === employee.employee_id}
+                  >
+                    <Play className="h-4 w-4 mr-1" />
+                    {startingDetection === employee.employee_id ? 'Starting...' : 'Start Detection'}
+                  </Button>
                 </div>
               </div>
             ))}
