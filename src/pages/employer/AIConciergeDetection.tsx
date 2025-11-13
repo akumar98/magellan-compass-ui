@@ -33,6 +33,7 @@ const AIConciergeDetection = () => {
   const [searchParams] = useSearchParams();
   const cycleId = searchParams.get('cycleId');
   const [showLogs, setShowLogs] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(10);
 
   const {
     cycle,
@@ -55,11 +56,52 @@ const AIConciergeDetection = () => {
     }
   }, [cycleId, navigate]);
 
+  // Calculate time remaining based on current step
+  useEffect(() => {
+    if (!cycle || !isRunning) {
+      setTimeRemaining(0);
+      return;
+    }
+
+    const stepDurations = {
+      context_analysis: 2,
+      preference_match: 2,
+      policy_alignment: 2,
+      budget_fit_check: 2,
+      generating_rewards: 2,
+    };
+
+    const stepsOrder = ['context_analysis', 'preference_match', 'policy_alignment', 'budget_fit_check', 'generating_rewards'];
+    const currentStepIndex = stepsOrder.indexOf(cycle.state);
+    
+    if (currentStepIndex === -1) {
+      setTimeRemaining(0);
+      return;
+    }
+
+    // Calculate remaining time: time for remaining complete steps + time for current step
+    let remaining = 0;
+    for (let i = currentStepIndex; i < stepsOrder.length; i++) {
+      remaining += stepDurations[stepsOrder[i] as keyof typeof stepDurations];
+    }
+
+    setTimeRemaining(remaining);
+
+    // Countdown timer
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [cycle, isRunning]);
+
+  // Auto-redirect on completion
   useEffect(() => {
     if (isCompleted && cycle?.result_summary_json) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         navigate(`/employer/ai-concierge/review?cycleId=${cycle.id}`);
       }, 2000);
+      return () => clearTimeout(timer);
     }
   }, [isCompleted, cycle, navigate]);
 
@@ -339,9 +381,19 @@ const AIConciergeDetection = () => {
             <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/30">
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Estimated completion time: <span className="font-semibold text-foreground">45 seconds</span></span>
+                <span className="text-sm text-muted-foreground">
+                  {isCompleted ? (
+                    'Completed!'
+                  ) : isFailed || isCancelled ? (
+                    'Stopped'
+                  ) : (
+                    <>
+                      Estimated completion time: <span className="font-semibold text-foreground">{timeRemaining}s</span>
+                    </>
+                  )}
+                </span>
               </div>
-              <Progress value={60} className="w-48" />
+              <Progress value={getStepProgress()} className="w-48" />
             </div>
 
             <p className="text-xs text-center text-muted-foreground flex items-center justify-center gap-2">
