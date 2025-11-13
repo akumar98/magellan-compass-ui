@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Shield, TrendingUp, Heart, Twitter, Linkedin, Instagram, ArrowRight } from "lucide-react";
 import { ProofStrip } from "@/components/landing/ProofStrip";
@@ -68,19 +68,19 @@ const LandingPage = () => {
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
               </div>
               <span className="text-xl font-bold text-gray-900">MagellanOneAI</span>
-            </div>
+            </Link>
 
             <div className="hidden md:flex items-center gap-8">
-              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">How It Works</button>
-              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">About US</button>
-              <button className="text-gray-700 text-sm font-medium hover:text-gray-900">Contact Us</button>
+              <Link to="/how-it-works" className="text-gray-700 text-sm font-medium hover:text-gray-900">How It Works</Link>
+              <Link to="/about-us" className="text-gray-700 text-sm font-medium hover:text-gray-900">About Us</Link>
+              <Link to="/contact-us" className="text-gray-700 text-sm font-medium hover:text-gray-900">Contact</Link>
             </div>
 
             <div className="flex items-center gap-3">
@@ -421,11 +421,11 @@ const LandingPage = () => {
             <div>
               <h4 className="font-bold mb-4 text-white">Product</h4>
               <div className="space-y-3">
+                <Link to="/how-it-works" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                  How It Works
+                </Link>
                 <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
                   Features
-                </a>
-                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
-                  How It Works
                 </a>
               </div>
             </div>
@@ -434,12 +434,12 @@ const LandingPage = () => {
             <div>
               <h4 className="font-bold mb-4 text-white">Company</h4>
               <div className="space-y-3">
-                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                <Link to="/about-us" className="block text-gray-400 hover:text-white text-sm transition-colors">
                   About Us
-                </a>
-                <a href="#" className="block text-gray-400 hover:text-white text-sm transition-colors">
+                </Link>
+                <Link to="/contact-us" className="block text-gray-400 hover:text-white text-sm transition-colors">
                   Contact
-                </a>
+                </Link>
               </div>
             </div>
           </div>

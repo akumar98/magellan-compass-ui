@@ -53,6 +53,9 @@ import AdminIntegrations from "./pages/admin/AdminIntegrations";
 import Help from "./pages/Help";
 import CompanyOnboarding from "./pages/CompanyOnboarding";
 import NotFound from "./pages/NotFound";
+import HowItWorks from "./pages/HowItWorks";
+import AboutUs from "./pages/AboutUs";
+import ContactUs from "./pages/ContactUs";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +68,9 @@ const App = () => (
         <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/super-admin/login" element={<SuperAdminLogin />} />
