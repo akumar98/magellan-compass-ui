@@ -222,7 +222,7 @@ export const useDetectionCycle = (cycleId?: string) => {
   };
 
   // Start a new cycle
-  const startCycle = async (employerId?: string) => {
+  const startCycle = async (employerId?: string, specificEmployeeId?: string) => {
     setLoading(true);
     try {
       // Use provided employerId or fetch from auth
@@ -242,13 +242,20 @@ export const useDetectionCycle = (cycleId?: string) => {
       
       console.log('[startCycle] Current user:', { userId, role: userRoleData?.role, company_id: userRoleData?.company_id });
 
-      // Fetch employees with burnout risk using direct join
-      const { data: employeesWithRisk, error: employeesError } = await supabase
+      // Fetch employees with burnout risk
+      let query = supabase
         .from('burnout_predictions')
-        .select('employee_id, risk_level, risk_score')
-        .in('risk_level', ['medium', 'high'])
-        .order('risk_score', { ascending: false })
-        .limit(5);
+        .select('employee_id, risk_level, risk_score, contributing_factors');
+
+      // If specific employee ID is provided, fetch only that employee
+      if (specificEmployeeId) {
+        query = query.eq('employee_id', specificEmployeeId);
+      } else {
+        // Otherwise fetch multiple at-risk employees
+        query = query.in('risk_level', ['medium', 'high']).order('risk_score', { ascending: false }).limit(5);
+      }
+
+      const { data: employeesWithRisk, error: employeesError } = await query;
 
       console.log('[startCycle] Fetched burnout predictions:', { employeesWithRisk, error: employeesError, count: employeesWithRisk?.length });
 
@@ -285,6 +292,7 @@ export const useDetectionCycle = (cycleId?: string) => {
           department: profile?.department || 'Unknown',
           risk_level: bp.risk_level,
           risk_score: bp.risk_score,
+          contributing_factors: bp.contributing_factors || [],
         };
       }) || [];
 

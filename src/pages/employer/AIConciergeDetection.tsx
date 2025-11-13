@@ -416,19 +416,23 @@ const AIConciergeDetection = () => {
                 <div className="space-y-3">
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
-                    <p className="text-sm">Detected with <span className="font-semibold">3 burnout cases 91% confidence</span></p>
+                    <p className="text-sm">
+                      Analyzing <span className="font-semibold">
+                        {cycle?.result_summary_json?.employees?.length || 0} employee{cycle?.result_summary_json?.employees?.length !== 1 ? 's' : ''}
+                      </span> with elevated burnout risk
+                    </p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
-                    <p className="text-sm"><span className="font-semibold">2 within budget</span>, 1 requires co-fund approval</p>
+                    <p className="text-sm">Cross-referencing behavioral data, preferences, and company policies</p>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                    <p className="text-sm">All employees meet policy compliance requirements</p>
+                    <p className="text-sm">Generating personalized reward recommendations</p>
                   </div>
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 text-warning flex-shrink-0 mt-0.5" />
-                    <p className="text-sm">Preference matching suggests for 2 employees <span className="font-semibold">wellness retreats</span></p>
+                    <p className="text-sm">Budget and policy alignment in progress</p>
                   </div>
                 </div>
 
@@ -479,6 +483,43 @@ const AIConciergeDetection = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Employees Being Analyzed */}
+            {cycle?.result_summary_json?.employees && cycle.result_summary_json.employees.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    Employees ({cycle.result_summary_json.employees.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {cycle.result_summary_json.employees.map((employee: any, idx: number) => (
+                    <div key={idx} className="p-3 rounded-lg border bg-muted/30">
+                      <div className="font-medium text-sm mb-1">{employee.name}</div>
+                      <div className="text-xs text-muted-foreground mb-2">{employee.department}</div>
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          variant={employee.risk_level === 'high' ? 'destructive' : 'secondary'}
+                          className="text-xs capitalize"
+                        >
+                          {employee.risk_level} Risk
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">Score: {employee.risk_score}%</span>
+                      </div>
+                      {employee.contributing_factors && employee.contributing_factors.length > 0 && (
+                        <div className="mt-2 text-xs text-muted-foreground">
+                          <div className="font-medium mb-1">Key Factors:</div>
+                          {employee.contributing_factors.slice(0, 2).map((factor: string, fIdx: number) => (
+                            <div key={fIdx}>• {factor}</div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Processing Metrics */}
             <Card>
