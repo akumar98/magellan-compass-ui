@@ -20,19 +20,117 @@ import {
   TrendingDown,
   AlertCircle,
   CheckCircle2,
-  Clock
+  Clock,
+  Play
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip } from 'recharts';
 import { useDetectionCycle } from '@/hooks/useDetectionCycle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const AIConciergeOverview = () => {
   const navigate = useNavigate();
   const { startCycle, loading } = useDetectionCycle();
   const [isStarting, setIsStarting] = useState(false);
+  const [startingEmployeeId, setStartingEmployeeId] = useState<string | null>(null);
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [employees, setEmployees] = useState<any[]>([]);
+  const [loadingEmployees, setLoadingEmployees] = useState(true);
+
+  useEffect(() => {
+    loadEmployeesWithRisk();
+  }, []);
+
+  const loadEmployeesWithRisk = async () => {
+    try {
+      if (!user?.id) return;
+
+      const { data: company } = await supabase
+        .from('user_roles')
+        .select('company_id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (!company?.company_id) return;
+
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, full_name, email, department')
+        .eq('company_id', company.company_id);
+
+      if (!profiles) return;
+
+      const employeeIds = profiles.map(p => p.id);
+
+      const { data: predictions } = await supabase
+        .from('burnout_predictions')
+        .select('*')
+        .in('employee_id', employeeIds)
+        .order('created_at', { ascending: false });
+
+      if (!predictions) return;
+
+      const latestPredictions = new Map();
+      predictions.forEach(pred => {
+        if (!latestPredictions.has(pred.employee_id)) {
+          latestPredictions.set(pred.employee_id, pred);
+        }
+      });
+
+      const employeesWithRisk = profiles
+        .map(profile => {
+          const prediction = latestPredictions.get(profile.id);
+          return prediction ? {
+            id: profile.id,
+            name: profile.full_name,
+            email: profile.email,
+            role: 'Employee',
+            team: profile.department || 'N/A',
+            signal: prediction.risk_level === 'critical' || prediction.risk_level === 'high' ? 'Burnout Risk' : 
+                   prediction.risk_level === 'medium' ? 'Disengagement' : 'Low Risk',
+            confidence: Math.round(prediction.risk_score),
+            status: 'New',
+            riskLevel: prediction.risk_level
+          } : null;
+        })
+        .filter(emp => emp !== null && emp.riskLevel !== 'low');
+
+      setEmployees(employeesWithRisk);
+    } catch (error) {
+      console.error('Error loading employees:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load employee data",
+        variant: "destructive"
+      });
+    } finally {
+      setLoadingEmployees(false);
+    }
+  };
+
+  const handleStartDetectionForEmployee = async (employeeId: string) => {
+    if (!user?.id) return;
+    setStartingEmployeeId(employeeId);
+    try {
+      const cycleId = await startCycle(user.id, employeeId);
+      if (cycleId) {
+        navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}`);
+      }
+    } catch (error) {
+      console.error('Error starting detection:', error);
+      toast({
+        title: "Error",
+        description: "Failed to start detection cycle",
+        variant: "destructive"
+      });
+    } finally {
+      setStartingEmployeeId(null);
+    }
+  };
 
   const handleStartCycle = async () => {
     if (!user?.id) return;
@@ -59,14 +157,6 @@ const AIConciergeOverview = () => {
     { week: 'Week 12', burnout: 75, disengagement: 64, events: 63 },
   ];
 
-  const employees = [
-    { name: 'Sarah Mitchell', email: 'sarah@company.com', role: 'Senior Engineer', team: 'Engineering', signal: 'Burnout Risk', confidence: 94, status: 'New' },
-    { name: 'Marcus Chen', email: 'marcus@company.com', role: 'Product Manager', team: 'Product', signal: 'Disengagement', confidence: 87, status: 'Processing' },
-    { name: 'Raya Rodriguez', email: 'raya@company.com', role: 'Marketing Lead', team: 'Marketing', signal: 'Life Event', confidence: 92, status: 'New' },
-    { name: 'David Park', email: 'david@company.com', role: 'Sales Director', team: 'Sales', signal: 'Burnout Risk', confidence: 88, status: 'Resolved' },
-    { name: 'Emily Johnson', email: 'emily@company.com', role: 'UX Designer', team: 'Design', signal: 'Disengagement', confidence: 81, status: 'Processing' },
-    { name: 'James Wilson', email: 'james@company.com', role: 'Data Analyst', team: 'Analytics', signal: 'Life Event', confidence: 96, status: 'New' },
-  ];
 
   const activationQueue = [
     { name: 'Sarah Mitchell', role: 'Senior Engineer', signal: 'Burnout Risk', confidence: '94%' },
@@ -272,18 +362,12 @@ const AIConciergeOverview = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
-                              onClick={async () => {
-                                if (!user?.id) return;
-                                const cycleId = await startCycle(user.id);
-                                if (cycleId) {
-                                  navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}&employeeId=${emp.name}`);
-                                }
-                              }}
-                              disabled={isStarting || loading}
+                              onClick={() => handleStartDetectionForEmployee(emp.id)}
+                              disabled={startingEmployeeId === emp.id || loading}
                               className="whitespace-nowrap"
                             >
-                              <Brain className="w-3 h-3 mr-1" />
-                              Start Detection
+                              <Play className="w-3 h-3 mr-1" />
+                              {startingEmployeeId === emp.id ? 'Starting...' : 'Start Detection'}
                             </Button>
                           </td>
                         </tr>
