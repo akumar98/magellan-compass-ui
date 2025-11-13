@@ -30,13 +30,19 @@ import {
 } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useDetectionCycle } from '@/hooks/useDetectionCycle';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 const AIConciergeReview = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const cycleId = searchParams.get('cycleId');
   const { cycle, loading } = useDetectionCycle(cycleId || undefined);
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const [approvedItems, setApprovedItems] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!cycleId) {
@@ -56,6 +62,40 @@ const AIConciergeReview = () => {
 
   const results = cycle.result_summary_json || {};
   const recommendations = results.recommendations || [];
+
+  const handleApprove = async (employeeId: string, recommendation: any) => {
+    if (!user?.id || !cycleId) return;
+
+    const itemKey = `${employeeId}-${recommendation.title}`;
+    
+    try {
+      const { error } = await supabase
+        .from('approved_recommendations')
+        .insert({
+          employee_id: employeeId,
+          cycle_id: cycleId,
+          recommendation_data: recommendation,
+          approved_by: user.id,
+          status: 'pending',
+        });
+
+      if (error) throw error;
+
+      setApprovedItems(prev => new Set(prev).add(itemKey));
+      
+      toast({
+        title: 'Recommendation Approved',
+        description: 'The employee will be notified of their new reward.',
+      });
+    } catch (error) {
+      console.error('Error approving recommendation:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to approve recommendation',
+        variant: 'destructive',
+      });
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -171,10 +211,20 @@ const AIConciergeReview = () => {
 
                       {/* Action Buttons */}
                       <div className="flex gap-2">
-                        <Button className="flex-1">
-                          <CheckCircle2 className="w-4 h-4 mr-2" />
-                          Approve This
-                        </Button>
+                        {approvedItems.has(`${emp.employee_id || `emp_${empIdx + 1}`}-${rec.title}`) ? (
+                          <Button className="flex-1" variant="secondary" disabled>
+                            <Check className="w-4 h-4 mr-2" />
+                            Approved
+                          </Button>
+                        ) : (
+                          <Button 
+                            className="flex-1"
+                            onClick={() => handleApprove(emp.employee_id || `emp_${empIdx + 1}`, rec)}
+                          >
+                            <CheckCircle2 className="w-4 h-4 mr-2" />
+                            Approve This
+                          </Button>
+                        )}
                         <Button variant="outline">
                           <RefreshCw className="w-4 h-4 mr-2" />
                           Swap Option

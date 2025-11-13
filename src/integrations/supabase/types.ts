@@ -78,6 +78,50 @@ export type Database = {
           },
         ]
       }
+      approved_recommendations: {
+        Row: {
+          approved_at: string | null
+          approved_by: string
+          created_at: string | null
+          cycle_id: string | null
+          employee_id: string
+          id: string
+          recommendation_data: Json
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by: string
+          created_at?: string | null
+          cycle_id?: string | null
+          employee_id: string
+          id?: string
+          recommendation_data: Json
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string
+          created_at?: string | null
+          cycle_id?: string | null
+          employee_id?: string
+          id?: string
+          recommendation_data?: Json
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approved_recommendations_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "detection_cycles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       burnout_predictions: {
         Row: {
           ai_reasoning: string | null

@@ -7,6 +7,7 @@ import { RewardPreview } from '@/components/employee/RewardPreview';
 import { QuickActions } from '@/components/employee/QuickActions';
 import { NotificationsList } from '@/components/employee/NotificationsList';
 import { AIInsight } from '@/components/employee/AIInsight';
+import { ApprovedRecommendations } from '@/components/employee/ApprovedRecommendations';
 import { Badge } from '@/components/ui/badge';
 import { Clock } from 'lucide-react';
 
@@ -51,6 +52,9 @@ export default function EmployeeDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Main Content */}
         <div className="lg:col-span-2 space-y-6">
+          {/* Approved Recommendations */}
+          <ApprovedRecommendations />
+
           {/* Wellness Snapshot */}
           <WellnessSnapshot riskLevel="Low" score={82} maxScore={100} />
 
