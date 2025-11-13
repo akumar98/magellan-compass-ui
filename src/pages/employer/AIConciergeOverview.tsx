@@ -222,66 +222,74 @@ const AIConciergeOverview = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-1">
-                  {/* Table Header */}
-                  <div className="grid grid-cols-7 gap-4 text-xs font-medium text-muted-foreground pb-2 border-b">
-                    <div className="col-span-2">Employee</div>
-                    <div>Role</div>
-                    <div>Team</div>
-                    <div>Signal Type</div>
-                    <div>Confidence</div>
-                    <div>Status</div>
-                    <div>Actions</div>
-                  </div>
-                  
-                  {/* Table Rows */}
-                  {employees.map((emp, idx) => (
-                    <div key={idx} className="grid grid-cols-7 gap-4 py-3 border-b hover:bg-muted/50 items-center">
-                      <div className="col-span-2 flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.name}`} />
-                          <AvatarFallback>{emp.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">{emp.name}</p>
-                          <p className="text-xs text-muted-foreground">{emp.email}</p>
-                        </div>
-                      </div>
-                      <div className="text-sm">{emp.role}</div>
-                      <div className="text-sm">{emp.team}</div>
-                      <div>
-                        <Badge variant={emp.signal === 'Burnout Risk' ? 'destructive' : emp.signal === 'Disengagement' ? 'default' : 'secondary'} className="text-xs">
-                          {emp.signal}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Progress value={emp.confidence} className="w-16 h-2" />
-                        <span className="text-xs font-medium">{emp.confidence}%</span>
-                      </div>
-                      <div>
-                        <Badge variant={emp.status === 'New' ? 'default' : emp.status === 'Processing' ? 'secondary' : 'outline'} className="text-xs">
-                          {emp.status}
-                        </Badge>
-                      </div>
-                      <div>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={async () => {
-                            if (!user?.id) return;
-                            const cycleId = await startCycle(user.id);
-                            if (cycleId) {
-                              navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}&employeeId=${emp.name}`);
-                            }
-                          }}
-                          disabled={isStarting || loading}
-                        >
-                          <Brain className="w-3 h-3 mr-1" />
-                          Start Detection
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                <div className="overflow-x-auto -mx-6 sm:mx-0">
+                  <table className="w-full min-w-[900px]">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Employee</th>
+                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Role</th>
+                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Team</th>
+                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Signal Type</th>
+                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Confidence</th>
+                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Status</th>
+                        <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {employees.map((emp, idx) => (
+                        <tr key={idx} className="border-b hover:bg-muted/50">
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-8 w-8 flex-shrink-0">
+                                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.name}`} />
+                                <AvatarFallback>{emp.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                              </Avatar>
+                              <div className="min-w-0">
+                                <p className="text-sm font-medium truncate">{emp.name}</p>
+                                <p className="text-xs text-muted-foreground truncate">{emp.email}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-2 text-sm">{emp.role}</td>
+                          <td className="py-3 px-2 text-sm">{emp.team}</td>
+                          <td className="py-3 px-2">
+                            <Badge variant={emp.signal === 'Burnout Risk' ? 'destructive' : emp.signal === 'Disengagement' ? 'default' : 'secondary'} className="text-xs whitespace-nowrap">
+                              {emp.signal}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-2">
+                            <div className="flex items-center gap-2">
+                              <Progress value={emp.confidence} className="w-16 h-2" />
+                              <span className="text-xs font-medium whitespace-nowrap">{emp.confidence}%</span>
+                            </div>
+                          </td>
+                          <td className="py-3 px-2">
+                            <Badge variant={emp.status === 'New' ? 'default' : emp.status === 'Processing' ? 'secondary' : 'outline'} className="text-xs whitespace-nowrap">
+                              {emp.status}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-4">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={async () => {
+                                if (!user?.id) return;
+                                const cycleId = await startCycle(user.id);
+                                if (cycleId) {
+                                  navigate(`/employer/ai-concierge/detection?cycleId=${cycleId}&employeeId=${emp.name}`);
+                                }
+                              }}
+                              disabled={isStarting || loading}
+                              className="whitespace-nowrap"
+                            >
+                              <Brain className="w-3 h-3 mr-1" />
+                              Start Detection
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
                 
                 {/* Pagination */}
