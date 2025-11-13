@@ -86,21 +86,21 @@ const App = () => (
             <Route path="/employee/redemption-history" element={<RedemptionHistory />} />
             <Route path="/employee/notifications" element={<Notifications />} />
             
-            {/* Employer routes */}
-          <Route path="/employer/profile" element={<EmployerProfile />} />
-          <Route path="/employer/team" element={<EmployerTeam />} />
-          <Route path="/employer/team/:id" element={<EmployeeDetail />} />
-          <Route path="/employer/approvals" element={<EmployerApprovals />} />
-          <Route path="/employer/employee-approval" element={<EmployerEmployeeApproval />} />
-          <Route path="/employer/billing" element={<EmployerBilling />} />
+            {/* Employer routes - Protected */}
+          <Route path="/employer/profile" element={<ProtectedRoute requiredRole="employer"><EmployerProfile /></ProtectedRoute>} />
+          <Route path="/employer/team" element={<ProtectedRoute requiredRole="employer"><EmployerTeam /></ProtectedRoute>} />
+          <Route path="/employer/team/:id" element={<ProtectedRoute requiredRole="employer"><EmployeeDetail /></ProtectedRoute>} />
+          <Route path="/employer/approvals" element={<ProtectedRoute requiredRole="employer"><EmployerApprovals /></ProtectedRoute>} />
+          <Route path="/employer/employee-approval" element={<ProtectedRoute requiredRole="employer"><EmployerEmployeeApproval /></ProtectedRoute>} />
+          <Route path="/employer/billing" element={<ProtectedRoute requiredRole="employer"><EmployerBilling /></ProtectedRoute>} />
           <Route path="/employer/notifications" element={<ProtectedRoute requiredRole="employer"><EmployerNotifications /></ProtectedRoute>} />
-          <Route path="/employer/reports" element={<EmployerReports />} />
-          <Route path="/employer/analytics" element={<Analytics />} />
-          <Route path="/employer/burnout" element={<EmployerBurnout />} />
-          <Route path="/employer/matching-policy" element={<EmployerMatchingPolicy />} />
-          <Route path="/employer/ai-concierge" element={<AIConciergeOverview />} />
-          <Route path="/employer/ai-concierge/detection" element={<AIConciergeDetection />} />
-          <Route path="/employer/ai-concierge/review" element={<AIConciergeReview />} />
+          <Route path="/employer/reports" element={<ProtectedRoute requiredRole="employer"><EmployerReports /></ProtectedRoute>} />
+          <Route path="/employer/analytics" element={<ProtectedRoute requiredRole="employer"><Analytics /></ProtectedRoute>} />
+          <Route path="/employer/burnout" element={<ProtectedRoute requiredRole="employer"><EmployerBurnout /></ProtectedRoute>} />
+          <Route path="/employer/matching-policy" element={<ProtectedRoute requiredRole="employer"><EmployerMatchingPolicy /></ProtectedRoute>} />
+          <Route path="/employer/ai-concierge" element={<ProtectedRoute requiredRole="employer"><AIConciergeOverview /></ProtectedRoute>} />
+          <Route path="/employer/ai-concierge/detection" element={<ProtectedRoute requiredRole="employer"><AIConciergeDetection /></ProtectedRoute>} />
+          <Route path="/employer/ai-concierge/review" element={<ProtectedRoute requiredRole="employer"><AIConciergeReview /></ProtectedRoute>} />
             
             {/* Super Admin routes - Protected */}
             <Route path="/super-admin" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminDashboard /></ProtectedRoute>} />
