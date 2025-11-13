@@ -58,12 +58,12 @@ const navItems: NavItem[] = [
     icon: <Users className="h-5 w-5" />,
     roles: ['super_admin'],
   },
-  // Admin & Other Role Items
+  // Admin Items
   {
     label: 'Dashboard',
     path: '/dashboard',
     icon: <LayoutDashboard className="h-5 w-5" />,
-    roles: ['admin', 'employer', 'employee'],
+    roles: ['admin'],
   },
   {
     label: 'Companies',
@@ -84,15 +84,23 @@ const navItems: NavItem[] = [
     roles: ['admin'],
   },
   {
-    label: 'Profile',
-    path: '/employer/profile',
-    icon: <User className="h-5 w-5" />,
-    roles: ['employer'],
+    label: 'System Settings',
+    path: '/admin/settings',
+    icon: <Settings className="h-5 w-5" />,
+    roles: ['admin'],
   },
   {
-    label: 'My Team',
-    path: '/employer/team',
-    icon: <Users className="h-5 w-5" />,
+    label: 'Audit Logs',
+    path: '/admin/logs',
+    icon: <FileText className="h-5 w-5" />,
+    roles: ['admin'],
+  },
+  
+  // Employer Items
+  {
+    label: 'Dashboard',
+    path: '/dashboard',
+    icon: <LayoutDashboard className="h-5 w-5" />,
     roles: ['employer'],
   },
   {
@@ -114,6 +122,18 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
+    label: 'Analytics',
+    path: '/employer/analytics',
+    icon: <BarChart3 className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
+    label: 'Matching Policy',
+    path: '/employer/matching-policy',
+    icon: <Sliders className="h-5 w-5" />,
+    roles: ['employer'],
+  },
+  {
     label: 'Billing',
     path: '/employer/billing',
     icon: <CreditCard className="h-5 w-5" />,
@@ -126,40 +146,19 @@ const navItems: NavItem[] = [
     roles: ['employer'],
   },
   {
-    label: 'Reports',
-    path: '/employer/reports',
-    icon: <TrendingUp className="h-5 w-5" />,
-    roles: ['employer'],
-  },
-  {
-    label: 'Burnout Analytics',
-    path: '/employer/burnout',
-    icon: <AlertTriangle className="h-5 w-5" />,
-    roles: ['employer'],
-  },
-  {
-    label: 'Analytics & Insights',
-    path: '/employer/analytics',
-    icon: <BarChart3 className="h-5 w-5" />,
-    roles: ['employer'],
-  },
-  {
-    label: 'Matching Policy',
-    path: '/employer/matching-policy',
-    icon: <Sliders className="h-5 w-5" />,
-    roles: ['employer'],
-  },
-  {
-    label: 'System Settings',
-    path: '/admin/settings',
+    label: 'Settings',
+    path: '/settings',
     icon: <Settings className="h-5 w-5" />,
-    roles: ['admin'],
+    roles: ['employer'],
   },
+  
+  // Employee Items
+  // Employee Items
   {
-    label: 'Audit Logs',
-    path: '/admin/logs',
-    icon: <FileText className="h-5 w-5" />,
-    roles: ['admin'],
+    label: 'Dashboard',
+    path: '/dashboard',
+    icon: <LayoutDashboard className="h-5 w-5" />,
+    roles: ['employee'],
   },
   {
     label: 'Profile',
@@ -171,7 +170,7 @@ const navItems: NavItem[] = [
     label: 'Travel Rewards',
     path: '/rewards',
     icon: <Gift className="h-5 w-5" />,
-    roles: ['employee'], // Only visible to employees
+    roles: ['employee'],
   },
   {
     label: 'Redemption History',
@@ -210,6 +209,14 @@ const navItems: NavItem[] = [
     roles: ['employee'],
   },
   {
+    label: 'Settings',
+    path: '/settings',
+    icon: <Settings className="h-5 w-5" />,
+    roles: ['employee'],
+  },
+  
+  // Shared Items
+  {
     label: 'Community',
     path: '/community',
     icon: <MessageSquare className="h-5 w-5" />,
@@ -219,12 +226,6 @@ const navItems: NavItem[] = [
     label: 'Help & Support',
     path: '/help',
     icon: <HelpCircle className="h-5 w-5" />,
-    roles: ['admin', 'employer', 'employee'],
-  },
-  {
-    label: 'Settings',
-    path: '/settings',
-    icon: <Settings className="h-5 w-5" />,
     roles: ['admin', 'employer', 'employee'],
   },
 ];
