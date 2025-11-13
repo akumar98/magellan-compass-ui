@@ -36,19 +36,19 @@ export type DetectionCycle = {
 };
 
 const STEP_DURATIONS = {
-  context_analysis: 10000,
-  preference_match: 8000,
-  policy_alignment: 10000,
-  budget_fit_check: 10000,
-  generating_rewards: 12000,
-};
-
-const FAST_MODE_DURATIONS = {
   context_analysis: 2000,
   preference_match: 2000,
   policy_alignment: 2000,
   budget_fit_check: 2000,
   generating_rewards: 2000,
+};
+
+const FAST_MODE_DURATIONS = {
+  context_analysis: 1000,
+  preference_match: 1000,
+  policy_alignment: 1000,
+  budget_fit_check: 1000,
+  generating_rewards: 1000,
 };
 
 const STEPS_ORDER: DetectionState[] = [
@@ -103,12 +103,39 @@ export const useDetectionCycle = (cycleId?: string) => {
     fetchCycle();
   }, [fetchCycle]);
 
-  // Generate mock results
-  const generateMockResults = () => {
+  // Generate mock results with AI images
+  const generateMockResults = async () => {
     const detections = Math.floor(Math.random() * 4) + 2; // 2-5
     const withinBudget = Math.floor(detections * 0.7);
     const needsCofund = detections - withinBudget;
     const avgCost = Math.floor(Math.random() * 200) + 500; // 500-700
+
+    // Generate images for recommendations using edge function
+    let images = [
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop',
+    ];
+
+    try {
+      const imagePrompts = [
+        'A serene wellness retreat in Sedona with desert landscapes, modern spa facilities, and yoga pavilions at sunset',
+        'A cozy mountain cabin weekend escape surrounded by pine forests with wooden interiors and mountain views',
+        'A luxury spa resort with infinity pools, tropical gardens, and elegant massage treatment rooms',
+      ];
+
+      const { data, error } = await supabase.functions.invoke('generate-recommendation-images', {
+        body: { prompts: imagePrompts },
+      });
+
+      if (!error && data?.images) {
+        // Use generated images if available, fallback to defaults
+        images = data.images.map((img: string | null, idx: number) => img || images[idx]);
+      }
+    } catch (error) {
+      console.error('Error generating images:', error);
+      // Use default images on error
+    }
 
     const recommendations = Array.from({ length: detections }, (_, i) => ({
       employee_id: `emp_${i + 1}`,
@@ -117,33 +144,33 @@ export const useDetectionCycle = (cycleId?: string) => {
       options: [
         {
           title: 'Wellness Retreat in Sedona',
-          desc: '3-day mindfulness and yoga retreat',
+          desc: '3-day mindfulness and yoga retreat in serene desert landscape',
           cost: 640,
           company: 480,
           employee: 160,
           policy: i < withinBudget ? 'within_budget' : 'needs_cofund',
-          why: 'Matches preference for wellness activities and outdoor settings',
-          image_url: '/placeholder.svg',
+          why: 'Matches preference for wellness activities and outdoor settings with proven stress-relief benefits',
+          image_url: images[0],
         },
         {
           title: 'Mountain Cabin Weekend',
-          desc: '2-day nature escape in the mountains',
+          desc: '2-day nature escape in the mountains with forest trails',
           cost: 520,
           company: 390,
           employee: 130,
           policy: 'within_budget',
-          why: 'Lower cost option with high stress-relief potential',
-          image_url: '/placeholder.svg',
+          why: 'Lower cost option with high stress-relief potential in peaceful natural surroundings',
+          image_url: images[1],
         },
         {
           title: 'Spa Resort Experience',
-          desc: '4-day luxury spa and relaxation',
+          desc: '4-day luxury spa and relaxation with premium amenities',
           cost: 880,
           company: 660,
           employee: 220,
           policy: 'needs_cofund',
-          why: 'Premium option for comprehensive wellness reset',
-          image_url: '/placeholder.svg',
+          why: 'Premium option for comprehensive wellness reset with world-class facilities',
+          image_url: images[2],
         },
       ],
     }));
@@ -261,8 +288,8 @@ export const useDetectionCycle = (cycleId?: string) => {
       await fetchCycle();
     }
 
-    // Generate results
-    const results = generateMockResults();
+    // Generate results with images
+    const results = await generateMockResults();
 
     // Update cycle to completed
     await supabase
@@ -271,7 +298,7 @@ export const useDetectionCycle = (cycleId?: string) => {
         state: 'completed',
         completed_at: new Date().toISOString(),
         result_summary_json: results,
-        duration_sec: 50,
+        duration_sec: 10,
       })
       .eq('id', cycleId);
 
