@@ -233,6 +233,15 @@ export const useDetectionCycle = (cycleId?: string) => {
         userId = user.id;
       }
 
+      // Debug: Check current user's role and company
+      const { data: userRoleData } = await supabase
+        .from('user_roles')
+        .select('role, company_id')
+        .eq('user_id', userId)
+        .single();
+      
+      console.log('[startCycle] Current user:', { userId, role: userRoleData?.role, company_id: userRoleData?.company_id });
+
       // Fetch employees with burnout risk using direct join
       const { data: employeesWithRisk, error: employeesError } = await supabase
         .from('burnout_predictions')
@@ -241,7 +250,7 @@ export const useDetectionCycle = (cycleId?: string) => {
         .order('risk_score', { ascending: false })
         .limit(5);
 
-      console.log('[startCycle] Fetched burnout predictions:', employeesWithRisk);
+      console.log('[startCycle] Fetched burnout predictions:', { employeesWithRisk, error: employeesError, count: employeesWithRisk?.length });
 
       if (employeesError) {
         console.error('Error fetching burnout predictions:', employeesError);
