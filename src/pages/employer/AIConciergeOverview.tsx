@@ -313,84 +313,109 @@ const AIConciergeOverview = () => {
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto -mx-6 sm:mx-0">
-                  <table className="w-full min-w-[900px]">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Employee</th>
-                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Role</th>
-                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Team</th>
-                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Signal Type</th>
-                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Confidence</th>
-                        <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Status</th>
-                        <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {employees.map((emp, idx) => (
-                        <tr key={idx} className="border-b hover:bg-muted/50">
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8 flex-shrink-0">
-                                <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.name}`} />
-                                <AvatarFallback>{emp.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                              </Avatar>
-                              <div className="min-w-0">
-                                <p className="text-sm font-medium truncate">{emp.name}</p>
-                                <p className="text-xs text-muted-foreground truncate">{emp.email}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-3 px-2 text-sm">{emp.role}</td>
-                          <td className="py-3 px-2 text-sm">{emp.team}</td>
-                          <td className="py-3 px-2">
-                            <Badge variant={emp.signal === 'Burnout Risk' ? 'destructive' : emp.signal === 'Disengagement' ? 'default' : 'secondary'} className="text-xs whitespace-nowrap">
-                              {emp.signal}
-                            </Badge>
-                          </td>
-                          <td className="py-3 px-2">
-                            <div className="flex items-center gap-2">
-                              <Progress value={emp.confidence} className="w-16 h-2" />
-                              <span className="text-xs font-medium whitespace-nowrap">{emp.confidence}%</span>
-                            </div>
-                          </td>
-                          <td className="py-3 px-2">
-                            <Badge variant={emp.status === 'New' ? 'default' : emp.status === 'Processing' ? 'secondary' : 'outline'} className="text-xs whitespace-nowrap">
-                              {emp.status}
-                            </Badge>
-                          </td>
-                          <td className="py-3 px-4">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => handleStartDetectionForEmployee(emp.id)}
-                              disabled={startingEmployeeId === emp.id || loading}
-                              className="whitespace-nowrap"
-                            >
-                              <Play className="w-3 h-3 mr-1" />
-                              {startingEmployeeId === emp.id ? 'Starting...' : 'Start Detection'}
-                            </Button>
-                          </td>
+                  {loadingEmployees ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                        <p className="text-sm text-muted-foreground">Loading employee data...</p>
+                      </div>
+                    </div>
+                  ) : employees.length === 0 ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center">
+                        <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-sm font-medium mb-1">No At-Risk Employees Found</p>
+                        <p className="text-xs text-muted-foreground">All employees currently have low burnout risk</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <table className="w-full min-w-[900px]">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Employee</th>
+                          <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Role</th>
+                          <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Team</th>
+                          <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Signal Type</th>
+                          <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Confidence</th>
+                          <th className="text-left py-3 px-2 text-xs font-medium text-muted-foreground">Status</th>
+                          <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Actions</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {employees.map((emp, idx) => (
+                          <tr key={idx} className="border-b hover:bg-muted/50">
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-8 w-8 flex-shrink-0">
+                                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${emp.name}`} />
+                                  <AvatarFallback>{emp.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                                </Avatar>
+                                <div className="min-w-0">
+                                  <p className="text-sm font-medium truncate">{emp.name}</p>
+                                  <p className="text-xs text-muted-foreground truncate">{emp.email}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-3 px-2 text-sm">{emp.role}</td>
+                            <td className="py-3 px-2 text-sm">{emp.team}</td>
+                            <td className="py-3 px-2">
+                              <Badge variant={emp.signal === 'Burnout Risk' ? 'destructive' : emp.signal === 'Disengagement' ? 'default' : 'secondary'} className="text-xs whitespace-nowrap">
+                                {emp.signal}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-2">
+                              <div className="flex items-center gap-2">
+                                <Progress value={emp.confidence} className="w-16 h-2" />
+                                <span className="text-xs font-medium whitespace-nowrap">{emp.confidence}%</span>
+                              </div>
+                            </td>
+                            <td className="py-3 px-2">
+                              <Badge variant={emp.status === 'New' ? 'default' : emp.status === 'Processing' ? 'secondary' : 'outline'} className="text-xs whitespace-nowrap">
+                                {emp.status}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => handleStartDetectionForEmployee(emp.id)}
+                                disabled={startingEmployeeId === emp.id || loading}
+                                className="whitespace-nowrap"
+                              >
+                                <Play className="w-3 h-3 mr-1" />
+                                {startingEmployeeId === emp.id ? 'Starting...' : 'Start Detection'}
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
                 </div>
                 
                 {/* Pagination */}
-                <div className="flex items-center justify-between mt-4 pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">Showing 1-6 of 247</p>
-                  <div className="flex items-center gap-1">
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button variant="default" size="icon" className="h-8 w-8">1</Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">2</Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">3</Button>
-                    <Button variant="outline" size="icon" className="h-8 w-8">
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
+                {!loadingEmployees && employees.length > 0 && (
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t">
+                    <p className="text-sm text-muted-foreground">Showing 1-{employees.length} of {employees.length}</p>
+                    <div className="flex items-center gap-1">
+                      <Button variant="outline" size="icon" className="h-8 w-8">
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button variant="default" size="icon" className="h-8 w-8">
+                        1
+                      </Button>
+                      <Button variant="outline" size="icon" className="h-8 w-8">
+                        2
+                      </Button>
+                      <Button variant="outline" size="icon" className="h-8 w-8">
+                        3
+                      </Button>
+                      <Button variant="outline" size="icon" className="h-8 w-8">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
