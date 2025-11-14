@@ -16,6 +16,13 @@ export default function EmployeesManagement() {
     { id: '3', name: 'Emily Rodriguez', email: 'emily@global.com', company: 'Global Solutions', department: 'Marketing', points: 1200, status: 'active' },
     { id: '4', name: 'David Kim', email: 'david@innovation.com', company: 'Innovation Labs', department: 'Research', points: 450, status: 'inactive' },
     { id: '5', name: 'Lisa Wang', email: 'lisa@digital.com', company: 'Digital Ventures', department: 'Product', points: 980, status: 'active' },
+    { id: '6', name: 'James Martinez', email: 'james@techcorp.com', company: 'Tech Corp', department: 'Engineering', points: 1450, status: 'active' },
+    { id: '7', name: 'Anna Patel', email: 'anna@startup.com', company: 'StartUp Labs', department: 'Design', points: 780, status: 'active' },
+    { id: '8', name: 'Robert Taylor', email: 'robert@bigco.com', company: 'BigCo Inc', department: 'Operations', points: 560, status: 'active' },
+    { id: '9', name: 'Maria Garcia', email: 'maria@solutions.com', company: 'Solutions Plus', department: 'HR', points: 920, status: 'active' },
+    { id: '10', name: 'John Anderson', email: 'john@ventures.com', company: 'Ventures Co', department: 'Finance', points: 340, status: 'inactive' },
+    { id: '11', name: 'Jessica Lee', email: 'jessica@innovation.com', company: 'Innovation Hub', department: 'Product', points: 1100, status: 'active' },
+    { id: '12', name: 'Chris Thompson', email: 'chris@global.com', company: 'Global Tech', department: 'Sales', points: 890, status: 'active' },
   ];
 
   const filteredEmployees = employees.filter(emp =>
