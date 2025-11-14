@@ -8,51 +8,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Base colors - Light gray background */
-    --background: 220 14% 96%;
-    --foreground: 222 47% 11%;
+    /* Base colors - Light teal-tinted background */
+    --background: 180 15% 96%;
+    --foreground: 213 54% 20%;
 
     /* Card styling - Pure white */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 213 54% 20%;
 
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 213 54% 20%;
 
-    /* Primary - Bright Blue #0090FF */
-    --primary: 209 100% 50%;
+    /* Primary - Teal from logo #3AAFA9 */
+    --primary: 177 54% 47%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 209 100% 60%;
-    --primary-dark: 209 100% 40%;
+    --primary-light: 177 54% 57%;
+    --primary-dark: 177 54% 37%;
 
-    /* Secondary - Teal/Cyan #06B6D4 */
-    --secondary: 187 85% 43%;
+    /* Secondary - Light Teal #5BC0BE */
+    --secondary: 179 45% 55%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 187 85% 53%;
+    --secondary-light: 179 45% 65%;
 
-    /* Accent - Purple #8B5CF6 for AI features */
-    --accent: 258 90% 66%;
+    /* Accent - Dark Navy Blue #2B7A78 */
+    --accent: 179 47% 32%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 258 90% 76%;
+    --accent-light: 179 47% 42%;
 
     /* Destructive/Error - Red #EF4444 */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     /* Muted colors */
-    --muted: 220 14% 95%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 180 14% 95%;
+    --muted-foreground: 180 9% 46%;
 
     /* Border and input */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 209 100% 50%;
+    --border: 180 13% 91%;
+    --input: 180 13% 91%;
+    --ring: 177 54% 47%;
 
     /* Additional colors for charts */
-    --chart-1: 209 100% 50%; /* Blue */
-    --chart-2: 258 90% 66%; /* Purple */
-    --chart-3: 187 85% 43%; /* Teal */
+    --chart-1: 177 54% 47%; /* Teal */
+    --chart-2: 179 47% 32%; /* Dark Teal */
+    --chart-3: 179 45% 55%; /* Light Teal */
     --chart-4: 38 92% 50%; /* Amber */
     --chart-5: 160 84% 39%; /* Green */
 
@@ -65,7 +65,7 @@ All colors MUST be HSL.
     --warning-foreground: 0 0% 100%;
 
     /* Info badge */
-    --info: 209 100% 50%;
+    --info: 177 54% 47%;
     --info-foreground: 0 0% 100%;
 
     /* Border radius */
@@ -73,13 +73,13 @@ All colors MUST be HSL.
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 209 100% 50%;
+    --sidebar-foreground: 213 54% 20%;
+    --sidebar-primary: 177 54% 47%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 95%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 209 100% 50%;
+    --sidebar-accent: 180 14% 95%;
+    --sidebar-accent-foreground: 213 54% 20%;
+    --sidebar-border: 180 13% 91%;
+    --sidebar-ring: 177 54% 47%;
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -89,27 +89,27 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 213 47% 11%;
+    --foreground: 180 40% 98%;
 
-    --card: 222 47% 15%;
-    --card-foreground: 210 40% 98%;
+    --card: 213 47% 15%;
+    --card-foreground: 180 40% 98%;
 
-    --popover: 222 47% 15%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 213 47% 15%;
+    --popover-foreground: 180 40% 98%;
 
-    --primary: 209 100% 60%;
+    --primary: 177 54% 57%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 209 100% 70%;
-    --primary-dark: 209 100% 50%;
+    --primary-light: 177 54% 67%;
+    --primary-dark: 177 54% 47%;
 
-    --secondary: 187 85% 53%;
+    --secondary: 179 45% 65%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-light: 187 85% 63%;
+    --secondary-light: 179 45% 75%;
 
-    --accent: 258 90% 76%;
+    --accent: 179 47% 42%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 258 90% 86%;
+    --accent-light: 179 47% 52%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -119,22 +119,22 @@ All colors MUST be HSL.
 
     --border: 217 33% 18%;
     --input: 217 33% 18%;
-    --ring: 209 100% 60%;
+    --ring: 177 54% 57%;
 
-    --chart-1: 209 100% 60%;
-    --chart-2: 258 90% 76%;
-    --chart-3: 187 85% 53%;
+    --chart-1: 177 54% 57%;
+    --chart-2: 179 47% 42%;
+    --chart-3: 179 45% 65%;
     --chart-4: 38 92% 60%;
     --chart-5: 160 84% 49%;
 
-    --sidebar-background: 222 47% 15%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 209 100% 60%;
+    --sidebar-background: 213 47% 15%;
+    --sidebar-foreground: 180 40% 98%;
+    --sidebar-primary: 177 54% 57%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 217 33% 18%;
-    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-accent-foreground: 180 40% 98%;
     --sidebar-border: 217 33% 18%;
-    --sidebar-ring: 209 100% 60%;
+    --sidebar-ring: 177 54% 57%;
 
     --success: 160 84% 49%;
     --success-foreground: 0 0% 100%;
