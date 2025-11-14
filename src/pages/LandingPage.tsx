@@ -142,7 +142,7 @@ const LandingPage = () => {
             {/* Right: Abstract Illustration */}
             <div className="hidden lg:flex justify-center items-center">
               <div className="relative w-full max-w-md">
-                <div className="absolute inset-0 bg-white/5 backdrop-blur-sm rounded-3xl" />
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl" />
                 <div className="relative p-8 space-y-6">
                   {/* Signal */}
                   <div className="flex items-center gap-4 animate-fade-in">
@@ -150,8 +150,8 @@ const LandingPage = () => {
                       <div className="w-6 h-6 rounded-full bg-white" />
                     </div>
                     <div className="flex-1">
-                      <div className="h-3 bg-white/30 rounded-full w-3/4" />
-                      <div className="h-2 bg-white/20 rounded-full w-1/2 mt-2" />
+                      <p className="text-white font-semibold text-sm">Signal detected</p>
+                      <p className="text-white/80 text-xs mt-1">Early patterns identified</p>
                     </div>
                   </div>
                   
@@ -166,8 +166,8 @@ const LandingPage = () => {
                       <Heart className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1">
-                      <div className="h-3 bg-white/30 rounded-full w-2/3" />
-                      <div className="h-2 bg-white/20 rounded-full w-1/2 mt-2" />
+                      <p className="text-white font-semibold text-sm">Support offered</p>
+                      <p className="text-white/80 text-xs mt-1">Personalized intervention</p>
                     </div>
                   </div>
                   
@@ -182,8 +182,8 @@ const LandingPage = () => {
                       <span className="text-2xl">😊</span>
                     </div>
                     <div className="flex-1">
-                      <div className="h-3 bg-white/30 rounded-full w-4/5" />
-                      <div className="h-2 bg-white/20 rounded-full w-3/5 mt-2" />
+                      <p className="text-white font-semibold text-sm">Impact measured</p>
+                      <p className="text-white/80 text-xs mt-1">Proven results</p>
                     </div>
                   </div>
                 </div>
