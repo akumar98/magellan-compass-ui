@@ -30,6 +30,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { PendingRequestsBadge } from '@/components/employer/PendingRequestsBadge';
+import magellanLogo from '@/assets/magellan-logo.png';
 
 interface NavItem {
   label: string;
@@ -248,10 +249,15 @@ export const Sidebar = () => {
     <>
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
-        <h1 className="text-2xl font-bold gradient-primary bg-clip-text text-transparent">
-          Magellan One
-        </h1>
-        <p className="text-xs text-muted-foreground mt-1">Travel Rewards Platform</p>
+        <div className="flex items-center gap-3">
+          <img src={magellanLogo} alt="MagellanOneAI" className="h-10 w-10 object-contain" />
+          <div>
+            <h1 className="text-lg font-bold text-foreground">
+              MagellanOneAI
+            </h1>
+            <p className="text-xs text-muted-foreground">Travel Rewards Platform</p>
+          </div>
+        </div>
       </div>
 
       {/* User Info */}

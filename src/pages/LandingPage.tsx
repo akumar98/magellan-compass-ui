@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Shield, TrendingUp, Heart, Twitter, Linkedin, Instagram, ArrowRight } from "lucide-react";
 import { ProofStrip } from "@/components/landing/ProofStrip";
 import heroBackground from "@/assets/hero-background.png";
+import magellanLogo from "@/assets/magellan-logo.png";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -69,11 +70,7 @@ const LandingPage = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-[#0EA5E9] rounded-full flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                </svg>
-              </div>
+              <img src={magellanLogo} alt="MagellanOneAI" className="h-10 w-auto" />
               <span className="text-xl font-bold text-gray-900">MagellanOneAI</span>
             </Link>
 
