@@ -248,16 +248,8 @@ export const Sidebar = () => {
   const SidebarContent = () => (
     <>
       {/* Logo */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-3">
-          <img src={magellanLogo} alt="MagellanOneAI" className="h-10 w-10 object-contain" />
-          <div>
-            <h1 className="text-lg font-bold text-foreground">
-              MagellanOneAI
-            </h1>
-            <p className="text-xs text-muted-foreground">Travel Rewards Platform</p>
-          </div>
-        </div>
+      <div className="p-6 border-b border-sidebar-border flex justify-center">
+        <img src={magellanLogo} alt="MagellanOneAI" className="h-16 w-auto object-contain" />
       </div>
 
       {/* User Info */}
