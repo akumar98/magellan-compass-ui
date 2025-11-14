@@ -67,10 +67,10 @@ const LandingPage = () => {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center">
-              <img src={magellanLogo} alt="MagellanOneAI" className="h-16 w-auto" />
+              <img src={magellanLogo} alt="MagellanOneAI" className="h-10 sm:h-12 md:h-16 w-auto" />
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -79,16 +79,16 @@ const LandingPage = () => {
               <Link to="/contact-us" className="text-gray-700 text-sm font-medium hover:text-gray-900">Contact</Link>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Button
                 onClick={handleLogin}
-                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-3 sm:px-6 h-9 sm:h-10 rounded-md text-xs sm:text-sm font-medium"
               >
                 Login
               </Button>
               <Button
                 onClick={handleRegister}
-                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-6 h-10 rounded-md text-sm font-medium"
+                className="bg-[#0EA5E9] hover:bg-[#0284C7] text-white px-3 sm:px-6 h-9 sm:h-10 rounded-md text-xs sm:text-sm font-medium"
               >
                 Register
               </Button>
@@ -98,28 +98,28 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 overflow-hidden">
+      <section className="relative py-12 sm:py-16 md:py-20 lg:py-32 overflow-hidden min-h-[600px] sm:min-h-[700px]">
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroBackground})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0EA5E9]/80 to-[#F59E0B]/60" />
 
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 h-full">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
             {/* Left: Text Content */}
             <div className="text-center lg:text-left">
-              <h1 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in">
                 {currentHero.headline}
               </h1>
-              <p className="text-xl lg:text-2xl text-white/90 mb-8 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 sm:mb-8 leading-relaxed">
                 {currentHero.subheadline}
               </p>
-              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+              <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4">
                 <Button
                   onClick={scrollToHowItWorks}
                   size="lg"
-                  className="bg-white text-primary hover:bg-white/90 px-8 h-12 text-base font-semibold rounded-lg shadow-lg"
+                  className="bg-white text-primary hover:bg-white/90 px-6 sm:px-8 h-11 sm:h-12 text-sm sm:text-base font-semibold rounded-lg shadow-lg"
                 >
                   See how it works
                 </Button>
@@ -127,14 +127,14 @@ const LandingPage = () => {
                   onClick={scrollToProof}
                   variant="outline"
                   size="lg"
-                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 h-12 text-base font-semibold rounded-lg"
+                  className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-6 sm:px-8 h-11 sm:h-12 text-sm sm:text-base font-semibold rounded-lg"
                 >
                   Why employees trust it
                 </Button>
               </div>
               
               {/* Trust Microcopy */}
-              <p className="text-white/80 text-sm mt-6 max-w-md mx-auto lg:mx-0">
+              <p className="text-white/80 text-xs sm:text-sm mt-4 sm:mt-6 max-w-md mx-auto lg:mx-0">
                 We read patterns, not messages. You control your signals at any time.
               </p>
             </div>
@@ -194,38 +194,38 @@ const LandingPage = () => {
       </section>
 
       {/* REP Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <section className="py-12 sm:py-16 md:py-20 bg-muted/30">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
             {/* Retention */}
             <Card className="card-stat group cursor-pointer">
-              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Shield className="w-8 h-8 text-primary" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-primary/20 transition-colors">
+                <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">Retention</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">Retention</h3>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 Fewer regretted exits. Catch risk early.
               </p>
             </Card>
 
             {/* Engagement */}
             <Card className="card-stat group cursor-pointer">
-              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
-                <Heart className="w-8 h-8 text-accent" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-accent/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-accent/20 transition-colors">
+                <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">Engagement</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">Engagement</h3>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 eNPS lifts when care arrives on time.
               </p>
             </Card>
 
             {/* Productivity */}
             <Card className="card-stat group cursor-pointer">
-              <div className="w-16 h-16 rounded-2xl bg-success/10 flex items-center justify-center mb-6 group-hover:bg-success/20 transition-colors">
-                <TrendingUp className="w-8 h-8 text-success" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-success/10 flex items-center justify-center mb-4 sm:mb-6 group-hover:bg-success/20 transition-colors">
+                <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-success" />
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3">Productivity</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-3">Productivity</h3>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 Momentum returns when teams get support.
               </p>
             </Card>
@@ -234,16 +234,16 @@ const LandingPage = () => {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-background">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">How It Works</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+      <section id="how-it-works" className="py-12 sm:py-16 md:py-20 bg-background">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 sm:mb-4">How It Works</h2>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto px-4">
               Three simple steps to transform workforce care
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
             {/* Step 1: Sense */}
             <div className="relative">
               <Card className="card-stat text-center">
