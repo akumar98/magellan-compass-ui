@@ -52,33 +52,28 @@ const AIConciergeReview = () => {
   }, [cycleId, navigate]);
 
   useEffect(() => {
-    const fetchEmployeeProfiles = async () => {
-      if (!cycle?.result_summary_json?.recommendations) return;
-      
-      const recommendations = cycle.result_summary_json.recommendations || [];
-      const employeeIds = recommendations.map((rec: any) => rec.employee_id).filter(Boolean);
-      
-      if (employeeIds.length === 0) return;
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, avatar_url')
-        .in('id', employeeIds);
-      
-      if (error) {
-        console.error('Error fetching employee profiles:', error);
-        return;
-      }
-      
-      const profilesMap = (data || []).reduce((acc: Record<string, any>, profile: any) => {
-        acc[profile.id] = profile;
-        return acc;
-      }, {});
-      
-      setEmployeeProfiles(profilesMap);
-    };
+    // Generate fake employee profiles
+    if (!cycle?.result_summary_json?.recommendations) return;
     
-    fetchEmployeeProfiles();
+    const fakeNames = [
+      'Sarah Johnson', 'Michael Chen', 'Emily Rodriguez', 'David Kim', 
+      'Lisa Wang', 'James Martinez', 'Anna Patel', 'Robert Taylor',
+      'Maria Garcia', 'John Anderson', 'Jessica Lee', 'Chris Thompson'
+    ];
+    
+    const recommendations = cycle.result_summary_json.recommendations || [];
+    const profilesMap = recommendations.reduce((acc: Record<string, any>, rec: any, idx: number) => {
+      const fakeName = fakeNames[idx % fakeNames.length];
+      acc[rec.employee_id || `fake-${idx}`] = {
+        id: rec.employee_id || `fake-${idx}`,
+        full_name: fakeName,
+        email: `${fakeName.toLowerCase().replace(' ', '.')}@company.com`,
+        avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${fakeName}`
+      };
+      return acc;
+    }, {});
+    
+    setEmployeeProfiles(profilesMap);
   }, [cycle]);
 
   if (loading || !cycle) {
