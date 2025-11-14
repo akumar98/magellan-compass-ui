@@ -69,9 +69,8 @@ const LandingPage = () => {
       <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <img src={magellanLogo} alt="MagellanOneAI" className="h-10 w-auto" />
-              <span className="text-xl font-bold text-gray-900">MagellanOneAI</span>
+            <Link to="/" className="flex items-center">
+              <img src={magellanLogo} alt="MagellanOneAI" className="h-12 w-auto" />
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
