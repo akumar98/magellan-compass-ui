@@ -43,12 +43,43 @@ const AIConciergeReview = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [approvedItems, setApprovedItems] = useState<Set<string>>(new Set());
+  const [employeeProfiles, setEmployeeProfiles] = useState<Record<string, any>>({});
 
   useEffect(() => {
     if (!cycleId) {
       navigate('/employer/ai-concierge');
     }
   }, [cycleId, navigate]);
+
+  useEffect(() => {
+    const fetchEmployeeProfiles = async () => {
+      if (!cycle?.result_summary_json?.recommendations) return;
+      
+      const recommendations = cycle.result_summary_json.recommendations || [];
+      const employeeIds = recommendations.map((rec: any) => rec.employee_id).filter(Boolean);
+      
+      if (employeeIds.length === 0) return;
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, email, avatar_url')
+        .in('id', employeeIds);
+      
+      if (error) {
+        console.error('Error fetching employee profiles:', error);
+        return;
+      }
+      
+      const profilesMap = (data || []).reduce((acc: Record<string, any>, profile: any) => {
+        acc[profile.id] = profile;
+        return acc;
+      }, {});
+      
+      setEmployeeProfiles(profilesMap);
+    };
+    
+    fetchEmployeeProfiles();
+  }, [cycle]);
 
   if (loading || !cycle) {
     return (
@@ -113,22 +144,31 @@ const AIConciergeReview = () => {
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold">Analyzing {recommendations.length} Employee{recommendations.length > 1 ? 's' : ''}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {recommendations.map((rec: any, idx: number) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 bg-background rounded-lg">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${rec.employee_name}`} />
-                        <AvatarFallback>{rec.employee_name?.split(' ').map((n: string) => n[0]).join('') || 'U'}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold truncate">{rec.employee_name || 'Unknown Employee'}</p>
-                        <p className="text-sm text-muted-foreground truncate">{rec.department || 'Unknown Department'}</p>
-                        <Badge variant="destructive" className="text-xs mt-1">
-                          <AlertTriangle className="w-3 h-3 mr-1" />
-                          {rec.burnout_risk || 'Risk'} Risk
-                        </Badge>
+                  {recommendations.map((rec: any, idx: number) => {
+                    const employee = employeeProfiles[rec.employee_id];
+                    const initials = employee?.full_name
+                      ?.split(' ')
+                      .map((n: string) => n[0])
+                      .join('')
+                      .toUpperCase() || rec.employee_name?.split(' ').map((n: string) => n[0]).join('') || 'U';
+                    
+                    return (
+                      <div key={idx} className="flex items-center gap-3 p-3 bg-background rounded-lg">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={employee?.avatar_url} />
+                          <AvatarFallback>{initials}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold truncate">{employee?.full_name || rec.employee_name || 'Loading...'}</p>
+                          <p className="text-sm text-muted-foreground truncate">{rec.department || 'Unknown Department'}</p>
+                          <Badge variant="destructive" className="text-xs mt-1">
+                            <AlertTriangle className="w-3 h-3 mr-1" />
+                            {rec.burnout_risk || 'Risk'} Risk
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </CardContent>
