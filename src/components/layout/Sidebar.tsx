@@ -249,7 +249,7 @@ export const Sidebar = () => {
     <>
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border flex justify-center">
-        <img src={magellanLogo} alt="MagellanOneAI" className="h-16 w-auto object-contain" />
+        <img src={magellanLogo} alt="MagellanOneAI" className="h-24 w-auto object-contain" />
       </div>
 
       {/* User Info */}
