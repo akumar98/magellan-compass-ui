@@ -70,7 +70,7 @@ const LandingPage = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <Link to="/" className="flex items-center">
-              <img src={magellanLogo} alt="MagellanOneAI" className="h-12 w-auto" />
+              <img src={magellanLogo} alt="MagellanOneAI" className="h-16 w-auto" />
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
