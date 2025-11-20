@@ -14,6 +14,7 @@ import SuperAdminLogin from "./pages/admin/SuperAdminLogin";
 import SuperAdminDashboard from "./pages/super-admin/SuperAdminDashboard";
 import SuperAdminCompanies from "./pages/super-admin/SuperAdminCompanies";
 import SuperAdminUsers from "./pages/super-admin/SuperAdminUsers";
+import SuperAdminDataEntry from "./pages/super-admin/SuperAdminDataEntry";
 import Dashboard from "./pages/Dashboard";
 import Rewards from "./pages/Rewards";
 import RewardDetail from "./pages/RewardDetail";
@@ -113,6 +114,7 @@ const App = () => (
             <Route path="/super-admin" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminDashboard /></ProtectedRoute>} />
             <Route path="/super-admin/companies" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminCompanies /></ProtectedRoute>} />
             <Route path="/super-admin/users" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminUsers /></ProtectedRoute>} />
+            <Route path="/super-admin/data-entry" element={<ProtectedRoute requiredRole="super_admin"><SuperAdminDataEntry /></ProtectedRoute>} />
             
             {/* Admin routes - Protected */}
             <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>} />

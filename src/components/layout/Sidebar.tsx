@@ -59,6 +59,12 @@ const navItems: NavItem[] = [
     icon: <Users className="h-5 w-5" />,
     roles: ['super_admin'],
   },
+  {
+    label: 'Data Entry',
+    path: '/super-admin/data-entry',
+    icon: <ClipboardCheck className="h-5 w-5" />,
+    roles: ['super_admin'],
+  },
   // Admin Items
   {
     label: 'Dashboard',
