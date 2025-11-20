@@ -255,7 +255,7 @@ const SuperAdminUsers = () => {
                 Add User
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New User</DialogTitle>
                 <DialogDescription>Create a new user in the platform</DialogDescription>
@@ -289,7 +289,7 @@ const SuperAdminUsers = () => {
                 <div>
                   <Label htmlFor="company">Company (Optional)</Label>
                   <Select value={formData.company_id} onValueChange={(value) => setFormData({ ...formData, company_id: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger id="company">
                       <SelectValue placeholder="Select a company (optional)" />
                     </SelectTrigger>
                     <SelectContent>
@@ -305,7 +305,7 @@ const SuperAdminUsers = () => {
                 <div>
                   <Label htmlFor="role">Role</Label>
                   <Select value={formData.role} onValueChange={(value: any) => setFormData({ ...formData, role: value })}>
-                    <SelectTrigger>
+                    <SelectTrigger id="role">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -321,7 +321,9 @@ const SuperAdminUsers = () => {
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={handleAdd}>Add User</Button>
+                <Button onClick={handleAdd} disabled={loading}>
+                  {loading ? 'Adding...' : 'Add User'}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -399,7 +401,7 @@ const SuperAdminUsers = () => {
         </Card>
 
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Edit User</DialogTitle>
               <DialogDescription>Update user company, role and permissions</DialogDescription>
@@ -408,7 +410,7 @@ const SuperAdminUsers = () => {
               <div>
                 <Label htmlFor="edit-company">Company</Label>
                 <Select value={formData.company_id} onValueChange={(value) => setFormData({ ...formData, company_id: value })}>
-                  <SelectTrigger>
+                  <SelectTrigger id="edit-company">
                     <SelectValue placeholder="Select a company (optional)" />
                   </SelectTrigger>
                   <SelectContent>
@@ -424,7 +426,7 @@ const SuperAdminUsers = () => {
               <div>
                 <Label htmlFor="edit-role">Role</Label>
                 <Select value={formData.role} onValueChange={(value: any) => setFormData({ ...formData, role: value })}>
-                  <SelectTrigger>
+                  <SelectTrigger id="edit-role">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -440,7 +442,9 @@ const SuperAdminUsers = () => {
               <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleEditRole}>Save Changes</Button>
+              <Button onClick={handleEditRole} disabled={loading}>
+                {loading ? 'Saving...' : 'Save Changes'}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
