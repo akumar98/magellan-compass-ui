@@ -130,19 +130,34 @@ const SuperAdminUsers = () => {
   const handleEditRole = async () => {
     if (!selectedUser) return;
 
+    // Update profile with company_id
+    if (formData.company_id !== selectedUser.company_id) {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ company_id: formData.company_id || null })
+        .eq('id', selectedUser.id);
+
+      if (profileError) {
+        toast.error('Failed to update user company');
+        console.error(profileError);
+        return;
+      }
+    }
+
     const { error } = await supabase
       .from('user_roles')
       .upsert({
         user_id: selectedUser.id,
         role: formData.role,
         approval_status: 'approved',
+        company_id: formData.company_id || null,
       });
 
     if (error) {
       toast.error('Failed to update user role');
       console.error(error);
     } else {
-      toast.success('User role updated successfully');
+      toast.success('User updated successfully');
       setIsEditDialogOpen(false);
       setSelectedUser(null);
       fetchUsers();
@@ -359,10 +374,26 @@ const SuperAdminUsers = () => {
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Edit User Role</DialogTitle>
-              <DialogDescription>Update user role and permissions</DialogDescription>
+              <DialogTitle>Edit User</DialogTitle>
+              <DialogDescription>Update user company, role and permissions</DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-company">Company</Label>
+                <Select value={formData.company_id} onValueChange={(value) => setFormData({ ...formData, company_id: value })}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a company (optional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">No company</SelectItem>
+                    {companies.map((company) => (
+                      <SelectItem key={company.id} value={company.id}>
+                        {company.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div>
                 <Label htmlFor="edit-role">Role</Label>
                 <Select value={formData.role} onValueChange={(value: any) => setFormData({ ...formData, role: value })}>
