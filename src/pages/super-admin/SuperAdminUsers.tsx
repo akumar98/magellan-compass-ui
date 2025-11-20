@@ -41,7 +41,10 @@ const SuperAdminUsers = () => {
     company_id: '',
   });
 
+  console.log('SuperAdminUsers component mounted');
+
   useEffect(() => {
+    console.log('useEffect running - fetching data');
     fetchUsers();
     fetchCompanies();
   }, []);
@@ -239,6 +242,8 @@ const SuperAdminUsers = () => {
         return 'outline';
     }
   };
+
+  console.log('Rendering SuperAdminUsers, users count:', users.length, 'loading:', loading);
 
   return (
     <DashboardLayout>
