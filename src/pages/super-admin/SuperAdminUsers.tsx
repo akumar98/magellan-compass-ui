@@ -293,12 +293,12 @@ const SuperAdminUsers = () => {
                 </div>
                 <div>
                   <Label htmlFor="company">Company (Optional)</Label>
-                  <Select value={formData.company_id} onValueChange={(value) => setFormData({ ...formData, company_id: value })}>
+                  <Select value={formData.company_id || 'none'} onValueChange={(value) => setFormData({ ...formData, company_id: value === 'none' ? '' : value })}>
                     <SelectTrigger id="company">
                       <SelectValue placeholder="Select a company (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No company</SelectItem>
+                      <SelectItem value="none">No company</SelectItem>
                       {companies.map((company) => (
                         <SelectItem key={company.id} value={company.id}>
                           {company.name}
@@ -414,12 +414,12 @@ const SuperAdminUsers = () => {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="edit-company">Company</Label>
-                <Select value={formData.company_id} onValueChange={(value) => setFormData({ ...formData, company_id: value })}>
+                <Select value={formData.company_id || 'none'} onValueChange={(value) => setFormData({ ...formData, company_id: value === 'none' ? '' : value })}>
                   <SelectTrigger id="edit-company">
                     <SelectValue placeholder="Select a company (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">No company</SelectItem>
+                    <SelectItem value="none">No company</SelectItem>
                     {companies.map((company) => (
                       <SelectItem key={company.id} value={company.id}>
                         {company.name}
