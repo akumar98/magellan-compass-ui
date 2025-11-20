@@ -20,6 +20,8 @@ interface UserWithRole {
   full_name: string;
   role?: string;
   approval_status?: string;
+  company_id?: string;
+  company_name?: string;
   created_at: string;
 }
 
@@ -57,14 +59,21 @@ const SuperAdminUsers = () => {
 
     const { data: rolesData } = await supabase
       .from('user_roles')
-      .select('user_id, role, approval_status');
+      .select('user_id, role, approval_status, company_id');
+
+    const { data: companiesData } = await supabase
+      .from('companies')
+      .select('id, name');
 
     const usersWithRoles = profilesData.map((profile) => {
       const userRole = rolesData?.find((r) => r.user_id === profile.id);
+      const company = companiesData?.find((c) => c.id === userRole?.company_id);
       return {
         ...profile,
         role: userRole?.role,
         approval_status: userRole?.approval_status,
+        company_id: userRole?.company_id,
+        company_name: company?.name,
       };
     });
 
@@ -260,6 +269,7 @@ const SuperAdminUsers = () => {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
+                    <TableHead>Company</TableHead>
                     <TableHead>Role</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -270,6 +280,13 @@ const SuperAdminUsers = () => {
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.full_name}</TableCell>
                       <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        {user.company_name ? (
+                          <span className="text-sm">{user.company_name}</span>
+                        ) : (
+                          <span className="text-sm text-muted-foreground">No company</span>
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Badge variant={getRoleBadgeVariant(user.role)}>
                           {user.role || 'No role'}
