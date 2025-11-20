@@ -22,9 +22,9 @@ Deno.serve(async (req) => {
       }
     );
 
-    const { email, password, fullName, role } = await req.json();
+    const { email, password, fullName, role, companyId } = await req.json();
 
-    console.log('Creating user:', { email, role });
+    console.log('Creating user:', { email, role, companyId });
 
     // Create the user
     const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
@@ -41,6 +41,18 @@ Deno.serve(async (req) => {
 
     console.log('User created successfully:', userData.user.id);
 
+    // Update profile with company_id if provided
+    if (companyId) {
+      const { error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .update({ company_id: companyId })
+        .eq('id', userData.user.id);
+
+      if (profileError) {
+        console.error('Error updating profile with company:', profileError);
+      }
+    }
+
     // Assign role to the user
     const { error: roleError } = await supabaseAdmin
       .from('user_roles')
@@ -48,6 +60,7 @@ Deno.serve(async (req) => {
         user_id: userData.user.id,
         role: role,
         approval_status: 'approved',
+        company_id: companyId || null,
       });
 
     if (roleError) {
