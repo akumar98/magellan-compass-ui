@@ -126,6 +126,9 @@ const SuperAdminUsers = () => {
     try {
       setLoading(true);
       
+      // Convert 'none' to null for company_id
+      const cleanCompanyId = formData.company_id === 'none' || !formData.company_id ? null : formData.company_id;
+
       // Call edge function to create user with service role
       const { data, error } = await supabase.functions.invoke('create-user', {
         body: {
@@ -133,7 +136,7 @@ const SuperAdminUsers = () => {
           password: formData.password,
           fullName: formData.full_name,
           role: formData.role,
-          companyId: formData.company_id || null,
+          companyId: cleanCompanyId,
         },
       });
 
@@ -154,37 +157,76 @@ const SuperAdminUsers = () => {
   const handleEditRole = async () => {
     if (!selectedUser) return;
 
-    // Update profile with company_id
-    if (formData.company_id !== selectedUser.company_id) {
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ company_id: formData.company_id || null })
-        .eq('id', selectedUser.id);
+    setLoading(true);
+    try {
+      console.log('Updating user:', selectedUser.id, 'with company:', formData.company_id, 'role:', formData.role);
 
-      if (profileError) {
-        toast.error('Failed to update user company');
-        console.error(profileError);
+      // Convert 'none' to null for company_id
+      const cleanCompanyId = formData.company_id === 'none' || !formData.company_id ? null : formData.company_id;
+
+      // Update profile with company_id
+      if (cleanCompanyId !== selectedUser.company_id) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ company_id: cleanCompanyId })
+          .eq('id', selectedUser.id);
+
+        if (profileError) {
+          console.error('Error updating profile:', profileError);
+          toast.error('Failed to update user company');
+          setLoading(false);
+          return;
+        }
+      }
+
+      // Check if user already has a role
+      const { data: existingRole } = await supabase
+        .from('user_roles')
+        .select('id')
+        .eq('user_id', selectedUser.id)
+        .single();
+
+      let roleError;
+      if (existingRole) {
+        // Update existing role
+        const { error } = await supabase
+          .from('user_roles')
+          .update({
+            role: formData.role,
+            approval_status: 'approved',
+            company_id: cleanCompanyId,
+          })
+          .eq('user_id', selectedUser.id);
+        roleError = error;
+      } else {
+        // Insert new role
+        const { error } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: selectedUser.id,
+            role: formData.role,
+            approval_status: 'approved',
+            company_id: cleanCompanyId,
+          });
+        roleError = error;
+      }
+
+      if (roleError) {
+        console.error('Error updating role:', roleError);
+        toast.error(`Failed to update user role: ${roleError.message}`);
+        setLoading(false);
         return;
       }
-    }
 
-    const { error } = await supabase
-      .from('user_roles')
-      .upsert({
-        user_id: selectedUser.id,
-        role: formData.role,
-        approval_status: 'approved',
-        company_id: formData.company_id || null,
-      });
-
-    if (error) {
-      toast.error('Failed to update user role');
-      console.error(error);
-    } else {
       toast.success('User updated successfully');
       setIsEditDialogOpen(false);
       setSelectedUser(null);
-      fetchUsers();
+      await fetchUsers();
+    } catch (error: any) {
+      console.error('Unexpected error:', error);
+      toast.error(`An error occurred: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
