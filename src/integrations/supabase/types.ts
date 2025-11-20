@@ -800,6 +800,10 @@ export type Database = {
         Args: { requesting_user_id: string; target_employee_id: string }
         Returns: boolean
       }
+      employer_can_view_burnout_prediction: {
+        Args: { _employee_id: string; _user_id: string }
+        Returns: boolean
+      }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
