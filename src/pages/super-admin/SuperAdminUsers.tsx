@@ -27,6 +27,7 @@ interface UserWithRole {
 
 const SuperAdminUsers = () => {
   const [users, setUsers] = useState<UserWithRole[]>([]);
+  const [companies, setCompanies] = useState<{ id: string; name: string }[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -37,11 +38,27 @@ const SuperAdminUsers = () => {
     password: '',
     full_name: '',
     role: 'employee' as 'super_admin' | 'admin' | 'employer' | 'employee',
+    company_id: '',
   });
 
   useEffect(() => {
     fetchUsers();
+    fetchCompanies();
   }, []);
+
+  const fetchCompanies = async () => {
+    const { data, error } = await supabase
+      .from('companies')
+      .select('id, name')
+      .order('name');
+
+    if (error) {
+      toast.error('Failed to fetch companies');
+      return;
+    }
+
+    setCompanies(data || []);
+  };
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -92,6 +109,7 @@ const SuperAdminUsers = () => {
           password: formData.password,
           fullName: formData.full_name,
           role: formData.role,
+          companyId: formData.company_id || null,
         },
       });
 
@@ -99,7 +117,7 @@ const SuperAdminUsers = () => {
 
       toast.success('User created successfully');
       setIsAddDialogOpen(false);
-      setFormData({ email: '', password: '', full_name: '', role: 'employee' });
+      setFormData({ email: '', password: '', full_name: '', role: 'employee', company_id: '' });
       fetchUsers();
     } catch (error: any) {
       console.error('Error creating user:', error);
@@ -163,6 +181,7 @@ const SuperAdminUsers = () => {
       password: '',
       full_name: user.full_name,
       role: (user.role as any) || 'employee',
+      company_id: user.company_id || '',
     });
     setIsEditDialogOpen(true);
   };
@@ -230,6 +249,22 @@ const SuperAdminUsers = () => {
                     value={formData.full_name}
                     onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                   />
+                </div>
+                <div>
+                  <Label htmlFor="company">Company (Optional)</Label>
+                  <Select value={formData.company_id} onValueChange={(value) => setFormData({ ...formData, company_id: value })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a company (optional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">No company</SelectItem>
+                      {companies.map((company) => (
+                        <SelectItem key={company.id} value={company.id}>
+                          {company.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="role">Role</Label>
