@@ -47,55 +47,76 @@ const SuperAdminUsers = () => {
   }, []);
 
   const fetchCompanies = async () => {
-    const { data, error } = await supabase
-      .from('companies')
-      .select('id, name')
-      .order('name');
+    try {
+      const { data, error } = await supabase
+        .from('companies')
+        .select('id, name')
+        .order('name');
 
-    if (error) {
-      toast.error('Failed to fetch companies');
-      return;
+      if (error) {
+        console.error('Error fetching companies:', error);
+        toast.error('Failed to fetch companies');
+        return;
+      }
+
+      console.log('Fetched companies:', data?.length || 0);
+      setCompanies(data || []);
+    } catch (error) {
+      console.error('Unexpected error fetching companies:', error);
     }
-
-    setCompanies(data || []);
   };
 
   const fetchUsers = async () => {
     setLoading(true);
-    const { data: profilesData, error: profilesError } = await supabase
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
+    try {
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    if (profilesError) {
-      toast.error('Failed to fetch users');
-      console.error(profilesError);
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+        toast.error('Failed to fetch users');
+        setLoading(false);
+        return;
+      }
+
+      const { data: rolesData, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role, approval_status, company_id');
+
+      if (rolesError) {
+        console.error('Error fetching roles:', rolesError);
+      }
+
+      const { data: companiesData, error: companiesError } = await supabase
+        .from('companies')
+        .select('id, name');
+
+      if (companiesError) {
+        console.error('Error fetching companies:', companiesError);
+      }
+
+      const usersWithRoles = profilesData.map((profile) => {
+        const userRole = rolesData?.find((r) => r.user_id === profile.id);
+        const company = companiesData?.find((c) => c.id === userRole?.company_id);
+        return {
+          ...profile,
+          role: userRole?.role,
+          approval_status: userRole?.approval_status,
+          company_id: userRole?.company_id,
+          company_name: company?.name,
+        };
+      });
+
+      console.log('Fetched users:', usersWithRoles.length);
+      setUsers(usersWithRoles);
+    } catch (error) {
+      console.error('Unexpected error fetching users:', error);
+      toast.error('An unexpected error occurred');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const { data: rolesData } = await supabase
-      .from('user_roles')
-      .select('user_id, role, approval_status, company_id');
-
-    const { data: companiesData } = await supabase
-      .from('companies')
-      .select('id, name');
-
-    const usersWithRoles = profilesData.map((profile) => {
-      const userRole = rolesData?.find((r) => r.user_id === profile.id);
-      const company = companiesData?.find((c) => c.id === userRole?.company_id);
-      return {
-        ...profile,
-        role: userRole?.role,
-        approval_status: userRole?.approval_status,
-        company_id: userRole?.company_id,
-        company_name: company?.name,
-      };
-    });
-
-    setUsers(usersWithRoles);
-    setLoading(false);
   };
 
   const handleAdd = async () => {
@@ -312,7 +333,13 @@ const SuperAdminUsers = () => {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className="text-center py-8">Loading...</div>
+              <div className="text-center py-8">
+                <div className="text-muted-foreground">Loading users...</div>
+              </div>
+            ) : users.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No users found.</p>
+              </div>
             ) : (
               <Table>
                 <TableHeader>
